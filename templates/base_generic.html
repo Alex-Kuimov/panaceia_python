@@ -1,0 +1,74 @@
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+     {% block title %}<title>Panaceia</title>{% endblock %}
+     {% load static %}
+    <link rel="stylesheet" href="{% static 'css/stylelk.css' %}">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}" >
+</head>
+
+<body>
+    <header>
+        <div class="container">
+            <div class="row">
+                <div class="col-3">
+                    <a href="{% url 'home' %}" class="logo-header"><img src="{% static 'img/logo.png' %}" alt="">
+                    </a>
+                </div>
+                <div class="col-5">
+                    <div class="botton-header">
+                        <a href="#">Консультации</a><a href="#">Видеолекции</a>
+                    </div>
+                </div>
+                <div class="col-4 header-info">
+                    {% if request.user.is_authenticated %}
+                        <div class="name-person">
+                            {{user_profile.fio}} <img style="width:32px; height: 32px; padding:5px auto; object-fit: cover; border-radius:100px;" src="/{{user_profile.avatar}}" alt="">
+                            <a href="{% url 'logout' %}"><img src="{% static 'img/logout.png' %}" alt=""></a>
+                        </div>
+                    {% else %}
+
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </header>
+    <div class="bodylk">
+        <div class="container">
+            <div class="row">
+
+                {% block sidebar %}
+                <div class="col-md-3 sidebar">
+                    {% if request.user.is_authenticated %}
+                        <ul>
+                            <li><a href="{% url 'user_profile' %}">Актуальное</a></li>
+                            <li><a href="{% url 'user_profile_main' %}">Профиль</a></li>
+                            <li><a href="{% url 'user_profile_grafik' %}">График работы</a></li>
+                            <li><a href="{% url 'user_profile_consalt' %}">Консультации</a></li>
+                            <li><a href="{% url 'user_profile_recomend' %}">Рекомендации</a></li>
+                            <li><a href="{% url 'user_profile_videos' %}">Видеолекции</a></li>
+                            <li><a href="{% url 'user_profile_settings' %}">Настройки</a></li>
+                        </ul>
+                    {% else %}
+                        <ul>
+                            <li><a href="{% url 'user_profile' %}">Регистрация</a></li>
+                            <li><a href="{% url 'login' %}">Авторизиция</a></li>
+                            <li><a href="{% url 'password_reset' %}">Забыли пароль</a></li>
+                        </ul>
+                    {% endif %}
+                </div>
+                {% endblock %}
+
+                {% block content %}
+                <!-- default content text (typically empty) -->
+                {% endblock %}
+            </div>
+        </div>
+    </div>
+</body>
+    <script src="{% static 'js/jquery-3.2.1.slim.min.js' %}"></script>
+    <script src="{% static 'js/popper.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'js/jquery.min.js' %}"></script>
+    <script src="{% static 'js/script.js' %}"></script>
+</html>

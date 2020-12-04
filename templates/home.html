@@ -1,0 +1,518 @@
+{% load static %}
+
+<!DOCTYPE html HTML PUBLIC "-//W3C//DTD HTML 4.01//EN">
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Panaceia</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}" >
+</head>
+
+<body>
+    <header>
+        <div class="container">
+            <div class="row">
+                <div class="col-sm">
+                    <a href="{% url 'home' %}" class="logo-header"><img src="{% static 'img/logo.png' %}" alt=""></a>
+                </div>
+                <div class="col-sm">
+                    <div class="text-people"><b>2 300 000</b> пациентов
+                    </div>
+                </div>
+                <div class="col-sm header-info">
+                    <div class="text-header"><span>Нужна помощь?</span> Звоните
+                    </div>
+                    <div class="phone-header">8-800-000-0000
+                    </div>
+                    <div class="select-city">
+                        <select>
+                            <option>Казань</option>
+                            <option>Москва</option>
+                            <option>Санкт-Питербург</option>
+                        </select>
+                        <a href="{% url 'login' %}">Личный кабинет</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+    </header>
+
+    {% block content %}
+
+    <div class="offer-block">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm">
+                    <div class="text-offer">
+                        Найти нужно видео
+                    </div>
+                    <div class="form-video">
+                        <form class="search-form">
+                            <p class="search-video">
+                                <input type="text" name="search-video" value="Психосоматика" />
+                            </p>
+                            <p class="found">
+                                <input type="submit" value="Найти" />
+                            </p>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="advantage">
+        <div class="container">
+            <div class="row">
+                <div class="advantage-title">
+                    Что можно вместе с Panaceia?
+                </div>
+            </div>
+            <div class="row adventage-block">
+                <div class="col-sm">
+                    <div class="row">
+                        <div class="col-3">
+                            <div class="advantage-blok-1">
+                                <img src="{% static 'img/doctor.png' %}" alt="">
+                            </div>
+                        </div>
+                        <div class="col-9">
+                            <div class="adventage-text">
+                                <a href="#">Часто задаваймые <span>вопросы</span></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm">
+                    <div class="row">
+                        <div class="col-3">
+                            <div class="advantage-blok-2">
+                                <img src="{% static 'img/video.png' %}" alt="">
+                            </div>
+                        </div>
+                        <div class="col-9">
+                            <div class="adventage-text">
+                                <a href="collectionvideo.html">Посмотреть <span>видео</span></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm">
+                    <div class="row">
+                        <div class="col-3">
+                            <div class="advantage-blok-3">
+                                <img src="{% static 'img/heart.png' %}" alt="">
+                            </div>
+                        </div>
+                        <div class="col-9">
+                            <div class="adventage-text">
+                                <a href="#">
+                                Записаться <span>на лабораторную диагностику</span></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row adventage-block">
+                <div class="col-sm">
+                    <div class="row">
+                        <div class="col-3">
+                            <div class="advantage-blok-4">
+                                <img src="{% static 'img/bookinfo.png' %}" alt="">
+                            </div>
+                        </div>
+                        <div class="col-9">
+                            <div class="adventage-text">
+                                <a href="#">Часто задаваймые <span>вопросы</span></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm">
+                    <div class="row">
+                        <div class="col-3">
+                            <div class="advantage-blok-5">
+                                <img src="{% static 'img/mobile.png' %}" alt="">
+                            </div>
+                        </div>
+                        <div class="col-9">
+                            <div class="adventage-text"><a href="#">
+              Посмотреть <span>видео</span></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm">
+                    <div class="row">
+                        <div class="col-3">
+                            <div class="advantage-blok-6">
+                                <img src="{% static 'img/gnm.png' %}" alt="">
+                            </div>
+                        </div>
+                        <div class="col-9">
+                            <div class="adventage-text"><a href="#">
+              Записаться <span>на лабораторную диагностику</span></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="line">
+        </div>
+        <div class="container">
+            <div class="row advantage-offer">
+                <div class="col-sm advantage-offer-text">
+                    Почему пользоваться panaceia так здорово?
+                </div>
+            </div>
+        </div>
+        <div class="container adventage-tab">
+            <div class="row">
+                <div class="col-sm">
+                    <div class="tab">
+                        <button class="tablinks" onmouseover="advantageTab(event, 'Otzivi')">Реальные отзывы</button>
+                        <button class="tablinks" onmouseover="advantageTab(event, 'Zapis')">Запись на удобное время</button>
+                        <button class="tablinks" onmouseover="advantageTab(event, 'Specialist')">Специалисты рядом с Вами</button>
+                    </div>
+                    <div id="Otzivi" class="tabcontent">
+                        <div class="text-tab text-tab-1">
+                            Рейтинг специалиста основан на проверенных отзывах его пациентов
+                        </div>
+                        <div class="text-tab text-tab-2">
+                            Также на основе отзыов формируется рейтинг личных качеств
+                        </div>
+                        <div class="text-tab text-tab-3">
+                            Мы публикуем отзывы о специалисте только от его пациентов, побывавших на приеме
+                        </div>
+                        <div class="center-img">
+                            <img style="vertical-align: middle;" src="{% static 'img/cart_doctor.png' %}" alt="">
+                        </div>
+                    </div>
+                    <div id="Zapis" class="tabcontent">
+                        <div class="text-tab text-tab-1">
+                            Рейтинг специалиста основан на проверенных отзывах его пациентов
+                        </div>
+                        <div class="text-tab text-tab-2">
+                            Также на основе отзыов формируется рейтинг личных качеств
+                        </div>
+                        <div class="text-tab text-tab-3">
+                            Мы публикуем отзывы о специалисте только от его пациентов, побывавших на приеме
+                        </div>
+                        <div class="center-img">
+                            <img style="vertical-align: middle;" src="{% static 'img/cart_doctor.png' %}" alt="">
+                        </div>
+                    </div>
+                    <div id="Specialist" class="tabcontent">
+                        <div class="text-tab text-tab-1">
+                            Рейтинг специалиста основан на проверенных отзывах его пациентов
+                        </div>
+                        <div class="text-tab text-tab-2">
+                            Также на основе отзыов формируется рейтинг личных качеств
+                        </div>
+                        <div class="text-tab text-tab-3">
+                            Мы публикуем отзывы о специалисте только от его пациентов, побывавших на приеме
+                        </div>
+                        <div class="center-img">
+                            <img src="{% static 'img/cart_doctor.png' %}" alt="">
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="counters">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm counters-1">
+                    <div class="counter-coin">
+                        122 333
+                    </div>
+                    <div class="counter-text">
+                        Отзывов о врачах от их пациентов
+                    </div>
+                </div>
+                <div class="col-sm counters-1">
+                    <div class="counter-coin">
+                        122 333
+                    </div>
+                    <div class="counter-text">
+                        Отзывов о врачах от их пациентов
+                    </div>
+                </div>
+                <div class="col-sm counters-1">
+                    <div class="counter-coin">
+                        122 333
+                    </div>
+                    <div class="counter-text">
+                        Отзывов о врачах от их пациентов
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="mobile-app">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm">
+                    <div class="mobile-mini">
+                        <img src="{% static 'img/mobile-mini.png' %}" alt="">
+                    </div>
+                    <div class="mobile-big">
+                        <img src="{% static 'img/mobile-big.png' %}" alt="">
+                    </div>
+                </div>
+                <div class="col-sm">
+                    <h4>Проверенные специалисты у Вас в телефоне</h4>
+                    <ul>
+                        <li>Легко найти специалиста неподалёку от вас</li>
+                        <li>Удобное приложение, всегда под рукой </li>
+                        <li>Записывайтесь к специалисту в одно касание</li>
+                    </ul>
+                    <span>Отправить вам ссылку?</span>
+                    <div class="form-load">
+                        <form class="load">
+                            <p class="mobile">
+                                <input type="text" name="mobile" value="+7 ХХХ ХХХ ХХ ХХ" />
+                            </p>
+                            <p class="send">
+                                <input type="submit" value="Получить" />
+                            </p>
+                        </form>
+                        <div class="submit-store">
+                            <img src="{% static 'img/apple.png' %}" alt=""><img src="{% static 'img/googlepay.png' %}" alt="">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="offer-2">
+        <div class="container">
+            <div class="row">
+                <div class="col-9">
+                    <h4>Поделитесь своей проблемой по здоровью, потратив 11 минут.</h4>
+                    <p>Мы покажем вам оптимальный выход из неё. Вы сэкономите часы, месяцы, годы на поиск специалиста.</p>
+                </div>
+                <div class="col-3">
+                    <button>Консультация</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="questions">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm">
+                    <div class="line">
+                    </div>
+                    <div class="questions-title">
+                        <h4>Наши ответы на часто задаваемые вопросы</h4>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-5">
+                    <img src="{% static 'img/doctor-image.png' %}" alt="">
+                </div>
+                <div class="col-7">
+                    <div class="accordion" id="accordionExample">
+                        <div class="card">
+                            <div class="card-header" id="headingOne">
+                                <h2 class="mb-0">
+                                    <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+         Записываться на Panaceia дороже, чем в клинике?
+       </button>
+                                </h2>
+                            </div>
+
+                            <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
+                                <div class="card-body">
+                                    Нет, цены на Panaceia не отличаются от цен в клиниках. Более того, во многие клиники записаться через Panaceia даже дешевле, чем по телефону медицинского центра. Максимальная скидка до 50%!
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header" id="headingTwo">
+                                <h2 class="mb-0">
+                                    <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+         Как записаться на прием?
+       </button>
+                                </h2>
+                            </div>
+                            <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
+                                <div class="card-body">
+                                    Описание как записаться
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header" id="headingThree">
+                                <h2 class="mb-0">
+                                    <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+         Сколько стоят услуги сервиса Panaceia
+       </button>
+                                </h2>
+                            </div>
+                            <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
+                                <div class="card-body">
+                                    Цены и тарифы
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header" id="headingFour">
+                                <h2 class="mb-0">
+                                    <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+         Как оплачивается прием у специалиста?
+       </button>
+                                </h2>
+                            </div>
+                            <div id="collapseFour" class="collapse" aria-labelledby="headingFour" data-parent="#accordionExample">
+                                <div class="card-body">
+                                    Оплата на сервисе
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header" id="headingFive">
+                                <h2 class="mb-0">
+                                    <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
+         Panaceia - это клиника?
+       </button>
+                                </h2>
+                            </div>
+                            <div id="collapseFive" class="collapse" aria-labelledby="headingFive" data-parent="#accordionExample">
+                                <div class="card-body">
+                                    Описание сервиса
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="line">
+            </div>
+            <div class="articles">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-sm">
+                            <h4>Полезные статьи</h4>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-4">
+                            <div class="image-article">
+                                <img src="{% static 'img/article.png' %}" alt="">
+                                <div class="date-articles">
+                                    22.02.2020
+                                </div>
+                                <h5>Топ-5 секретов обязательного медицинского страхования</h5>
+                                <h6>Многие россияне уверены, что лечиться за деньги в нашей стране гораздо приятнее и надежнее.</h6>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="image-article">
+                                <img src="{% static 'img/article.png' %}" alt="">
+                                <div class="date-articles">
+                                    22.02.2020
+                                </div>
+                                <h5>Топ-5 секретов обязательного медицинского страхования</h5>
+                                <h6>Многие россияне уверены, что лечиться за деньги в нашей стране гораздо приятнее и надежнее.</h6>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="image-article">
+                                <img src="{% static 'img/article.png' %}" alt="">
+                                <div class="date-articles">
+                                    22.02.2020
+                                </div>
+                                <h5>Топ-5 секретов обязательного медицинского страхования</h5>
+                                <h6>Многие россияне уверены, что лечиться за деньги в нашей стране гораздо приятнее и надежнее.</h6>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% endblock %}
+
+    <footer>
+        <div class="line-footer">
+        </div>
+        <div class="footer-block">
+            <div class="container">
+                <div class="row">
+                    <div class="col-4">
+                        <img src="{% static 'img/logo.png' %}" alt="">
+                        <p>Пишите нам: <a href="#">info@panaceia.ru</a> <br>Звоните нам: <a href="#">8 (499) 116 81 78</a> <br>© Panaceia 2012-2020</p>
+                    </div>
+                    <div class="col-2">
+                        <h5>Сервис</h5>
+                        <ul>
+                            <li>О нас</li>
+                            <li>Контакты</li>
+                            <li>F.A.Q</li>
+                            <li>Отзывы о Panaceia</li>
+                            <li>Соглашение</li>
+                            <li>Моб. приложение</li>
+                        </ul>
+                    </div>
+                    <div class="col-2">
+                        <h5>Клиенту</h5>
+                        <ul>
+                            <li>Специалисты</li>
+                            <li>Диогностика</li>
+                            <li>Блог</li>
+                            <li>Видеоблог</li>
+                            <li>Конфедициальность</li>
+                            <li>Согласие на обработку персональных данных</li>
+                        </ul>
+                    </div>
+                    <div class="col-2">
+                        <h5>Специалисту</h5>
+                        <ul>
+                            <li>Личный кабинет</li>
+                            <li>Регистрация</li>
+                        </ul>
+                    </div>
+                    <div class="col-2">
+                        <h5>Соц. сети</h5>
+                        <a href="#"><img src="{% static 'img/vk.png' %}" alt=""></a>
+                        <a href="#"><img src="{% static 'img/fb.png' %}" alt=""></a>
+                        <a href="#"><img src="{% static 'img/ytube.png' %}" alt=""></a>
+                        <a href="#"><img src="{% static 'img/insta.png' %}" alt=""> </a>
+                    </div>
+                </div>
+            </div>
+            <div class="line-footer">
+            </div>
+            <div class="footer-info">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-8">
+                            <p>Информация, представленная на сайте, не может быть использована для постановки диагноза, назначения лечения и не заменяет прием врача.</p>
+                        </div>
+                        <div class="col-4" style="text-align:right">
+                            <p>ООО «Panaceia» <br>ОГРН 0000000000</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!--Тут скрипты-->
+    <script src="{% static 'js/jquery-3.2.1.slim.min.js' %}"></script>
+    <script src="{% static 'js/popper.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'js/jquery.min.js' %}"></script>
+    <script src="{% static 'js/script.js' %}"></script>
+</body>
+
+</html>

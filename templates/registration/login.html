@@ -1,0 +1,36 @@
+{% extends "home.html" %}
+{% load static %}
+
+{% block content %}
+
+{% if form.errors %}
+  <p>Ошибка авторизации.</p>
+{% endif %}
+
+<div class="offer-block reg-page">
+    <div class="container">
+        <form method="post" action="{% url 'login' %}" class="row">
+            <div class="col-12">
+                <h3>Войти</h3>
+            </div>
+            {% csrf_token %}
+            <div class="col-12">
+                <input type="text" name="username" autofocus="" autocapitalize="none" autocomplete="username" maxlength="150" required="" id="id_username" placeholder="Введите Ваш Логин">
+                <input type="password" name="password" autocomplete="current-password" required="" id="id_password" placeholder="Введите Ваш Пароль">
+            </div>
+            <div class="col-12 submit-login">
+              <input type="submit" value="Войти" />
+              <input type="hidden" name="next" value="{{ next }}" />
+            </div>
+            <div class="col-12">
+             <h4>Авторизоваться с помощью аккаунта Google <a href=""><img src="{% static 'img/google.png' %}" alt=""></a></h4>
+            </div>
+
+            <div class="col-12 botton-reg">
+                <a href="{% url 'registration' %}">Зарегистрироваться</a><a href="{% url 'password_reset' %}">Забыли пароль?</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% endblock %}

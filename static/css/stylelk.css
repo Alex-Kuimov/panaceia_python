@@ -1,0 +1,345 @@
+@font-face {
+    font-family: 'Museo Cyrl';
+    src: local('fonts/Museo Cyrl 500'), local('fonts/MuseoCyrl-500'), url('fonts/Museocyrl500.woff2') format('woff2'), url('fonts/Museocyrl500.woff') format('woff'), url('fonts/Museocyrl500.ttf') format('truetype');
+    font-weight: 500;
+    font-style: normal;
+}
+a, abbr, acronym, address, applet, article, aside, audio, b, big, blockquote, body, canvas, caption, center, cite, code, dd, del, details, dfn, div, dl, dt, em, embed, fieldset, figcaption, figure, footer, form, h1, h2, h3, h4, h5, h6, header, hgroup, html, i, iframe, img, ins, kbd, label, legend, li, mark, menu, nav, object, ol, output, p, pre, q, ruby, s, samp, section, small, span, strike, strong, sub, summary, sup, table, tbody, td, tfoot, th, thead, time, tr, tt, u, ul, var, video {
+  font-family: 'Museo Cyrl';
+}
+a {
+    color: #1D9D73!important;
+    text-decoration: none;
+    background-color: transparent;
+    -webkit-text-decoration-skip: objects;
+}
+header{
+  height: 70px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.02);
+}
+.logo-header img{
+margin-top:15px;
+height: 40px;
+}
+.botton-header{
+  line-height: 70px;
+}
+.botton-header a{
+  padding-right: 40px;
+  font-size: 15px;
+  line-height: 70px;
+  color: #18384C;
+}
+.name-person{
+  line-height: 70px;
+}
+.name-person a img {
+    width: 22px;
+    margin: 4px 5px;
+}
+.bodylk{
+   background:#F4F8F9;
+   padding-top: 20px;
+}
+.col-md-3.sidebar {
+    min-height: calc(100vh);
+    background: #fff;
+}
+.sidebar ul {
+  list-style-type: none;
+  padding-top:10px;
+}
+.sidebar ul li{
+    padding-top:10px;
+}
+.col-md-12.search-lk {
+    padding:12px;
+    background:#fff;
+    border-radius:5px;
+    box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.02);
+}
+
+.search-lk input[type="text"] {
+    width: 100%;
+    background: #F4F8F9;
+    border: 1px solid #D0E3E8;
+    box-sizing: border-box;
+    border-radius: 4px;
+    padding: 16px 20px;
+    font-size: 14px;
+    color: #ABABAB;
+}
+.block-lk {
+    margin-top:20px;
+}
+.block-info {
+    background: #fff;
+    border: solid 3px #f4f8f9;
+    border-radius: 5px;
+    box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.02);
+}
+.line {
+    height: 1px;
+    background:#d0e3e8;
+    border:5px;
+}
+.block-info h4{
+    padding:24px 10px;
+font-style: normal;
+font-weight: 600;
+font-size: 16px;
+line-height: 16px;
+color: #18384C;
+}
+.block-info h5{padding-top: 15px;font-style: normal;font-weight: 200;font-size: 14px;line-height: 20px;color: #18384C;margin: 0px;}
+.block-info p{padding: 24px 10px 0px;font-style: normal;font-weight: 200;font-size: 16px;line-height: 16px;color: #18384C;}
+.block-info img{
+    width: 60px;
+    height: 60px;
+    border-radius:50px;
+    margin-bottom: 30px;
+}
+.col-md-7.tab-line li{
+    display: inline-flex;
+    margin-left:10px;
+    line-height:60px;
+}
+.nav-tabs {
+    border-bottom: none!important;
+}
+.central{
+  margin: auto;
+  text-align: center;
+}
+.central img {
+    border-radius: 0px;
+    margin-bottom: 0px;
+    width: auto;
+    height: auto;
+    margin-top: 20px;
+}
+.col-md-3.central.avatar {
+    margin: 0px auto;
+}
+.avatar a{
+    line-height:30px;
+}
+.col-md-3.central.avatar img{
+    border-radius:100px;
+    width:125px;
+    height:125px;
+}
+.block-info input[type="text"] {
+    width: 100%;
+    background: #F4F8F9;
+    border: 1px solid #D0E3E8;
+    box-sizing: border-box;
+    border-radius: 4px;
+    padding: 16px 20px;
+    font-size: 14px;
+    color: #ABABAB;
+    margin:10px 0px;
+}
+.block-info select {
+    width: 100%;
+    background: #F4F8F9;
+    border: 1px solid #D0E3E8;
+    box-sizing: border-box;
+    border-radius: 4px;
+    padding: 16px 20px;
+    font-size: 14px;
+    color: #ABABAB;
+    margin-bottom:10px
+}
+.sex-input {
+    display: flex;
+}
+.sex-input input[type=radio] {border: 1px solid #D0E3E8!important;box-sizing: border-box;border-radius: 4px;background-color: #F4F8F9!important;width: 22px;height: 22px;}
+.sex-input p{
+    padding:10px 20px;
+    line-height: 30px;
+}
+.block-info button {
+width: 240px;
+height: 50px;
+background: #36A672;
+border-radius: 6px;
+color:white;
+border:#36A672;
+margin:20px 0px 20px 0px;
+}
+.col-md-6.tab-line {text-align: right;line-height: 60px;}
+.col-md-6.tab-line a{margin-right:10px;font-size: 14px;
+line-height: 16px;}
+p.info {
+    padding: 0px;
+    font-size: 14px;
+    line-height: 20px;
+    margin-top: 10px;
+    margin-bottom: 0px;
+}
+.col-md-6.info-specialist {
+    margin-bottom: 20px;
+    margin-top:20px;
+}
+.col-md-6.info-specialist img{
+    width:100px;
+    height:100px;
+}
+.col-md-6.info-specialist h5{
+    padding-top:0px;
+}
+.block-form textarea {
+    width:100%;
+    background: #F4F8F9;
+    border: 1px solid #D0E3E8;
+    box-sizing: border-box;
+    border-radius: 4px;
+    margin-top:30px;
+    padding: 10px;
+    margin-bottom:20px;
+    color: #b0b0b0;
+}
+.block-form a img{
+    width: auto;
+    height: auto;
+    border-radius:0px;
+    margin-bottom: 0px;
+}
+.tabs-content {
+    width:960px;
+    height:300px;
+    overflow:hidden;
+}
+.tabs-content ul {
+    list-style: none;
+    /* Эти 3 линии для Opera */
+    height: 320px;
+    overflow: scroll;
+    overflow-y: hidden;
+}
+.tabs-content ul li {
+    width:960px;
+    height:300px;
+}
+.checkbox-block img{
+  width: 20px;
+height: 20px;
+border-radius: 50px;
+margin-bottom: 0px;
+}
+
+.checkbox-block input[type=checkbox]{
+  width: 20px;
+height: 20px;
+background: #F4F8F9;
+border: 1px solid #D0E3E8;
+box-sizing: border-box;
+border-radius: 4px;
+}
+.checkbox-block input[type=checkbox]:checked{
+  background: #1D9D73;!important
+}
+.doc-specialist{
+  background: #FFFFFF;
+border: 1px solid #D0E3E8;
+box-sizing: border-box;
+border-radius: 4px;
+}
+.doc-specialist img{
+  width: 60px;
+  height: 60px;
+  border-radius: 2px;
+  margin: 10px 10px;
+  text-align: center;
+}
+.youtube-block {
+    padding-top: 15px;
+}
+.youtube-block img{
+    width:100%;
+    border-radius:0px;
+    height:auto;
+}
+.youtube-block p{
+    padding: 0px;
+    font-style: normal;
+    font-weight: 200;
+    font-size: 16px;
+    line-height: 16px;
+    color: #18384C;
+}
+
+/* Таблица календарика */
+.calendar {
+ font-size:14px;
+}
+/* Заголовок */
+.calendar th {
+  width: 117px;
+  height: 48px;
+  left: 705px;
+  top: 228px;
+  background: #F4F8F9;
+  border: 1px solid #D0E3E8;
+  box-sizing: border-box;
+  text-align:center;   
+}
+/* Ячейка дня */
+.calendar td {
+ width: 118px;
+height: 100px;
+left: 821px;
+top: 275px;
+
+background: #FFFFFF;
+border: 1px solid #D0E3E8;
+box-sizing: border-box;
+text-align:center;
+}
+/* Затемненный день */
+.calendar td.grayed {
+  background: #F0F0F0;
+  cursor: auto !important;
+}
+/* Выбранный день */
+.calendar td.selected {
+  background: #BCE6D8;
+border: 1px solid #D0E3E8;
+box-sizing: border-box;
+}
+/* Кнопки навигации */
+.calendar td.navigation {
+font-weight: 600;
+font-size: 24px;
+line-height: 24px;
+color: #18384C;        
+}
+div#calendar_table {
+    margin-top: 10px;
+}
+.exit {
+   position: absolute;
+   bottom: 10px;
+   left: 50%;
+   margin-left: -104.5px;
+   width: 210px;
+   height: 48px;
+   border: 1px solid #6D828F;
+   box-sizing: border-box;
+   border-radius: 4px;
+   text-align:center;
+   line-height:48px;
+   display:flex;
+   justify-content: space-around;
+}
+.exit a{
+color: #768A96!important;
+}
+.exit a:hover{
+color: #1D9D73!important;
+text-decoration:none;
+}
+
+
+

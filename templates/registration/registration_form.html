@@ -1,0 +1,42 @@
+{% extends "home.html" %}
+{% load static %}
+
+{% block content %}
+
+<!-- <h1>Регистрация1</h1>
+<form method="post">
+    {% csrf_token %}
+    {{form.as_p}}
+    <input type="submit" value="Sign up">
+</form>
+-->
+
+<div class="offer-block reg-page">
+    <div class="container">
+        <div class="row">
+         <div class="col-12">
+             <h3>Зарегистрироваться</h3>
+             <form method="post">
+                 {% csrf_token %}
+                 <input type="text" name="username" placeholder="Введите логин">
+                 <input type="text" name="email" placeholder="Введите E-mail">
+                 <input type="text" name="first_name" placeholder="Введите ФИО">
+                 <select name="usertype" id="usertype">
+                    <option value="doctor">Доктор</option>
+                    <option value="patient">Пациент</option>
+                </select>
+                 <input type="password" name="password1" placeholder="Введите Пароль">
+                 <input type="password" name="password2" placeholder="Повторите Пароль">
+                 <div class="col-12 submit-login">
+                  <input type="submit" value="Зарегистрироваться">
+                 </div>
+             </form>
+             <div class="col-12">
+              <h4>Зарегистрироваться с помощью аккаунта Google <a href=""><img src="{% static 'img/google.png' %}" alt=""></a></h4>
+             </div>
+         </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

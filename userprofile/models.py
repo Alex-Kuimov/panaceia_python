@@ -6,14 +6,10 @@ from django.dispatch import receiver
 class UserMain(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
 
-    USERTYPES = [('doctor', 'Доктор'),
-               ('patient', 'Пациент')]
-
     GENDER = [('male', 'Мужской'),
                ('female', 'Женский')]
 
     gender = models.CharField(default=False, max_length=11, choices=GENDER, verbose_name='Пол')
-    usertype = models.CharField(default=False, max_length=11, choices=USERTYPES, verbose_name='Тип')
     avatar = models.ImageField(blank=False, upload_to='images/users', verbose_name='Изображение')
 
     fio = models.CharField(default=False, max_length=100, verbose_name='ФИО')

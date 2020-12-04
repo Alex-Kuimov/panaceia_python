@@ -60,8 +60,7 @@ def save_main_data(request):
 
     return HttpResponseRedirect(reverse('user_profile_main'))
 
-def signup_view(request):
-    context = {}
+def signup_user_view(request):
     form = SignUpForm(request.POST)
     if request.method == "POST":
         if form.is_valid():
@@ -72,8 +71,22 @@ def signup_view(request):
             user_group = Group.objects.get(name='users')
             user_group.user_set.add(signup_user)
             return render(request, 'registration/login.html')
-    context['form'] = form
-    return render(request, 'registration/registration_form.html',context)
+
+    return render(request, 'registration/registration_user_form.html', {'form': form})
+
+def signup_doctor_view(request):
+    form = SignUpForm(request.POST)
+    if request.method == "POST":
+        if form.is_valid():
+            form.save()
+            username = form.cleaned_data.get('username')
+            signup_user = User.objects.get(username=username)
+            signup_user.active = True
+            user_group = Group.objects.get(name='doctors')
+            user_group.user_set.add(signup_user)
+            return render(request, 'registration/login.html')
+
+    return render(request, 'registration/registration_doctor_form.html', {'form': form})
 
 
 def login_view(request):

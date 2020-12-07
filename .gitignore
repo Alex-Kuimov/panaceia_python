@@ -1,0 +1,4 @@
+manage.py
+db.sqlite3
+/media/
+/medicsite/settings.py

@@ -23,7 +23,7 @@
                 <div class="col-4 header-info">
                     {% if request.user.is_authenticated %}
                         <div class="name-person">
-                            {{user_profile.fio}} <img style="width:32px; height: 32px; padding:5px auto; object-fit: cover; border-radius:100px;" src="/{{user_profile.avatar}}" alt="">
+                            {{user_profile.fio}} <img style="width:32px; height: 32px; padding:5px auto; object-fit: cover; border-radius:100px;" src="/media/{{user_profile.avatar}}" alt="">
                             <a href="{% url 'logout' %}"><img src="{% static 'img/logout.png' %}" alt=""></a>
                         </div>
                     {% else %}

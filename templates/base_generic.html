@@ -39,7 +39,8 @@
 
                 {% block sidebar %}
                 <div class="col-md-3 sidebar">
-                    {% if request.user.is_authenticated %}
+
+                    {% if user.groups.all.0.name == "doctors" %}
                         <ul>
                             <li><a href="{% url 'user_profile' %}">Актуальное</a></li>
                             <li><a href="{% url 'user_profile_main' %}">Профиль</a></li>
@@ -47,15 +48,25 @@
                             <li><a href="{% url 'user_profile_consalt' %}">Консультации</a></li>
                             <li><a href="{% url 'user_profile_recomend' %}">Рекомендации</a></li>
                             <li><a href="{% url 'user_profile_videos' %}">Видеолекции</a></li>
+                            <li><a href="">Статьи</a></li>
+                            <li><a href="">Сообщения</a></li>
                             <li><a href="{% url 'user_profile_settings' %}">Настройки</a></li>
                         </ul>
-                    {% else %}
+                    {% endif %}
+
+                    {% if user.groups.all.0.name == "users" %}
                         <ul>
-                            <li><a href="{% url 'user_profile' %}">Регистрация</a></li>
-                            <li><a href="{% url 'login' %}">Авторизиция</a></li>
-                            <li><a href="{% url 'password_reset' %}">Забыли пароль</a></li>
+                            <li><a href="{% url 'user_profile' %}">Актуальное</a></li>
+                            <li><a href="{% url 'user_profile_main' %}">Профиль</a></li>
+                            <li><a href="{% url 'user_profile_consalt' %}">Консультации</a></li>
+                            <li><a href="{% url 'user_profile_recomend' %}">Рекомендации</a></li>
+                            <li><a href="{% url 'user_profile_videos' %}">Видеолекции</a></li>
+                            <li><a href="">Статьи</a></li>
+                            <li><a href="">Сообщения</a></li>
+                            <li><a href="{% url 'user_profile_settings' %}">Настройки</a></li>
                         </ul>
                     {% endif %}
+
                 </div>
                 {% endblock %}
 

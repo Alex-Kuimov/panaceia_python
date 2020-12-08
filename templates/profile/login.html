@@ -4,8 +4,16 @@
 {% block content %}
 
 {% if form.errors %}
-  <p>Ошибка авторизации.</p>
+    {% for key, value in form.errors.items %}
+        <div class="error-wrap">
+           {{ value }}
+        </div>
+    {% endfor %}
 {% endif %}
+
+<div class="ok-wrap">
+    <p>{{msg}}</p>
+</div>
 
 <div class="offer-block reg-page">
     <div class="container">

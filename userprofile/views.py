@@ -20,12 +20,17 @@ def user_main(request):
 def profile_page_view(request):
     if request.user.is_authenticated:
         user_profile = UserMain.objects.get(user=request.user)
+        #user_doctor = UserDoctor.objects.get(user=request.user)
+        user_doctor = ''
 
         if request.path == '/profile/info/':
             return render(request, 'profile/profile.html', {'user_profile': user_profile})
 
         if request.path == '/profile/main/':
             return render(request, 'profile/profile_main.html', {'user_profile': user_profile})
+
+        if request.path == '/profile/doctor/':
+            return render(request, 'profile/profile_doctor.html', {'user_doctor': user_doctor, 'user_profile': user_profile})
 
         if request.path == '/profile/recomend/':
             return render(request, 'profile/recomend.html', {'user_profile': user_profile})
@@ -49,12 +54,23 @@ def profile_page_view(request):
 def save_main_data(request):
     user_profile = UserMain.objects.get(user=request.user)
     user_profile.fio = request.POST['fio']
+    user_profile.dob = request.POST['dob']
     user_profile.city = request.POST['city']
+    user_profile.gender = request.POST['gender']
+    user_profile.time_zone = request.POST['timezone']
     user_profile.whatsapp = request.POST['whatsapp']
     user_profile.skype = request.POST['skype']
     user_profile.save()
 
     return HttpResponseRedirect(reverse('user_profile_main'))
+
+
+def save_doctor_data(request):
+    user_doctor = UserDoctor.objects.get(user=request.user)
+    user_doctor.specialty = request.POST['specialty']
+    user_doctor.save()
+
+    return HttpResponseRedirect(reverse('user_profile_doctor'))
 
 
 def signup_user_view(request):
@@ -67,12 +83,19 @@ def signup_user_view(request):
             signup_user.active = True
             user_group = Group.objects.get(name='users')
             user_group.user_set.add(signup_user)
-            return render(request, 'profile/login.html')
+
+            user_profile = UserMain.objects.get(user=signup_user)
+            user_profile.fio = request.POST['first_name']
+            user_profile.save()
+
+            return render(request, 'profile/login.html', {'msg': 'Вы успешно зарегестрированы!'})
+        else:
+            return render(request, 'profile/registration_user_form.html', {'form': form})
 
     if request.user.is_authenticated:
         return redirect('user_profile')
     else:
-        return render(request, 'profile/registration_user_form.html', {'form': form})
+        return render(request, 'profile/registration_user_form.html')
 
 
 def signup_doctor_view(request):
@@ -85,15 +108,23 @@ def signup_doctor_view(request):
             signup_user.active = True
             user_group = Group.objects.get(name='doctors')
             user_group.user_set.add(signup_user)
-            return render(request, 'profile/login.html')
+
+            user_profile = UserMain.objects.get(username=username)
+            user_profile.fio = request.POST['first_name']
+            user_profile.save()
+
+            return render(request, 'profile/login.html', {'msg': 'Вы успешно зарегестрированы!'})
+        else:
+            return render(request, 'profile/registration_user_form.html', {'form': form})
 
     if request.user.is_authenticated:
         return redirect('user_profile')
     else:
-        return render(request, 'profile/registration_doctor_form.html', {'form': form})
+        return render(request, 'profile/registration_doctor_form.html')
 
 
 def login_view(request):
+    form = SignUpForm(request.POST)
     if request.method == 'POST':
         form = AuthenticationForm(data=request.POST)
         if form.is_valid():
@@ -105,11 +136,13 @@ def login_view(request):
                 return redirect('user_profile')
             else:
                 return redirect('registration')
+        else:
+            return render(request, 'profile/login.html', {'form': form})
 
     if request.user.is_authenticated:
         return redirect('user_profile')
     else:
-        return render(request, 'profile/login.html')
+        return render(request, 'profile/login.html',)
 
 
 def logout_view(request):

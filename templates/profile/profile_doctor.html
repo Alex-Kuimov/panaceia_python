@@ -1,0 +1,117 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+{% load static %}
+
+<div class="col-md-9 px-4">
+    <div class="row">
+        <div class="col-md-12 block-info">
+
+            <form action="{% url 'save_doctor_data' %}" method="POST" class="row">
+                 <div class="col-md-5">
+                    <h4>Инфомация в моем профиле</h4>
+                 </div>
+
+                {% if user.groups.all.0.name == "doctors" %}
+                    <div class="col-md-7 tab-line">
+                        <ul>
+                            <li><a href="{% url 'user_profile_main' %}">Основная информация</a></li>
+                            <li><a href="{% url 'user_profile_doctor' %}">Профессиональная информация</a></li>
+                        </ul>
+                    </div>
+                {% endif %}
+
+                <div class="col-md-7 checkbox-block">
+                    {% csrf_token %}
+                    <h5>*Общая</h5>
+
+                    {% if user_doctor.doctor != ''%}
+                        <input type="checkbox" name="doctor" value="a1" checked> Я врач <img src="{% static 'img/question.png' %}" alt="Я врач" title="Здесь будет текст информации">
+                    {% else %}
+                        <input type="checkbox" name="doctor" value="a1"> Я врач <img src="{% static 'img/question.png' %}" alt="Я врач" title="Здесь будет текст информации">
+                    {%endif%}
+
+                    <br>
+                    <input type="checkbox" name="option2" value="a2"> Я консультант <img src="{% static 'img/question.png' %}" alt="Я врач" title="Здесь будет текст информации">
+                    <br>
+                    <input type="checkbox" name="option3" value="a3"> Я врач и консультант <img src="{% static 'img/question.png' %}" alt="Я врач" title="Здесь будет текст информации">
+                    <br>
+                    <input type="checkbox" name="option4" value="a4"> Я автор видеолекций <img src="{% static 'img/question.png' %}" alt="Я врач" title="Здесь будет текст информации">
+                    <br>
+                    <br>
+                    <select class="" name="orgtype">
+                        <option value="ur">Юридическое лицо</option>
+                        <option value="fiz">Физическое лицо</option>
+                    </select>
+                    <div class="row">
+                        <div class="col-8">
+                            <input type="text" name="" value="Психосоматика">
+                        </div>
+                        <div class="col-4">
+                            <a href="#">Удалить</a>
+                        </div>
+                    </div>
+                    <a href="#">+ Добавить специализацию</a>
+                    <div class="line"></div>
+                    <h4>Специализация</h4>
+                    <input type="text" name="specialty" value="{{ user_doctor.specialty }}">
+                </div>
+                <div class="col-md-5 documents-block">
+                    <h4>Документы <img src="{% static 'img/question.png' %}" alt="Я врач" title="Здесь будет текст информации"></h4>
+                    <div class="documents-specialist">
+                        <div class="row">
+                            <div class="col-4">
+                                <img src="{% static 'img/foto.png' %}" alt="">
+                            </div>
+                            <div class="col-8">
+                                Диплом о медицинском образовании (для врачей)
+                                <a href="#">Загрузить</a> <a href="#">Удалить</a>
+
+                            </div>
+                        </div>
+                        <div class="line"></div>
+                        <div class="row">
+                            <div class="col-4">
+                                <img src="{% static 'img/foto.png' %}" alt="">
+                            </div>
+                            <div class="col-8">
+                                Диплом о медицинском образовании (для врачей)
+                                <a href="#">Загрузить</a> <a href="#">Удалить</a>
+
+                            </div>
+                        </div>
+                        <div class="line"></div>
+                        <div class="row">
+                            <div class="col-4">
+                                <img src="{% static 'img/foto.png' %}" alt="">
+                            </div>
+                            <div class="col-8">
+                                Диплом о медицинском образовании (для врачей)
+                                <a href="#">Загрузить</a> <a href="#">Удалить</a>
+
+                            </div>
+                        </div>
+                        <div class="line"></div>
+                        <div class="row">
+                            <div class="col-4">
+                                <img src="{% static 'img/foto.png' %}" alt="">
+                            </div>
+                            <div class="col-8">
+                                Диплом о медицинском образовании (для врачей)
+                                <a href="#">Загрузить</a> <a href="#">Удалить</a>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-12">
+                    <button type="submit" name="button">Сохранить изменения</button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

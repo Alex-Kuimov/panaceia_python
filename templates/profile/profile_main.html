@@ -10,34 +10,65 @@
                 <div class="col-md-5">
                     <h4>Инфомация в моем профиле</h4>
                 </div>
-                <div class="col-md-7 tab-line">
-                    <ul>
-                        <li><a href="#">Основная информация</a></li>
-                        <li><a href="#">Профессиональная информация</a></li>
-                    </ul>
-                </div>
+
+                {% if user.groups.all.0.name == "doctors" %}
+                    <div class="col-md-7 tab-line">
+                        <ul>
+                            <li><a href="{% url 'user_profile_main' %}">Основная информация</a></li>
+                            <li><a href="{% url 'user_profile_doctor' %}">Профессиональная информация</a></li>
+                        </ul>
+                    </div>
+                {% endif %}
+
             </div>
             <div class="line"></div>
             <form action="{% url 'save_main_data' %}" method="POST">
                 {% csrf_token %}
                 <div class="row">
                     <div class="col-md-3 central avatar">
-                        <a href="#"> <img src="/media/{{user_profile.avatar}}" alt=""></a>
+
+                        {% if user_profile.avatar != '' %}
+                            <a href="#"> <img src="/media/{{user_profile.avatar}}" alt=""></a>
+                        {% else %}
+                            <a href="#"> <img src="{% static 'img/user.png' %}" alt=""></a>
+                        {% endif %}
+
                         <a href="#">Загрузить</a><br>
                         <a href="#" style="color:#acacac!important;">Удалить</a>
                     </div>
                     <div class="col-md-9">
-                        <input type="text" name="fio" value="{{user_profile.fio}}">
-                        <input type="text" name="" value="Дата рождения (дд.мм.гггг)">
-                        <input type="text" name="city" value="{{user_profile.city}}">
-                        <select class="" name="" value="(UTC +3:00) Москва, Санкт-Петербург, Воронеж, Казань">
-                            <option value="">(UTC +3:00) Москва, Санкт-Петербург, Воронеж, Казань</option>
-                            <option value="">(МСК+3, UTC+7): Республика Алтай, Алтайский край, Новосибирская, Омская, Томская области.</option>
+                        <input type="text" name="fio" value="{{user_profile.fio}}" placeholder="ФИО">
+                        <input type="text" name="dob" value="{{user_profile.dob}}" placeholder="Дата рождения (дд.мм.гггг)">
+                        <input type="text" name="city" value="{{user_profile.city}}" placeholder="Город">
+
+                        <select class="" name="timezone">
+                            {% if user_profile.time_zone != '' %}
+                                <option value="{{user_profile.time_zone}}">{{user_profile.time_zone}}</option>
+                                <option disabled>---</option>
+                            {% endif %}
+                            <option value="(UTC +3) Москва, Санкт-Петербург, Воронеж, Казань">(UTC +3) Москва, Санкт-Петербург, Воронеж, Казань</option>
+                            <option value="(UTC +7): Республика Алтай, Алтайский край, Новосибирская, Омская, Томская области">(UTC +7): Республика Алтай, Алтайский край, Новосибирская, Омская, Томская области</option>
                         </select>
+
                         <div class="sex-input">
                             <p>Пол:</p>
-                            <p> <input type="radio" name="sex_input" value="Мужской"> Мужской</p>
-                            <p><input type="radio" name="sex_input" value="Женский"> Женский</p>
+
+                            {%if user_profile.gender == "Мужской" %}
+                                <p><input type="radio" name="gender" value="Мужской" checked>Мужской</p>
+                            {% else %}
+                                {%if user_profile.gender == "" %}
+                                    <p><input type="radio" name="gender" value="Мужской" checked>Мужской</p>
+                                {% else %}
+                                    <p><input type="radio" name="gender" value="Мужской">Мужской</p>
+                                {% endif %}
+                            {% endif %}
+
+                            {%if user_profile.gender == "Женский" %}
+                                <p><input type="radio" name="gender" value="Женский" checked> Женский</p>
+                            {% else %}
+                                <p><input type="radio" name="gender" value="Женский"> Женский</p>
+                            {% endif %}
+
                         </div>
                     </div>
                 </div>
@@ -48,9 +79,9 @@
                             <div class="col-md-3">
                             </div>
                             <div class="col-md-9">
-                                <input type="text" name="email" value="{{user.email}}">
-                                <input type="text" name="skype" value="{{user_profile.skype}}">
-                                <input type="text" name="whatsapp" value="{{user_profile.whatsapp}}">
+                                <input type="text" name="email" value="{{user.email}}" placeholder="E-mail">
+                                <input type="text" name="skype" value="{{user_profile.skype}}" placeholder="Skype">
+                                <input type="text" name="whatsapp" value="{{user_profile.whatsapp}}" placeholder="Whatsapp">
                                 <button type="submit" name="button">Сохранить изменения</button>
                             </div>
                         </div>

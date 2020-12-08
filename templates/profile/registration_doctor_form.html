@@ -3,13 +3,13 @@
 
 {% block content %}
 
-<!-- <h1>Регистрация1</h1>
-<form method="post">
-    {% csrf_token %}
-    {{form.as_p}}
-    <input type="submit" value="Sign up">
-</form>
--->
+{% if form.errors %}
+    {% for key, value in form.errors.items %}
+        <div class="error-wrap">
+            {{ value }}
+        </div>
+    {% endfor %}
+{% endif %}
 
 <div class="offer-block reg-page">
     <div class="container">

@@ -9,13 +9,18 @@ class UserMain(models.Model):
     GENDER = [('male', 'Мужской'),
                ('female', 'Женский')]
 
-    gender = models.CharField(default=False, max_length=11, choices=GENDER, verbose_name='Пол')
-    avatar = models.ImageField(blank=False, upload_to='images/users', verbose_name='Изображение')
+    TIMEZONE = [('(UTC +3) Москва, Санкт-Петербург, Воронеж, Казань', '(UTC +3) Москва, Санкт-Петербург, Воронеж, Казань'),
+                ('(UTC +7): Республика Алтай, Алтайский край, Новосибирская, Омская, Томская области', '(UTC +7): Республика Алтай, Алтайский край, Новосибирская, Омская, Томская области')]
 
-    fio = models.CharField(default=False, max_length=100, verbose_name='ФИО')
-    city = models.CharField(default=False, max_length=100, verbose_name='Город')
-    whatsapp = models.CharField(default=False, max_length=100, verbose_name='WhatsApp')
-    skype = models.CharField(default=False, max_length=100, verbose_name='Skype')
+    gender = models.CharField(blank=True,  max_length=11, choices=GENDER, verbose_name='Пол')
+    avatar = models.ImageField(blank=True, upload_to='images/users', verbose_name='Изображение')
+
+    fio = models.CharField(blank=True, max_length=100, verbose_name='ФИО')
+    dob = models.CharField(blank=True, max_length=100, verbose_name='Дата рождения')
+    city = models.CharField(blank=True, max_length=100, verbose_name='Город')
+    time_zone = models.CharField(blank=True, max_length=150, choices=TIMEZONE, verbose_name='Временная зона')
+    whatsapp = models.CharField(blank=True, max_length=100, verbose_name='WhatsApp')
+    skype = models.CharField(blank=True, max_length=100, verbose_name='Skype')
 
     def __unicode__(self):
         return self.user
@@ -31,14 +36,14 @@ class UserDoctor(models.Model):
     ORGTYPES = [('ur', 'Юридическое лицо'),
                ('fiz', 'Физическое лицо')]
 
-    doctor = models.BooleanField(default=False, verbose_name='Я врач')
-    consultant = models.BooleanField(default=False, verbose_name='Я консультант')
-    fullDoctor = models.BooleanField(default=False, verbose_name='Я врач и консультант')
-    author = models.BooleanField(default=False, verbose_name='Я автор видеолекций')
-    orgtype = models.CharField(default=False, max_length=11, choices=ORGTYPES, verbose_name='Тип организации')
-    specialty = models.CharField(default=False, max_length=100, verbose_name='Специализация')
-    patientGrown = models.BooleanField(default=False, verbose_name='Взрослые')
-    patientChildren = models.BooleanField(default=False, verbose_name='Дети')
+    doctor = models.BooleanField(blank=True, verbose_name='Я врач')
+    consultant = models.BooleanField(blank=True, verbose_name='Я консультант')
+    fullDoctor = models.BooleanField(blank=True, verbose_name='Я врач и консультант')
+    author = models.BooleanField(blank=True, verbose_name='Я автор видеолекций')
+    orgtype = models.CharField(blank=True, max_length=11, choices=ORGTYPES, verbose_name='Тип организации')
+    specialty = models.CharField(blank=True, max_length=100, verbose_name='Специализация')
+    patientGrown = models.BooleanField(blank=True, verbose_name='Взрослые')
+    patientChildren = models.BooleanField(blank=True, verbose_name='Дети')
 
     def __unicode__(self):
         return self.user
@@ -71,3 +76,4 @@ class Specialty(models.Model):
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
         UserMain.objects.create(user=instance)
+        #UserDoctor.objects.create(user=instance)

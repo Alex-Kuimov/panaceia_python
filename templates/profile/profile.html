@@ -12,6 +12,13 @@
     <div class="row block-lk">
         <div class="col-md-12">
             <div class="row">
+                <div class="col-md-12 block-info">
+                    {% if user_profile.fio == '' or user_profile.city == '' or user_profile.dob == ''%}
+                        <div class="error-wrap">
+                            <p>Заполните свой <a href="{% url 'user_profile_main' %}">профиль!</a></p>
+                        </div>
+                    {% endif %}
+                </div>
                 <div class="col-md-6 block-info">
                     <h4>Добро пожаловать!</h4>
                     <div class="line"></div>

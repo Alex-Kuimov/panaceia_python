@@ -6,11 +6,13 @@ from django.dispatch import receiver
 class UserMain(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
 
+    test = 'test'
+
     GENDER = [('male', 'Мужской'),
                ('female', 'Женский')]
 
-    TIMEZONE = [('(UTC +3) Москва, Санкт-Петербург, Воронеж, Казань', '(UTC +3) Москва, Санкт-Петербург, Воронеж, Казань'),
-                ('(UTC +7): Республика Алтай, Алтайский край, Новосибирская, Омская, Томская области', '(UTC +7): Республика Алтай, Алтайский край, Новосибирская, Омская, Томская области')]
+    TIMEZONE = [('UTC +3', '(UTC +3) Москва, Санкт-Петербург, Воронеж, Казань'),
+                ('UTC +7', '(UTC +7): Республика Алтай, Алтайский край, Новосибирская, Омская, Томская области')]
 
     gender = models.CharField(blank=True,  max_length=11, choices=GENDER, verbose_name='Пол')
     avatar = models.ImageField(blank=True, upload_to='images/users', verbose_name='Изображение')
@@ -36,14 +38,14 @@ class UserDoctor(models.Model):
     ORGTYPES = [('ur', 'Юридическое лицо'),
                ('fiz', 'Физическое лицо')]
 
-    doctor = models.BooleanField(blank=True, verbose_name='Я врач')
-    consultant = models.BooleanField(blank=True, verbose_name='Я консультант')
-    fullDoctor = models.BooleanField(blank=True, verbose_name='Я врач и консультант')
-    author = models.BooleanField(blank=True, verbose_name='Я автор видеолекций')
-    orgtype = models.CharField(blank=True, max_length=11, choices=ORGTYPES, verbose_name='Тип организации')
+    doctor = models.BooleanField(blank=True, null=True, verbose_name='Я врач')
+    consultant = models.BooleanField(blank=True, null=True, verbose_name='Я консультант')
+    fullDoctor = models.BooleanField(blank=True, null=True, verbose_name='Я врач и консультант')
+    author = models.BooleanField(blank=True, null=True, verbose_name='Я автор видеолекций')
+    orgtype = models.CharField(blank=True, null=True, max_length=11, choices=ORGTYPES, verbose_name='Тип организации')
     specialty = models.CharField(blank=True, max_length=100, verbose_name='Специализация')
-    patientGrown = models.BooleanField(blank=True, verbose_name='Взрослые')
-    patientChildren = models.BooleanField(blank=True, verbose_name='Дети')
+    patientGrown = models.BooleanField(blank=True, null=True, verbose_name='Взрослые')
+    patientChildren = models.BooleanField(blank=True, null=True, verbose_name='Дети')
 
     def __unicode__(self):
         return self.user
@@ -76,4 +78,4 @@ class Specialty(models.Model):
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
         UserMain.objects.create(user=instance)
-        #UserDoctor.objects.create(user=instance)
+        UserDoctor.objects.create(user=instance)

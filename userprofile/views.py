@@ -6,7 +6,7 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import authenticate, login, logout
 from .forms import SignUpForm
 from django.contrib.auth.models import Group, User
-
+from django.core.files.storage import FileSystemStorage
 
 def home(request):
     return render(request, 'home.html')
@@ -20,8 +20,7 @@ def user_main(request):
 def profile_page_view(request):
     if request.user.is_authenticated:
         user_profile = UserMain.objects.get(user=request.user)
-        #user_doctor = UserDoctor.objects.get(user=request.user)
-        user_doctor = ''
+        user_doctor = UserDoctor.objects.get(user=request.user)
 
         if request.path == '/profile/info/':
             return render(request, 'profile/profile.html', {'user_profile': user_profile})
@@ -60,6 +59,13 @@ def save_main_data(request):
     user_profile.time_zone = request.POST['timezone']
     user_profile.whatsapp = request.POST['whatsapp']
     user_profile.skype = request.POST['skype']
+
+    if 'avatar' in request.FILES:
+        user_profile.avatar = request.FILES['avatar']
+
+    if request.POST['avatar_none'] == 'y':
+        user_profile.avatar = ''
+
     user_profile.save()
 
     return HttpResponseRedirect(reverse('user_profile_main'))
@@ -67,7 +73,30 @@ def save_main_data(request):
 
 def save_doctor_data(request):
     user_doctor = UserDoctor.objects.get(user=request.user)
+
     user_doctor.specialty = request.POST['specialty']
+
+    if 'doctor' in request.POST:
+        user_doctor.doctor = request.POST['doctor']
+    else:
+        user_doctor.doctor = False
+
+    if 'consultant' in request.POST:
+        print(request.POST['consultant'])
+        user_doctor.consultant = request.POST['consultant']
+    else:
+        user_doctor.consultant = False
+
+    if 'fullDoctor' in request.POST:
+        user_doctor.fullDoctor = request.POST['fullDoctor']
+    else:
+        user_doctor.fullDoctor = False
+
+    if 'author' in request.POST:
+        user_doctor.author = request.POST['author']
+    else:
+        user_doctor.author = False
+
     user_doctor.save()
 
     return HttpResponseRedirect(reverse('user_profile_doctor'))
@@ -109,13 +138,13 @@ def signup_doctor_view(request):
             user_group = Group.objects.get(name='doctors')
             user_group.user_set.add(signup_user)
 
-            user_profile = UserMain.objects.get(username=username)
+            user_profile = UserMain.objects.get(user=signup_user)
             user_profile.fio = request.POST['first_name']
             user_profile.save()
 
             return render(request, 'profile/login.html', {'msg': 'Вы успешно зарегестрированы!'})
         else:
-            return render(request, 'profile/registration_user_form.html', {'form': form})
+            return render(request, 'profile/registration_doctor_form.html', {'form': form})
 
     if request.user.is_authenticated:
         return redirect('user_profile')

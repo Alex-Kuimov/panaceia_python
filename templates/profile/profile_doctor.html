@@ -8,6 +8,7 @@
         <div class="col-md-12 block-info">
 
             <form action="{% url 'save_doctor_data' %}" method="POST" class="row">
+                {% csrf_token %}
                  <div class="col-md-5">
                     <h4>Инфомация в моем профиле</h4>
                  </div>
@@ -22,21 +23,39 @@
                 {% endif %}
 
                 <div class="col-md-7 checkbox-block">
-                    {% csrf_token %}
+
                     <h5>*Общая</h5>
 
-                    {% if user_doctor.doctor != ''%}
-                        <input type="checkbox" name="doctor" value="a1" checked> Я врач <img src="{% static 'img/question.png' %}" alt="Я врач" title="Здесь будет текст информации">
+                    {% if user_doctor.doctor == True %}
+                        <input type="checkbox" name="doctor" class="doctor_chk" value="True" checked> Я врач <img src="{% static 'img/question.png' %}" alt="Я врач" title="Здесь будет текст информации">
                     {% else %}
-                        <input type="checkbox" name="doctor" value="a1"> Я врач <img src="{% static 'img/question.png' %}" alt="Я врач" title="Здесь будет текст информации">
-                    {%endif%}
+                        <input type="checkbox" name="doctor" class="doctor_chk" value="False"> Я врач <img src="{% static 'img/question.png' %}" alt="Я врач" title="Здесь будет текст информации">
+                    {% endif %}
 
                     <br>
-                    <input type="checkbox" name="option2" value="a2"> Я консультант <img src="{% static 'img/question.png' %}" alt="Я врач" title="Здесь будет текст информации">
+
+                    {% if user_doctor.consultant == True %}
+                        <input type="checkbox" name="consultant" class="doctor_chk" value="True" checked> Я консультант <img src="{% static 'img/question.png' %}" alt="Я консультант" title="Здесь будет текст информации">
+                    {% else %}
+                        <input type="checkbox" name="consultant" class="doctor_chk" value="False"> Я консультант <img src="{% static 'img/question.png' %}" alt="Я консультант" title="Здесь будет текст информации">
+                    {% endif %}
+
                     <br>
-                    <input type="checkbox" name="option3" value="a3"> Я врач и консультант <img src="{% static 'img/question.png' %}" alt="Я врач" title="Здесь будет текст информации">
+
+                    {% if user_doctor.fullDoctor == True %}
+                        <input type="checkbox" name="fullDoctor" class="doctor_chk" value="True" checked> Я врач и консультант <img src="{% static 'img/question.png' %}" alt="Я врач и консультант" title="Здесь будет текст информации">
+                    {% else %}
+                        <input type="checkbox" name="fullDoctor" class="doctor_chk" value="False"> Я врач и консультант <img src="{% static 'img/question.png' %}" alt="Я врач и консультант" title="Здесь будет текст информации">
+                    {% endif %}
+
                     <br>
-                    <input type="checkbox" name="option4" value="a4"> Я автор видеолекций <img src="{% static 'img/question.png' %}" alt="Я врач" title="Здесь будет текст информации">
+
+                    {% if user_doctor.author == True %}
+                        <input type="checkbox" name="author" class="doctor_chk" value="True" checked> Я автор видеолекций <img src="{% static 'img/question.png' %}" alt="Я автор видеолекций" title="Здесь будет текст информации">
+                    {% else %}
+                        <input type="checkbox" name="author" class="doctor_chk" value="False"> Я автор видеолекций <img src="{% static 'img/question.png' %}" alt="Я автор видеолекций" title="Здесь будет текст информации">
+                    {% endif %}
+
                     <br>
                     <br>
                     <select class="" name="orgtype">

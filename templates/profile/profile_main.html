@@ -22,23 +22,26 @@
 
             </div>
             <div class="line"></div>
-            <form action="{% url 'save_main_data' %}" method="POST">
+            <form action="{% url 'save_main_data' %}" method="POST" enctype="multipart/form-data">
                 {% csrf_token %}
                 <div class="row">
                     <div class="col-md-3 central avatar">
 
                         {% if user_profile.avatar != '' %}
-                            <a href="#"> <img src="/media/{{user_profile.avatar}}" alt=""></a>
+                            <img src="/media/{{user_profile.avatar}}" alt="" class="avatar_image">
                         {% else %}
-                            <a href="#"> <img src="{% static 'img/user.png' %}" alt=""></a>
+                            <img src="{% static 'img/user.png' %}" alt="" class="avatar_image">
                         {% endif %}
 
-                        <a href="#">Загрузить</a><br>
-                        <a href="#" style="color:#acacac!important;">Удалить</a>
+                        <label for="avatar" style="cursor:pointer">Загрузить</label>
+                        <input type="file" id="avatar" name="avatar" class="avatar" style="display:none">
+                        <input type="hidden" id="avatar_none" class="avatar_none"  name="avatar_none" >
+                        <br>
+                        <a href="#" style="color:#acacac!important;" class="remove-avatar">Удалить</a>
                     </div>
                     <div class="col-md-9">
                         <input type="text" name="fio" value="{{user_profile.fio}}" placeholder="ФИО">
-                        <input type="text" name="dob" value="{{user_profile.dob}}" placeholder="Дата рождения (дд.мм.гггг)">
+                        <input type="text" name="dob" class="dob" value="{{user_profile.dob}}" placeholder="Дата рождения (дд.мм.гггг)">
                         <input type="text" name="city" value="{{user_profile.city}}" placeholder="Город">
 
                         <select class="" name="timezone">
@@ -46,27 +49,27 @@
                                 <option value="{{user_profile.time_zone}}">{{user_profile.time_zone}}</option>
                                 <option disabled>---</option>
                             {% endif %}
-                            <option value="(UTC +3) Москва, Санкт-Петербург, Воронеж, Казань">(UTC +3) Москва, Санкт-Петербург, Воронеж, Казань</option>
-                            <option value="(UTC +7): Республика Алтай, Алтайский край, Новосибирская, Омская, Томская области">(UTC +7): Республика Алтай, Алтайский край, Новосибирская, Омская, Томская области</option>
+                            <option value="UTC +3">(UTC +3) Москва, Санкт-Петербург, Воронеж, Казань</option>
+                            <option value="UTC +7">(UTC +7): Республика Алтай, Алтайский край, Новосибирская, Омская, Томская области</option>
                         </select>
 
                         <div class="sex-input">
                             <p>Пол:</p>
 
-                            {%if user_profile.gender == "Мужской" %}
-                                <p><input type="radio" name="gender" value="Мужской" checked>Мужской</p>
+                            {%if user_profile.gender == "male" %}
+                                <p><input type="radio" name="gender" value="male" checked>Мужской</p>
                             {% else %}
                                 {%if user_profile.gender == "" %}
-                                    <p><input type="radio" name="gender" value="Мужской" checked>Мужской</p>
+                                    <p><input type="radio" name="gender" value="male" checked>Мужской</p>
                                 {% else %}
-                                    <p><input type="radio" name="gender" value="Мужской">Мужской</p>
+                                    <p><input type="radio" name="gender" value="male">Мужской</p>
                                 {% endif %}
                             {% endif %}
 
-                            {%if user_profile.gender == "Женский" %}
-                                <p><input type="radio" name="gender" value="Женский" checked> Женский</p>
+                            {%if user_profile.gender == "female" %}
+                                <p><input type="radio" name="gender" value="female" checked> Женский</p>
                             {% else %}
-                                <p><input type="radio" name="gender" value="Женский"> Женский</p>
+                                <p><input type="radio" name="gender" value="female"> Женский</p>
                             {% endif %}
 
                         </div>

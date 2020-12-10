@@ -62,15 +62,21 @@
                         <option value="ur">Юридическое лицо</option>
                         <option value="fiz">Физическое лицо</option>
                     </select>
-                    <div class="row">
-                        <div class="col-8">
-                            <input type="text" name="" value="Психосоматика">
+
+                    {% for spec in user_spec %}
+
+                        <div class="row spec-block spec-block-{{ spec.id }}">
+                            <div class="col-8">
+                                <input type="text" name="spec[{{ spec.id }}]" value="{{ spec.title }}" placeholder="специальность">
+                            </div>
+                            <div class="col-4">
+                                <a href="#" class="spec-remove" data-id="{{ spec.id }}">Удалить</a>
+                            </div>
                         </div>
-                        <div class="col-4">
-                            <a href="#">Удалить</a>
-                        </div>
-                    </div>
-                    <a href="#">+ Добавить специализацию</a>
+
+                    {% endfor %}
+
+                    <a href="#" class="spec-add">+ Добавить специальность</a>
                     <div class="line"></div>
                     <h4>Специализация</h4>
                     <input type="text" name="specialty" value="{{ user_doctor.specialty }}">

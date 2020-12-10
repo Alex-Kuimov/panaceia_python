@@ -8,6 +8,8 @@ $(document).ready(function(){
             $('.remove-avatar').on('click', profile.removeAvatar);
             $('.avatar').on('change', profile.changeAvatar);
             $('.doctor_chk').on('change', profile.typeSpecialty);
+            $('.spec-remove').on('click', profile.removeSpec);
+            $('.spec-add').on('click', profile.addSpec);
         },
 
         readURL: function(input, img){
@@ -65,6 +67,30 @@ $(document).ready(function(){
             } else {
                 $(this).val('False');
             }
+        },
+
+        addSpec: function(){
+            let element = '';
+
+            element += '<div class="row spec-block spec-block-1">';
+                element += '<div class="col-8">';
+                    element += '<input type="text" name="spec[1]" value="" placeholder="специальность">';
+                element += '</div>';
+                element += '<div class="col-4">';
+                    element += '<a href="#" class="spec-remove" data-id="1">Удалить</a>';
+                element += '</div>';
+            element += '</div>';
+
+            $(this).before(element);
+            return false
+        },
+
+        removeSpec: function(){
+            let itemID = $(this).attr('data-id')
+            console.log(itemID)
+            $('.spec-block-'+itemID).remove();
+
+            return false
         },
 
         init: function(){

@@ -2,20 +2,21 @@ $(document).ready(function(){
 
     'use strict';
 
+    let countSpecElement = 0;
+
     let profile = {
 
         action: function(){
             $('.remove-avatar').on('click', profile.removeAvatar);
             $('.avatar').on('change', profile.changeAvatar);
             $('.doctor_chk').on('change', profile.typeSpecialty);
-            $('.spec-remove').on('click', profile.removeSpec);
+            $('body').on('click', '.spec-remove', profile.removeSpec);
             $('.spec-add').on('click', profile.addSpec);
         },
 
         readURL: function(input, img){
             if (input.files && input.files[0]) {
                 var reader = new FileReader();
-
                 reader.onload = function(e) {
                     $(img).attr('src', e.target.result);
                 }
@@ -72,24 +73,27 @@ $(document).ready(function(){
         addSpec: function(){
             let element = '';
 
-            element += '<div class="row spec-block spec-block-1">';
+            countSpecElement = countSpecElement + 1;
+
+            element += '<div class="row spec-block spec-block-'+countSpecElement+'">';
                 element += '<div class="col-8">';
-                    element += '<input type="text" name="spec[1]" value="" placeholder="специальность">';
+                    element += '<input type="text" name="spec['+countSpecElement+']" value="" placeholder="специальность">';
                 element += '</div>';
                 element += '<div class="col-4">';
-                    element += '<a href="#" class="spec-remove" data-id="1">Удалить</a>';
+                    element += '<a href="#" class="spec-remove" data-id="'+countSpecElement+'">Удалить</a>';
                 element += '</div>';
             element += '</div>';
 
             $(this).before(element);
+
+            console.log(countSpecElement);
+
             return false
         },
 
         removeSpec: function(){
-            let itemID = $(this).attr('data-id')
-            console.log(itemID)
+            let itemID = $(this).attr('data-id');
             $('.spec-block-'+itemID).remove();
-
             return false
         },
 

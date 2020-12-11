@@ -11,15 +11,6 @@
                     <h4>Инфомация в моем профиле</h4>
                 </div>
 
-                {% if user.groups.all.0.name == "doctors" %}
-                    <div class="col-md-7 tab-line">
-                        <ul>
-                            <li><a href="{% url 'user_profile_main' %}">Основная информация</a></li>
-                            <li><a href="{% url 'user_profile_doctor' %}">Профессиональная информация</a></li>
-                        </ul>
-                    </div>
-                {% endif %}
-
             </div>
             <div class="line"></div>
             <form action="{% url 'save_main_data' %}" method="POST" enctype="multipart/form-data">
@@ -91,6 +82,152 @@
                     </div>
                 </div>
             </form>
+            <div class="line"></div>
+
+            {% if user.groups.all.0.name == "doctors" %}
+                <form action="{% url 'save_doctor_data' %}" method="POST" class="row">
+                    {% csrf_token %}
+
+                    <div class="col-md-7 checkbox-block">
+
+                        <h5>*Общая</h5>
+
+                        {% if user_doctor.doctor == True %}
+                            <input type="checkbox" name="doctor" class="doctor_chk" value="True" checked> Я врач <img src="{% static 'img/question.png' %}" alt="Я врач" title="Здесь будет текст информации">
+                        {% else %}
+                            <input type="checkbox" name="doctor" class="doctor_chk" value="False"> Я врач <img src="{% static 'img/question.png' %}" alt="Я врач" title="Здесь будет текст информации">
+                        {% endif %}
+
+                        <br>
+
+                        {% if user_doctor.consultant == True %}
+                            <input type="checkbox" name="consultant" class="doctor_chk" value="True" checked> Я консультант <img src="{% static 'img/question.png' %}" alt="Я консультант" title="Здесь будет текст информации">
+                        {% else %}
+                            <input type="checkbox" name="consultant" class="doctor_chk" value="False"> Я консультант <img src="{% static 'img/question.png' %}" alt="Я консультант" title="Здесь будет текст информации">
+                        {% endif %}
+
+                        <br>
+
+                        {% if user_doctor.fullDoctor == True %}
+                            <input type="checkbox" name="fullDoctor" class="doctor_chk" value="True" checked> Я врач и консультант <img src="{% static 'img/question.png' %}" alt="Я врач и консультант" title="Здесь будет текст информации">
+                        {% else %}
+                            <input type="checkbox" name="fullDoctor" class="doctor_chk" value="False"> Я врач и консультант <img src="{% static 'img/question.png' %}" alt="Я врач и консультант" title="Здесь будет текст информации">
+                        {% endif %}
+
+                        <br>
+
+                        {% if user_doctor.author == True %}
+                            <input type="checkbox" name="author" class="doctor_chk" value="True" checked> Я автор видеолекций <img src="{% static 'img/question.png' %}" alt="Я автор видеолекций" title="Здесь будет текст информации">
+                        {% else %}
+                            <input type="checkbox" name="author" class="doctor_chk" value="False"> Я автор видеолекций <img src="{% static 'img/question.png' %}" alt="Я автор видеолекций" title="Здесь будет текст информации">
+                        {% endif %}
+
+                        <br>
+                        <br>
+                        <select class="" name="orgtype">
+                            {% if user_doctor.orgtype != '' %}
+
+                                {% if user_doctor.orgtype == 'ur' %}
+                                    <option value="{{user_doctor.orgtype}}">Юридическое лицо</option>
+                                {% endif %}
+
+                                {% if user_doctor.orgtype == 'fiz' %}
+                                    <option value="{{user_doctor.orgtype}}">Физическое лицо</option>
+                                {% endif %}
+
+                                <option disabled>---</option>
+                            {% endif %}
+
+                            <option value="ur">Юридическое лицо</option>
+                            <option value="fiz">Физическое лицо</option>
+                        </select>
+
+                        {% for spec in user_spec %}
+
+                            <div class="row spec-block spec-block-{{ spec.id }}">
+                                <div class="col-8">
+                                    <input type="text" name="spec[{{ spec.id }}]" value="{{ spec.title }}" placeholder="специальность">
+                                </div>
+                                <div class="col-4">
+                                    <a href="#" class="spec-remove" data-id="{{ spec.id }}">Удалить</a>
+                                </div>
+                            </div>
+
+                        {% endfor %}
+
+                        <a href="#" class="spec-add">+ Добавить специальность</a>
+                        <div class="line"></div>
+                        <h4>Специализация</h4>
+                        <input type="text" name="specialty" value="{{ user_doctor.specialty }}">
+
+
+                        {% if user_doctor.patientGrown == True %}
+                            <input type="checkbox" name="patientGrown" class="doctor_chk" value="True" checked> Взрослые
+                        {% else %}
+                            <input type="checkbox" name="patientGrown" class="doctor_chk" value="False"> Взрослые
+                        {% endif %}
+
+                        {% if user_doctor.patientChildren == True %}
+                            <input type="checkbox" name="patientChildren" class="doctor_chk" value="True" checked> Дети
+                        {% else %}
+                            <input type="checkbox" name="patientChildren" class="doctor_chk" value="False"> Дети
+                        {% endif %}
+
+                    </div>
+                    <div class="col-md-5 documents-block">
+                        <h4>Документы <img src="{% static 'img/question.png' %}" alt="Я врач" title="Здесь будет текст информации"></h4>
+                        <div class="documents-specialist">
+                            <div class="row">
+                                <div class="col-4">
+                                    <img src="{% static 'img/foto.png' %}" alt="">
+                                </div>
+                                <div class="col-8">
+                                    Диплом о медицинском образовании (для врачей)
+                                    <a href="#">Загрузить</a> <a href="#">Удалить</a>
+
+                                </div>
+                            </div>
+                            <div class="line"></div>
+                            <div class="row">
+                                <div class="col-4">
+                                    <img src="{% static 'img/foto.png' %}" alt="">
+                                </div>
+                                <div class="col-8">
+                                    Диплом о медицинском образовании (для врачей)
+                                    <a href="#">Загрузить</a> <a href="#">Удалить</a>
+
+                                </div>
+                            </div>
+                            <div class="line"></div>
+                            <div class="row">
+                                <div class="col-4">
+                                    <img src="{% static 'img/foto.png' %}" alt="">
+                                </div>
+                                <div class="col-8">
+                                    Диплом о медицинском образовании (для врачей)
+                                    <a href="#">Загрузить</a> <a href="#">Удалить</a>
+
+                                </div>
+                            </div>
+                            <div class="line"></div>
+                            <div class="row">
+                                <div class="col-4">
+                                    <img src="{% static 'img/foto.png' %}" alt="">
+                                </div>
+                                <div class="col-8">
+                                    Диплом о медицинском образовании (для врачей)
+                                    <a href="#">Загрузить</a> <a href="#">Удалить</a>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12">
+                        <button type="submit" name="button">Сохранить изменения</button>
+                    </div>
+                </form>
+            {% endif %}
         </div>
     </div>
 </div>

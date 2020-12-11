@@ -7,6 +7,7 @@ from django.contrib.auth import authenticate, login, logout
 from .forms import SignUpForm
 from django.contrib.auth.models import Group, User
 from django.core.files.storage import FileSystemStorage
+import re
 
 def home(request):
     return render(request, 'home.html')
@@ -27,10 +28,7 @@ def profile_page_view(request):
             return render(request, 'profile/profile.html', {'user_profile': user_profile})
 
         if request.path == '/profile/main/':
-            return render(request, 'profile/profile_main.html', {'user_profile': user_profile})
-
-        if request.path == '/profile/doctor/':
-            return render(request, 'profile/profile_doctor.html', {'user_doctor': user_doctor, 'user_profile': user_profile, 'user_spec': user_spec})
+            return render(request, 'profile/profile_main.html', {'user_profile': user_profile, 'user_doctor': user_doctor, 'user_spec': user_spec})
 
         if request.path == '/profile/recomend/':
             return render(request, 'profile/recomend.html', {'user_profile': user_profile})
@@ -53,6 +51,11 @@ def profile_page_view(request):
 
 def save_main_data(request):
     user_profile = UserMain.objects.get(user=request.user)
+    user = User.objects.get(pk=request.user.id)
+
+    user.email = request.POST['email']
+    user.save()
+
     user_profile.fio = request.POST['fio']
     user_profile.dob = request.POST['dob']
     user_profile.city = request.POST['city']
@@ -75,63 +78,24 @@ def save_main_data(request):
 def save_doctor_data(request):
     user_doctor = UserDoctor.objects.get(user=request.user)
     user_spec = Specialty.objects.filter(content=request.user)
-    #specialty = Specialty.objects.get(id=request.user.id)
-    #user = User.objects.get(pk=request.user.id)
 
     user_doctor.specialty = request.POST['specialty']
+    user_doctor.orgtype = request.POST['orgtype']
+    UserDoctor.save_chk(user_doctor, 'doctor', request)
+    UserDoctor.save_chk(user_doctor, 'consultant', request)
+    UserDoctor.save_chk(user_doctor, 'fullDoctor', request)
+    UserDoctor.save_chk(user_doctor, 'author', request)
 
-    if 'doctor' in request.POST:
-        user_doctor.doctor = request.POST['doctor']
-    else:
-        user_doctor.doctor = False
+    UserDoctor.save_chk(user_doctor, 'patientGrown', request)
+    UserDoctor.save_chk(user_doctor, 'patientChildren', request)
 
-    if 'consultant' in request.POST:
-        user_doctor.consultant = request.POST['consultant']
-    else:
-        user_doctor.consultant = False
-
-    if 'fullDoctor' in request.POST:
-        user_doctor.fullDoctor = request.POST['fullDoctor']
-    else:
-        user_doctor.fullDoctor = False
-
-    if 'author' in request.POST:
-        user_doctor.author = request.POST['author']
-    else:
-        user_doctor.author = False
-
-    # save/update
-    for item in request.POST:
-        if item.find('spec[') != -1:
-
-            for spec in user_spec:
-                name = 'spec[{}]'.format(spec.id)
-
-                if item == name:
-                    spec.title = request.POST[name]
-                    spec.save()
-
-    # add new
-    spec_post_list = []
-    for item in request.POST:
-        if item.find('spec[') != -1:
-            spec_post_list.append(item)
-
-    spec_model_list = []
-    for spec in user_spec:
-        name = 'spec[{}]'.format(spec.id)
-        spec_model_list.append(name)
-
-    for item in spec_post_list:
-        if not item in spec_model_list:
-            if(request.POST[item]!=''):
-                new_spec = Specialty.objects.create(title=request.POST[item], content_id=request.user.id)
-                user_spec.user = new_spec
-
+    Specialty.add(user_spec, request)
+    Specialty.update(user_spec, request)
+    Specialty.remove(user_spec, request)
 
     user_doctor.save()
 
-    return HttpResponseRedirect(reverse('user_profile_doctor'))
+    return HttpResponseRedirect(reverse('user_profile_main'))
 
 
 def signup_user_view(request):

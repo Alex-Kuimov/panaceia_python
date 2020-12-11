@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-
+import re
 
 class UserMain(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -51,6 +51,45 @@ class UserDoctor(models.Model):
     def __unicode__(self):
         return self.user
 
+    def save_chk(self, name, request):
+
+        if name in request.POST:
+            if name == 'doctor':
+                self.doctor = request.POST[name]
+
+            if name == 'consultant':
+                self.consultant = request.POST[name]
+
+            if name == 'fullDoctor':
+                self.fullDoctor = request.POST[name]
+
+            if name == 'author':
+                self.author = request.POST[name]
+
+            if name == 'patientGrown':
+                self.patientGrown = request.POST[name]
+
+            if name == 'patientChildren':
+                self.patientChildren = request.POST[name]
+        else:
+            if name == 'doctor':
+                self.doctor = False
+
+            if name == 'consultant':
+                self.consultant = False
+
+            if name == 'fullDoctor':
+                self.fullDoctor = False
+
+            if name == 'author':
+                self.author = False
+
+            if name == 'patientGrown':
+                self.patientGrown = False
+
+            if name == 'patientChildren':
+                self.patientChildren = False
+
     class Meta:
         verbose_name = 'Профиль'
         verbose_name_plural = 'Профили'
@@ -69,6 +108,54 @@ class Document(models.Model):
 class Specialty(models.Model):
     content = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=200, verbose_name='Название')
+
+    # add
+    def add(self, request):
+        spec_post_list = []
+        for item in request.POST:
+            if item.find('spec[') != -1:
+                spec_post_list.append(item)
+
+        spec_model_list = []
+        for spec in self:
+            name = 'spec[{}]'.format(spec.id)
+            spec_model_list.append(name)
+
+        for item in spec_post_list:
+            if not item in spec_model_list:
+                if (request.POST[item] != ''):
+                    new_spec = Specialty.objects.create(title=request.POST[item], content_id=request.user.id)
+                    self.user = new_spec
+
+    # update
+    def update(self, request):
+        for item in request.POST:
+            if item.find('spec[') != -1:
+
+                for spec in self:
+                    name = 'spec[{}]'.format(spec.id)
+
+                    if item == name:
+                        spec.title = request.POST[name]
+                        spec.save()
+
+    # remove
+    def remove(self, request):
+        spec_post_list = []
+        for item in request.POST:
+            if item.find('spec[') != -1:
+                spec_post_list.append(item)
+
+        spec_model_list = []
+        for spec in self:
+            name = 'spec[{}]'.format(spec.id)
+            spec_model_list.append(name)
+
+        for item in spec_model_list:
+            if not item in spec_post_list:
+                item_id = re.sub(r'[^0-9.]+', r'', item)
+                instance = Specialty.objects.get(id=item_id)
+                instance.delete()
 
     class Meta:
         verbose_name = 'Специальность'

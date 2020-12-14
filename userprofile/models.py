@@ -1,8 +1,10 @@
+import re
+
 from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-import re
+
 
 class UserMain(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -24,6 +26,7 @@ class UserMain(models.Model):
     time_zone = models.CharField(blank=True, max_length=150, choices=TIMEZONE, verbose_name='Временная зона')
     whatsapp = models.CharField(blank=True, max_length=100, verbose_name='WhatsApp')
     skype = models.CharField(blank=True, max_length=100, verbose_name='Skype')
+    phone = models.CharField(blank=True, max_length=100, verbose_name='Номер телефона')
 
     def __unicode__(self):
         return self.user
@@ -47,6 +50,9 @@ class UserDoctor(models.Model):
     specialty = models.CharField(blank=True, max_length=100, verbose_name='Специализация')
     patientGrown = models.BooleanField(blank=True, null=True, verbose_name='Взрослые')
     patientChildren = models.BooleanField(blank=True, null=True, verbose_name='Дети')
+
+    experienceText = models.CharField(blank=True, max_length=3000, verbose_name='Опыт работы')
+    experienceYears = models.CharField(blank=True, max_length=2, verbose_name='Стаж')
 
     def __unicode__(self):
         return self.user
@@ -160,6 +166,63 @@ class Specialty(models.Model):
     class Meta:
         verbose_name = 'Специальность'
         verbose_name_plural = 'Специальности'
+
+
+class Associations(models.Model):
+    content = models.ForeignKey(User, on_delete=models.CASCADE)
+    title = models.CharField(max_length=250, verbose_name='Название')
+
+    # add
+    def add(self, request):
+        post_list = []
+        for item in request.POST:
+            if item.find('as[') != -1:
+                post_list.append(item)
+
+        model_list = []
+        for spec in self:
+            name = 'as[{}]'.format(spec.id)
+            model_list.append(name)
+
+        for item in post_list:
+            if not item in model_list:
+                if (request.POST[item] != ''):
+                    new_mem = Associations.objects.create(title=request.POST[item], content_id=request.user.id)
+                    self.user = new_mem
+
+    # update
+    def update(self, request):
+        for item in request.POST:
+            if item.find('as[') != -1:
+
+                for i in self:
+                    name = 'as[{}]'.format(i.id)
+
+                    if item == name:
+                        i.title = request.POST[name]
+                        i.save()
+
+    # remove
+    def remove(self, request):
+        post_list = []
+        for item in request.POST:
+            if item.find('as[') != -1:
+                post_list.append(item)
+
+        model_list = []
+        for i in self:
+            name = 'as[{}]'.format(i.id)
+            model_list.append(name)
+
+        for item in model_list:
+            if not item in post_list:
+                item_id = re.sub(r'[^0-9.]+', r'', item)
+                instance = Associations.objects.get(id=item_id)
+                instance.delete()
+
+    class Meta:
+        verbose_name = 'Членство в ассоциациях'
+        verbose_name_plural = 'Членство в ассоциациях'
 
 
 @receiver(post_save, sender=User)

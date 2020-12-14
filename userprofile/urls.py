@@ -17,4 +17,6 @@ urlpatterns = [
     path('profile/videos/', views.profile_page_view, name='user_profile_videos'),
     path('save_main_data', views.save_main_data, name='save_main_data'),
     path('save_doctor_data', views.save_doctor_data, name='save_doctor_data'),
+    path('change_user_pass', views.change_user_pass, name='change_user_pass'),
+    path('save_user_settings', views.save_user_settings, name='save_user_settings'),
 ]

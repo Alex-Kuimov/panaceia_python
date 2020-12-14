@@ -173,6 +173,34 @@
                             <input type="checkbox" name="patientChildren" class="doctor_chk" value="False"> Дети
                         {% endif %}
 
+                        <div class="line"></div>
+
+                        <div class="row">
+                            <div class="col-md-12 block-form">
+                                <h4>Расскажите об опыте работы</h4>
+                                <textarea name="experienceText" rows="8" cols="80" placeholder="Расскажите ос воем опыте работы">{{user_doctor.experienceText}}</textarea>
+                                <input type="text" name="experienceYears" value="{{user_doctor.experienceYears}}" placeholder="Стаж">
+                            </div>
+                        </div>
+
+                        <div class="line"></div>
+                        <h4>Членство в ассоциациях</h4>
+
+                        {% for association in user_associations %}
+
+                            <div class="row as-block as-block-{{ association.id }}">
+                                <div class="col-8">
+                                    <input type="text" name="as[{{ association.id }}]" value="{{ association.title }}" placeholder="Название ассоциации">
+                                </div>
+                                <div class="col-4">
+                                    <a href="#" class="as-remove" data-id="{{ association.id }}">Удалить</a>
+                                </div>
+                            </div>
+
+                        {% endfor %}
+
+                        <a href="#" class="as-add">+ Добавить ассоциацию</a>
+
                     </div>
                     <div class="col-md-5 documents-block">
                         <h4>Документы <img src="{% static 'img/question.png' %}" alt="Я врач" title="Здесь будет текст информации"></h4>

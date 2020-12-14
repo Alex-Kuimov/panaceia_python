@@ -9,25 +9,28 @@
             <h4>Параметры настроек</h4>
             <div class="line"></div>
             <div class="row">
-                <div class="col-md-9">
+                <form class="col-md-9" action="{% url 'save_user_settings' %}" method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
                     <h4>Данные для входа</h4>
-                    <input type="text" name="" value="Номер телефона">
-                    <input type="text" name="" value="dmitro.sparta@gmail.com">
-                    <button type="button" name="button">Сохранить изменения</button>
-                </div>
+                    <input type="text" name="phone" value="{{user_profile.phone}}" placeholder="Номер телефона">
+                    <input type="text" name="email" value="{{user.email}}" placeholder="dmitro.sparta@gmail.com">
+                    <button type="submit" name="button">Сохранить изменения</button>
+                </form>
             </div>
             <div class="line"></div>
             <div class="row">
                 <div class="col-md-12">
-                    <div class="row">
+                    <form class="row" action="{% url 'change_user_pass' %}" method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
                         <div class="col-md-9">
                             <h4>Смена пароля</h4>
-                            <input type="text" name="" value="Старый пароль">
-                            <input type="text" name="" value="Новый пароль">
-                            <input type="text" name="" value="Повторить пароль">
-                            <button type="button" name="button">Сохранить изменения</button> <a href="#" style="color:DA2A2A!important;margin-left:10px;">Удалить профиль</a>
+                            {{msg}}
+                            <input type="password" name="password" placeholder="Новый пароль"  minlength="5" required>
+                            <input type="password" name="password2" placeholder="Повторить пароль" minlength="5" required>
+                            <button type="submit" name="button">Сохранить изменения</button>
+                            <a href="#" style="color:DA2A2A!important;margin-left:10px;">Удалить профиль</a>
                         </div>
-                    </div>
+                    </form>
                 </div>
             </div>
         </div>

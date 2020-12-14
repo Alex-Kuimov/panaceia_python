@@ -1,13 +1,13 @@
 from django.http import HttpResponse, Http404, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import UserMain, UserDoctor, User,Specialty
+from .models import UserMain, UserDoctor, User, Specialty, Associations
 from django.urls import reverse
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import authenticate, login, logout
 from .forms import SignUpForm
 from django.contrib.auth.models import Group, User
 from django.core.files.storage import FileSystemStorage
-import re
+
 
 def home(request):
     return render(request, 'home.html')
@@ -23,12 +23,13 @@ def profile_page_view(request):
         user_profile = UserMain.objects.get(user=request.user)
         user_doctor = UserDoctor.objects.get(user=request.user)
         user_spec = Specialty.objects.filter(content=request.user)
+        user_associations = Associations.objects.filter(content=request.user)
 
         if request.path == '/profile/info/':
             return render(request, 'profile/profile.html', {'user_profile': user_profile})
 
         if request.path == '/profile/main/':
-            return render(request, 'profile/profile_main.html', {'user_profile': user_profile, 'user_doctor': user_doctor, 'user_spec': user_spec})
+            return render(request, 'profile/profile_main.html', {'user_profile': user_profile, 'user_doctor': user_doctor, 'user_spec': user_spec, 'user_associations': user_associations})
 
         if request.path == '/profile/recomend/':
             return render(request, 'profile/recomend.html', {'user_profile': user_profile})
@@ -78,9 +79,13 @@ def save_main_data(request):
 def save_doctor_data(request):
     user_doctor = UserDoctor.objects.get(user=request.user)
     user_spec = Specialty.objects.filter(content=request.user)
+    user_associations = Associations.objects.filter(content=request.user)
 
     user_doctor.specialty = request.POST['specialty']
     user_doctor.orgtype = request.POST['orgtype']
+    user_doctor.experienceText = request.POST['experienceText']
+    user_doctor.experienceYears = request.POST['experienceYears']
+
     UserDoctor.save_chk(user_doctor, 'doctor', request)
     UserDoctor.save_chk(user_doctor, 'consultant', request)
     UserDoctor.save_chk(user_doctor, 'fullDoctor', request)
@@ -92,6 +97,10 @@ def save_doctor_data(request):
     Specialty.add(user_spec, request)
     Specialty.update(user_spec, request)
     Specialty.remove(user_spec, request)
+
+    Associations.add(user_associations, request)
+    Associations.update(user_associations, request)
+    Associations.remove(user_associations, request)
 
     user_doctor.save()
 
@@ -173,3 +182,29 @@ def login_view(request):
 def logout_view(request):
     logout(request)
     return redirect('login')
+
+
+def change_user_pass(request):
+    user = User.objects.get(pk=request.user.id)
+
+    if request.method == 'POST':
+        if request.POST['password'] == request.POST['password2']:
+            user.set_password(request.POST['password'])
+            user.save()
+        else:
+            return render(request, 'profile/settings.html', {'msg': 'Пароли не совпадают!'})
+
+    return redirect('user_profile_settings')
+
+
+def save_user_settings(request):
+    user_profile = UserMain.objects.get(user=request.user)
+    user = User.objects.get(pk=request.user.id)
+
+    user.email = request.POST['email']
+    user.save()
+
+    user_profile.phone = request.POST['phone']
+    user_profile.save()
+
+    return redirect('user_profile_settings')

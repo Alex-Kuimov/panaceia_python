@@ -3,6 +3,7 @@ $(document).ready(function(){
     'use strict';
 
     let countSpecElement = 0;
+    let countElement = 0;
 
     let profile = {
 
@@ -12,6 +13,8 @@ $(document).ready(function(){
             $('.doctor_chk').on('change', profile.typeSpecialty);
             $('body').on('click', '.spec-remove', profile.removeSpec);
             $('.spec-add').on('click', profile.addSpec);
+            $('body').on('click', '.as-remove', profile.removeAs);
+            $('.as-add').on('click', profile.addAs);
         },
 
         readURL: function(input, img){
@@ -86,7 +89,24 @@ $(document).ready(function(){
 
             $(this).before(element);
 
-            console.log(countSpecElement);
+            return false
+        },
+
+        addAs: function(){
+            let element = '';
+
+            countElement = countElement + 1;
+
+            element += '<div class="row as-block as-block-'+countElement+'">';
+                element += '<div class="col-8">';
+                    element += '<input type="text" name="as['+countElement+']" value="" placeholder="Название ассоциации">';
+                element += '</div>';
+                element += '<div class="col-4">';
+                    element += '<a href="#" class="as-remove" data-id="'+countElement+'">Удалить</a>';
+                element += '</div>';
+            element += '</div>';
+
+            $(this).before(element);
 
             return false
         },
@@ -94,6 +114,12 @@ $(document).ready(function(){
         removeSpec: function(){
             let itemID = $(this).attr('data-id');
             $('.spec-block-'+itemID).remove();
+            return false
+        },
+
+        removeAs: function(){
+            let itemID = $(this).attr('data-id');
+            $('.as-block-'+itemID).remove();
             return false
         },
 

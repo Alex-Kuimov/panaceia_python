@@ -36,14 +36,16 @@
         </div>
         <div class="col-md-12 block-info">
             <h4>Сообщение в службу поддержки</h4>
+            {{txt}}
             <div class="line"></div>
-            <div class="row">
+            <form class="row" action="{% url 'save_support_message' %}" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
                 <div class="col-md-12 block-form">
-                    <textarea name="name" rows="8" cols="80">* Текст сообщения</textarea>
+                    <textarea name="message" rows="8" cols="80" placeholder="* Текст сообщения"></textarea>
                     <a href="#"><img src="{% static 'img/skrepka.png' %}" alt=""> Прикрепить файл</a><br>
-                    <button type="button" name="button">Отправить</button>
+                    <button type="submit" name="button">Отправить</button>
                 </div>
-            </div>
+            </form>
         </div>
     </div>
 </div>

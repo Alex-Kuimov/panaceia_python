@@ -1,6 +1,6 @@
 from django.http import HttpResponse, Http404, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import UserMain, UserDoctor, User, Specialty, Associations
+from .models import UserMain, UserDoctor, User, Specialty, Associations, Education, Support
 from django.urls import reverse
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import authenticate, login, logout
@@ -24,27 +24,36 @@ def profile_page_view(request):
         user_doctor = UserDoctor.objects.get(user=request.user)
         user_spec = Specialty.objects.filter(content=request.user)
         user_associations = Associations.objects.filter(content=request.user)
+        user_education = Education.objects.filter(content=request.user)
+
+        data = {
+            'user_profile': user_profile,
+            'user_doctor': user_doctor,
+            'user_spec': user_spec,
+            'user_associations': user_associations,
+            'user_education': user_education
+        }
 
         if request.path == '/profile/info/':
-            return render(request, 'profile/profile.html', {'user_profile': user_profile})
+            return render(request, 'profile/profile.html', data)
 
         if request.path == '/profile/main/':
-            return render(request, 'profile/profile_main.html', {'user_profile': user_profile, 'user_doctor': user_doctor, 'user_spec': user_spec, 'user_associations': user_associations})
+            return render(request, 'profile/profile_main.html', data)
 
         if request.path == '/profile/recomend/':
-            return render(request, 'profile/recomend.html', {'user_profile': user_profile})
+            return render(request, 'profile/recomend.html', data)
 
         if request.path == '/profile/grafik/':
-            return render(request, 'profile/grafik.html', {'user_profile': user_profile})
+            return render(request, 'profile/grafik.html', data)
 
         if request.path == '/profile/consalt/':
-            return render(request, 'profile/consalt.html', {'user_profile': user_profile})
+            return render(request, 'profile/consalt.html', data)
 
         if request.path == '/profile/videos/':
-            return render(request, 'profile/videos.html', {'user_profile': user_profile})
+            return render(request, 'profile/videos.html', data)
 
         if request.path == '/profile/settings/':
-            return render(request, 'profile/settings.html', {'user_profile': user_profile})
+            return render(request, 'profile/settings.html', data)
 
     else:
         return redirect('login')
@@ -80,6 +89,7 @@ def save_doctor_data(request):
     user_doctor = UserDoctor.objects.get(user=request.user)
     user_spec = Specialty.objects.filter(content=request.user)
     user_associations = Associations.objects.filter(content=request.user)
+    user_education = Education.objects.filter(content=request.user)
 
     user_doctor.specialty = request.POST['specialty']
     user_doctor.orgtype = request.POST['orgtype']
@@ -101,6 +111,10 @@ def save_doctor_data(request):
     Associations.add(user_associations, request)
     Associations.update(user_associations, request)
     Associations.remove(user_associations, request)
+
+    Education.add(user_education, request)
+    Education.update(user_education, request)
+    Education.remove(user_education, request)
 
     user_doctor.save()
 
@@ -208,3 +222,15 @@ def save_user_settings(request):
     user_profile.save()
 
     return redirect('user_profile_settings')
+
+
+def save_support_message(request):
+    if request.method == 'POST':
+        user_id = request.user.id
+        user_name = request.user.username
+        message = request.POST['message']
+
+        s = Support.objects.create(user_id=user_id, user_name=user_name, text=message)
+        s.save()
+
+    return render(request, 'profile/settings.html', {'txt': 'Сообщение отправлено!'})

@@ -117,50 +117,53 @@ class Specialty(models.Model):
 
     # add
     def add(self, request):
-        spec_post_list = []
-        for item in request.POST:
-            if item.find('spec[') != -1:
-                spec_post_list.append(item)
+        post_list = []
+        model_list = []
+        pref = 'spec'
 
-        spec_model_list = []
-        for spec in self:
-            name = 'spec[{}]'.format(spec.id)
-            spec_model_list.append(name)
+        for key in request.POST:
+            if key.find(pref+'[') != -1:
+                post_list.append(key)
 
-        for item in spec_post_list:
-            if not item in spec_model_list:
-                if (request.POST[item] != ''):
+        for key in self:
+            name = pref+'[{}]'.format(key.id)
+            model_list.append(name)
+
+        for item in post_list:
+            if not item in model_list:
+                if request.POST[item] != '':
                     new_spec = Specialty.objects.create(title=request.POST[item], content_id=request.user.id)
                     self.user = new_spec
 
     # update
     def update(self, request):
+        pref = 'spec'
         for item in request.POST:
-            if item.find('spec[') != -1:
-
-                for spec in self:
-                    name = 'spec[{}]'.format(spec.id)
-
+            if item.find(pref+'[') != -1:
+                for i in self:
+                    name = pref+'[{}]'.format(i.id)
                     if item == name:
-                        spec.title = request.POST[name]
-                        spec.save()
+                        i.title = request.POST[name]
+                        i.save()
 
     # remove
     def remove(self, request):
-        spec_post_list = []
-        for item in request.POST:
-            if item.find('spec[') != -1:
-                spec_post_list.append(item)
+        post_list = []
+        model_list = []
+        pref = 'spec'
 
-        spec_model_list = []
-        for spec in self:
-            name = 'spec[{}]'.format(spec.id)
-            spec_model_list.append(name)
+        for key in request.POST:
+            if key.find(pref + '[') != -1:
+                post_list.append(key)
 
-        for item in spec_model_list:
-            if not item in spec_post_list:
-                item_id = re.sub(r'[^0-9.]+', r'', item)
-                instance = Specialty.objects.get(id=item_id)
+        for key in self:
+            name = pref + '[{}]'.format(key.id)
+            model_list.append(name)
+
+        for item in model_list:
+            if not item in post_list:
+                index = re.sub(r'[^0-9.]+', r'', item)
+                instance = Specialty.objects.get(id=index)
                 instance.delete()
 
     class Meta:
@@ -175,29 +178,31 @@ class Associations(models.Model):
     # add
     def add(self, request):
         post_list = []
-        for item in request.POST:
-            if item.find('as[') != -1:
-                post_list.append(item)
-
         model_list = []
-        for spec in self:
-            name = 'as[{}]'.format(spec.id)
+        pref = 'as'
+
+        for key in request.POST:
+            if key.find(pref + '[') != -1:
+                post_list.append(key)
+
+        for key in self:
+            name = pref + '[{}]'.format(key.id)
             model_list.append(name)
 
         for item in post_list:
             if not item in model_list:
-                if (request.POST[item] != ''):
-                    new_mem = Associations.objects.create(title=request.POST[item], content_id=request.user.id)
-                    self.user = new_mem
+                if request.POST[item] != '':
+                    index = re.sub(r'[^0-9.]+', r'', item)
+                    instance = Associations.objects.create(title=request.POST[pref+'[' + index + ']'], content_id=request.user.id)
+                    self.user = instance
 
     # update
     def update(self, request):
+        pref = 'as'
         for item in request.POST:
-            if item.find('as[') != -1:
-
+            if item.find(pref + '[') != -1:
                 for i in self:
-                    name = 'as[{}]'.format(i.id)
-
+                    name = pref + '[{}]'.format(i.id)
                     if item == name:
                         i.title = request.POST[name]
                         i.save()
@@ -205,13 +210,15 @@ class Associations(models.Model):
     # remove
     def remove(self, request):
         post_list = []
-        for item in request.POST:
-            if item.find('as[') != -1:
-                post_list.append(item)
-
         model_list = []
-        for i in self:
-            name = 'as[{}]'.format(i.id)
+        pref = 'as'
+
+        for key in request.POST:
+            if key.find(pref + '[') != -1:
+                post_list.append(key)
+
+        for key in self:
+            name = pref + '[{}]'.format(key.id)
             model_list.append(name)
 
         for item in model_list:
@@ -223,6 +230,81 @@ class Associations(models.Model):
     class Meta:
         verbose_name = 'Членство в ассоциациях'
         verbose_name_plural = 'Членство в ассоциациях'
+
+
+class Education(models.Model):
+    content = models.ForeignKey(User, on_delete=models.CASCADE)
+    years = models.CharField(max_length=250, verbose_name='Года')
+    name = models.CharField(max_length=1000, verbose_name='Название')
+
+    # add
+    def add(self, request):
+        post_list = []
+        model_list = []
+        pref = 'ed'
+
+        for key in request.POST:
+            if key.find(pref+'[') != -1:
+                post_list.append(key)
+
+        for key in self:
+            name = pref+'[{}]'.format(key.id)
+            model_list.append(name)
+
+        for item in post_list:
+            if not item in model_list:
+                if request.POST[item] != '':
+                    index = re.sub(r'[^0-9.]+', r'', item)
+                    instance = Education.objects.create(years=request.POST['edy['+index+']'], name=request.POST['ed['+index+']'], content_id=request.user.id)
+                    self.user = instance
+
+    # update
+    def update(self, request):
+        fields = {'ed': 'name', 'edy': 'years'}
+
+        for item in request.POST:
+            for key in fields.keys():
+                if item.find(key+'[') != -1:
+                    for i in self:
+                        name = key+'[{}]'.format(i.id)
+                        if item == name:
+                            val = fields.get(key)
+                            setattr(i, val, request.POST[name])
+                            i.save()
+
+    # remove
+    def remove(self, request):
+        post_list = []
+        model_list = []
+        pref = 'ed'
+
+        for key in request.POST:
+            if key.find(pref + '[') != -1:
+                post_list.append(key)
+
+        for key in self:
+            name = pref + '[{}]'.format(key.id)
+            model_list.append(name)
+
+        for item in model_list:
+            if not item in post_list:
+                index = re.sub(r'[^0-9.]+', r'', item)
+                instance = Education.objects.get(id=index)
+                instance.delete()
+
+    class Meta:
+        verbose_name = 'Образование'
+        verbose_name_plural = 'Образование'
+
+
+class Support(models.Model):
+    user_id = models.IntegerField(blank=True, max_length=10)
+    user_name = models.CharField(blank=True, max_length=200)
+    text = models.CharField(blank=True, max_length=3000)
+
+    class Meta:
+        verbose_name = 'Сообщение в службу поддержки'
+        verbose_name_plural = 'Сообщения в службу поддержки'
 
 
 @receiver(post_save, sender=User)

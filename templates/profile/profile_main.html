@@ -184,6 +184,27 @@
                         </div>
 
                         <div class="line"></div>
+                        <h4>* Образование</h4>
+
+                        {% for education in user_education %}
+
+                            <div class="row ed-block ed-block-{{ education.id }}">
+                                <div class="col-3">
+                                    <input type="text" name="edy[{{ education.id }}]" value="{{ education.years }}" placeholder="Года">
+                                </div>
+                                <div class="col-5">
+                                    <input type="text" name="ed[{{ education.id }}]" value="{{ education.name }}" placeholder="Название организации">
+                                </div>
+                                <div class="col-4">
+                                    <a href="#" class="ed-remove" data-id="{{ education.id }}">Удалить</a>
+                                </div>
+                            </div>
+
+                        {% endfor %}
+
+                        <a href="#" class="ed-add">+ Добавить учебное заведение</a>
+
+                        <div class="line"></div>
                         <h4>Членство в ассоциациях</h4>
 
                         {% for association in user_associations %}

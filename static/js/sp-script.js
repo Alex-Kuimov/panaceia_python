@@ -4,6 +4,7 @@ $(document).ready(function(){
 
     let countSpecElement = 0;
     let countElement = 0;
+    let countEdElement = 0;
 
     let profile = {
 
@@ -15,6 +16,8 @@ $(document).ready(function(){
             $('.spec-add').on('click', profile.addSpec);
             $('body').on('click', '.as-remove', profile.removeAs);
             $('.as-add').on('click', profile.addAs);
+            $('body').on('click', '.ed-remove', profile.removeEd);
+            $('.ed-add').on('click', profile.addEd);
         },
 
         readURL: function(input, img){
@@ -111,6 +114,28 @@ $(document).ready(function(){
             return false
         },
 
+        addEd: function(){
+            let element = '';
+
+            countEdElement = countEdElement + 1;
+
+            element += '<div class="row ed-block ed-block-'+countEdElement+'">';
+                element += '<div class="col-3">';
+                    element += '<input type="text" name="edy['+countEdElement+']" value="" placeholder="Года">';
+                element += '</div>';
+                element += '<div class="col-5">';
+                    element += '<input type="text" name="ed['+countEdElement+']" value="" placeholder="Название организации">';
+                element += '</div>';
+                element += '<div class="col-4">';
+                    element += '<a href="#" class="ed-remove" data-id="'+countEdElement+'">Удалить</a>';
+                element += '</div>';
+            element += '</div>';
+
+            $(this).before(element);
+
+            return false
+        },
+
         removeSpec: function(){
             let itemID = $(this).attr('data-id');
             $('.spec-block-'+itemID).remove();
@@ -120,6 +145,12 @@ $(document).ready(function(){
         removeAs: function(){
             let itemID = $(this).attr('data-id');
             $('.as-block-'+itemID).remove();
+            return false
+        },
+
+        removeEd: function(){
+            let itemID = $(this).attr('data-id');
+            $('.ed-block-'+itemID).remove();
             return false
         },
 

@@ -19,4 +19,5 @@ urlpatterns = [
     path('save_doctor_data', views.save_doctor_data, name='save_doctor_data'),
     path('change_user_pass', views.change_user_pass, name='change_user_pass'),
     path('save_user_settings', views.save_user_settings, name='save_user_settings'),
+    path('save_support_message', views.save_support_message, name='save_support_message'),
 ]

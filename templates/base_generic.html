@@ -6,6 +6,8 @@
     <link rel="stylesheet" href="{% static 'css/stylelk.css' %}">
     <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
     <link rel="stylesheet" href="{% static 'css/jquery-ui.css' %}" >
+
+    <script src='https://maps.googleapis.com/maps/api/js?key=AIzaSyBR6OxT_jaau41Ajg1CNRR3f4D7xbQxD1E&libraries=places'></script>
 </head>
 
 <body>
@@ -56,7 +58,7 @@
                             <li><a href="{% url 'user_profile_consalt' %}">Консультации</a></li>
                             <li><a href="{% url 'user_profile_recomend' %}">Рекомендации</a></li>
                             <li><a href="{% url 'user_profile_videos' %}">Видеолекции</a></li>
-                            <li><a href="">Статьи</a></li>
+                            <li><a href="{% url 'user_profile_articles' %}">Статьи</a></li>
                             <li><a href="">Сообщения</a></li>
                             <li><a href="{% url 'user_profile_settings' %}">Настройки</a></li>
                         </ul>
@@ -69,7 +71,7 @@
                             <li><a href="{% url 'user_profile_consalt' %}">Консультации</a></li>
                             <li><a href="{% url 'user_profile_recomend' %}">Рекомендации</a></li>
                             <li><a href="{% url 'user_profile_videos' %}">Видеолекции</a></li>
-                            <li><a href="">Статьи</a></li>
+                            <li><a href="{% url 'user_profile_articles' %}">Статьи</a></li>
                             <li><a href="">Сообщения</a></li>
                             <li><a href="{% url 'user_profile_settings' %}">Настройки</a></li>
                         </ul>
@@ -85,12 +87,13 @@
         </div>
     </div>
 </body>
-    <script src="{% static 'js/jquery-3.2.1.slim.min.js' %}"></script>
-    <script src="{% static 'js/popper.min.js' %}"></script>
-    <script src="{% static 'js/bootstrap.min.js' %}"></script>
-    <script src="{% static 'js/jquery.min.js' %}"></script>
-    <script src="{% static 'js/jquery-ui.js' %}"></script>
-    <script src="{% static 'js/data-picker-ru.js' %}"></script>
-    <script src="{% static 'js/script.js' %}"></script>
-    <script src="{% static 'js/sp-script.js' %}"></script>
+<script src='https://maps.googleapis.com/maps/api/js?key=AIzaSyBR6OxT_jaau41Ajg1CNRR3f4D7xbQxD1E&libraries=places'></script>
+<script src="{% static 'js/jquery-3.2.1.slim.min.js' %}"></script>
+<script src="{% static 'js/popper.min.js' %}"></script>
+<script src="{% static 'js/bootstrap.min.js' %}"></script>
+<script src="{% static 'js/jquery.min.js' %}"></script>
+<script src="{% static 'js/jquery-ui.js' %}"></script>
+<script src="{% static 'js/data-picker-ru.js' %}"></script>
+<script src="{% static 'js/script.js' %}"></script>
+<script src="{% static 'js/sp-script.js' %}"></script>
 </html>

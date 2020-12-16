@@ -1,12 +1,12 @@
 from django.http import HttpResponse, Http404, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import UserMain, UserDoctor, User, Specialty, Associations, Education, Support
+from .models import UserMain, UserDoctor, User, Specialty, Associations, Education, Support, TimeZone
 from django.urls import reverse
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import authenticate, login, logout
 from .forms import SignUpForm
 from django.contrib.auth.models import Group, User
-from django.core.files.storage import FileSystemStorage
+from blog.models import Article
 
 
 def home(request):
@@ -25,13 +25,19 @@ def profile_page_view(request):
         user_spec = Specialty.objects.filter(content=request.user)
         user_associations = Associations.objects.filter(content=request.user)
         user_education = Education.objects.filter(content=request.user)
+        timezone = TimeZone.objects.all()
+        articles = Article.objects.all()
+
+        print(articles)
 
         data = {
             'user_profile': user_profile,
             'user_doctor': user_doctor,
             'user_spec': user_spec,
             'user_associations': user_associations,
-            'user_education': user_education
+            'user_education': user_education,
+            'timezone': timezone,
+            'articles': articles
         }
 
         if request.path == '/profile/info/':
@@ -54,6 +60,9 @@ def profile_page_view(request):
 
         if request.path == '/profile/settings/':
             return render(request, 'profile/settings.html', data)
+
+        if request.path == '/profile/articles/':
+            return render(request, 'profile/articles.html', data)
 
     else:
         return redirect('login')

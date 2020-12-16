@@ -31,17 +31,23 @@
                         <a href="#" style="color:#acacac!important;" class="remove-avatar">Удалить</a>
                     </div>
                     <div class="col-md-9">
-                        <input type="text" name="fio" value="{{user_profile.fio}}" placeholder="ФИО">
-                        <input type="text" name="dob" class="dob" value="{{user_profile.dob}}" placeholder="Дата рождения (дд.мм.гггг)">
-                        <input type="text" name="city" value="{{user_profile.city}}" placeholder="Город">
+                        <input type="text" name="fio" value="{{user_profile.fio}}" placeholder="ФИО" required>
+                        <input type="text" name="dob" class="dob" value="{{user_profile.dob}}" placeholder="Дата рождения (дд.мм.гггг)" required>
+                        <input type="text" name="city" id="user-city" value="{{user_profile.city}}" placeholder="Город" required>
 
                         <select class="" name="timezone">
-                            {% if user_profile.time_zone != '' %}
-                                <option value="{{user_profile.time_zone}}">{{user_profile.time_zone}}</option>
-                                <option disabled>---</option>
-                            {% endif %}
-                            <option value="UTC +3">(UTC +3) Москва, Санкт-Петербург, Воронеж, Казань</option>
-                            <option value="UTC +7">(UTC +7): Республика Алтай, Алтайский край, Новосибирская, Омская, Томская области</option>
+
+                            {% for item in timezone %}
+                                {% if user_profile.time_zone == item.name  %}
+                                    <option value="{{ item.name }}">{{ item.title }}</option>
+                                    <option disabled>---</option>
+                                {% endif %}
+                            {% endfor %}
+
+                            {% for item in timezone %}
+                                <option value="{{ item.name }}">{{ item.title }}</option>
+                            {% endfor %}
+
                         </select>
 
                         <div class="sex-input">
@@ -76,6 +82,7 @@
                                 <input type="text" name="email" value="{{user.email}}" placeholder="E-mail">
                                 <input type="text" name="skype" value="{{user_profile.skype}}" placeholder="Skype">
                                 <input type="text" name="whatsapp" value="{{user_profile.whatsapp}}" placeholder="Whatsapp">
+                                <br>
                                 <button type="submit" name="button">Сохранить изменения</button>
                             </div>
                         </div>

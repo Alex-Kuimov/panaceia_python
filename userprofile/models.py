@@ -6,30 +6,47 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 
 
+class TimeZone(models.Model):
+    name = models.CharField(blank=True, max_length=30, verbose_name='Название')
+    title = models.TextField(blank=True, max_length=1000, verbose_name='Города')
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = 'Временные зоны'
+        verbose_name_plural = 'Временные зоны'
+
+
 class UserMain(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
 
-    test = 'test'
+    gender_list = (
+        ('male', 'Мужской'),
+        ('female', 'Женский')
+    )
 
-    GENDER = [('male', 'Мужской'),
-               ('female', 'Женский')]
+    queryset = TimeZone.objects.all()
+    time_zone_list = []
+    for i in queryset:
+         time_zone_list.append((i.name, i.title))
 
-    TIMEZONE = [('UTC +3', '(UTC +3) Москва, Санкт-Петербург, Воронеж, Казань'),
-                ('UTC +7', '(UTC +7): Республика Алтай, Алтайский край, Новосибирская, Омская, Томская области')]
-
-    gender = models.CharField(blank=True,  max_length=11, choices=GENDER, verbose_name='Пол')
+    gender = models.CharField(blank=True,  max_length=11, choices=gender_list, verbose_name='Пол')
     avatar = models.ImageField(blank=True, upload_to='images/users', verbose_name='Изображение')
 
     fio = models.CharField(blank=True, max_length=100, verbose_name='ФИО')
     dob = models.CharField(blank=True, max_length=100, verbose_name='Дата рождения')
     city = models.CharField(blank=True, max_length=100, verbose_name='Город')
-    time_zone = models.CharField(blank=True, max_length=150, choices=TIMEZONE, verbose_name='Временная зона')
-    whatsapp = models.CharField(blank=True, max_length=100, verbose_name='WhatsApp')
+    time_zone = models.CharField(blank=True, max_length=2000, choices=time_zone_list, verbose_name='Временная зона')
+    whatsapp = models.CharField(blank=True, max_length=20, verbose_name='WhatsApp')
     skype = models.CharField(blank=True, max_length=100, verbose_name='Skype')
-    phone = models.CharField(blank=True, max_length=100, verbose_name='Номер телефона')
+    phone = models.CharField(blank=True, max_length=200, verbose_name='Номер телефона')
 
     def __unicode__(self):
         return self.user
+
+    def __str__(self):
+        return self.user.username
 
     class Meta:
         verbose_name = 'Профиль'
@@ -51,11 +68,14 @@ class UserDoctor(models.Model):
     patientGrown = models.BooleanField(blank=True, null=True, verbose_name='Взрослые')
     patientChildren = models.BooleanField(blank=True, null=True, verbose_name='Дети')
 
-    experienceText = models.CharField(blank=True, max_length=3000, verbose_name='Опыт работы')
+    experienceText = models.TextField(blank=True, max_length=3000, verbose_name='Опыт работы')
     experienceYears = models.CharField(blank=True, max_length=2, verbose_name='Стаж')
 
     def __unicode__(self):
         return self.user
+
+    def __str__(self):
+        return self.user.username
 
     def save_chk(self, name, request):
 
@@ -166,6 +186,9 @@ class Specialty(models.Model):
                 instance = Specialty.objects.get(id=index)
                 instance.delete()
 
+    def __str__(self):
+        return self.title
+
     class Meta:
         verbose_name = 'Специальность'
         verbose_name_plural = 'Специальности'
@@ -226,6 +249,9 @@ class Associations(models.Model):
                 item_id = re.sub(r'[^0-9.]+', r'', item)
                 instance = Associations.objects.get(id=item_id)
                 instance.delete()
+
+    def __str__(self):
+        return self.title
 
     class Meta:
         verbose_name = 'Членство в ассоциациях'
@@ -292,15 +318,21 @@ class Education(models.Model):
                 instance = Education.objects.get(id=index)
                 instance.delete()
 
+    def __str__(self):
+        return self.name
+
     class Meta:
         verbose_name = 'Образование'
         verbose_name_plural = 'Образование'
 
 
 class Support(models.Model):
-    user_id = models.IntegerField(blank=True, max_length=10)
+    user_id = models.IntegerField(blank=True)
     user_name = models.CharField(blank=True, max_length=200)
-    text = models.CharField(blank=True, max_length=3000)
+    text = models.TextField(blank=True, max_length=3000)
+
+    def __str__(self):
+        return f'Обращение №{self.id}'
 
     class Meta:
         verbose_name = 'Сообщение в службу поддержки'

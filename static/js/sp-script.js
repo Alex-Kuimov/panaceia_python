@@ -154,9 +154,17 @@ $(document).ready(function(){
             return false
         },
 
+        cityAutocomplete: function(){
+            let city = document.getElementById('user-city');
+            if(city){
+                let autoCity = new google.maps.places.Autocomplete(city);
+            }
+        },
+
         init: function(){
            profile.action();
            profile.dob();
+           profile.cityAutocomplete();
         }
 
     }

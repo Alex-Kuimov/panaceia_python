@@ -31,9 +31,9 @@
                         <a href="#" style="color:#acacac!important;" class="remove-avatar">Удалить</a>
                     </div>
                     <div class="col-md-9">
-                        <input type="text" name="fio" value="{{user_profile.fio}}" placeholder="ФИО" required>
-                        <input type="text" name="dob" class="dob" value="{{user_profile.dob}}" placeholder="Дата рождения (дд.мм.гггг)" required>
-                        <input type="text" name="city" id="user-city" value="{{user_profile.city}}" placeholder="Город" required>
+                        <input type="text" name="fio" value="{{user_profile.fio}}" minlength="3" maxlength="100" placeholder="ФИО" required>
+                        <input type="text" name="dob" class="dob" value="{{user_profile.dob}}" maxlength="10" placeholder="Дата рождения (дд.мм.гггг)" required>
+                        <input type="text" name="city" id="user-city" value="{{user_profile.city}}" minlength="3" maxlength="100" placeholder="Город" required>
 
                         <select class="" name="timezone">
 
@@ -79,9 +79,9 @@
                             <div class="col-md-3">
                             </div>
                             <div class="col-md-9">
-                                <input type="text" name="email" value="{{user.email}}" placeholder="E-mail">
-                                <input type="text" name="skype" value="{{user_profile.skype}}" placeholder="Skype">
-                                <input type="text" name="whatsapp" value="{{user_profile.whatsapp}}" placeholder="Whatsapp">
+                                <input type="text" name="email" value="{{user.email}}" minlength="5" maxlength="100" placeholder="E-mail">
+                                <input type="text" name="skype" value="{{user_profile.skype}}" minlength="5" maxlength="50" placeholder="Skype">
+                                <input type="text" name="whatsapp" value="{{user_profile.whatsapp}}" minlength="5" maxlength="20" placeholder="Whatsapp">
                                 <br>
                                 <button type="submit" name="button">Сохранить изменения</button>
                             </div>
@@ -153,7 +153,7 @@
 
                             <div class="row spec-block spec-block-{{ spec.id }}">
                                 <div class="col-8">
-                                    <input type="text" name="spec[{{ spec.id }}]" value="{{ spec.title }}" placeholder="специальность">
+                                    <input type="text" name="spec[{{ spec.id }}]" class="input-spec" id="input-spec-{{ spec.id }}" value="{{ spec.title }}" placeholder="специальность">
                                 </div>
                                 <div class="col-4">
                                     <a href="#" class="spec-remove" data-id="{{ spec.id }}">Удалить</a>
@@ -210,6 +210,28 @@
                         {% endfor %}
 
                         <a href="#" class="ed-add">+ Добавить учебное заведение</a>
+
+
+                        <div class="line"></div>
+                        <h4>Повышение квалификации</h4>
+
+                        {% for qualification in user_qualification %}
+
+                            <div class="row qu-block qu-block-{{ qualification.id }}">
+                                <div class="col-3">
+                                    <input type="text" name="quy[{{ qualification.id }}]" value="{{ qualification.years }}" placeholder="Года">
+                                </div>
+                                <div class="col-5">
+                                    <input type="text" name="qu[{{ qualification.id }}]" value="{{ qualification.name }}" placeholder="Название организации">
+                                </div>
+                                <div class="col-4">
+                                    <a href="#" class="qu-remove" data-id="{{ qualification.id }}">Удалить</a>
+                                </div>
+                            </div>
+
+                        {% endfor %}
+
+                        <a href="#" class="qu-add">+ Добавить учебное заведение</a>
 
                         <div class="line"></div>
                         <h4>Членство в ассоциациях</h4>

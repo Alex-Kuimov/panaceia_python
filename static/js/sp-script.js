@@ -5,6 +5,7 @@ $(document).ready(function(){
     let countSpecElement = 0;
     let countElement = 0;
     let countEdElement = 0;
+    let countQuElement = 0;
 
     let profile = {
 
@@ -18,6 +19,9 @@ $(document).ready(function(){
             $('.as-add').on('click', profile.addAs);
             $('body').on('click', '.ed-remove', profile.removeEd);
             $('.ed-add').on('click', profile.addEd);
+
+            $('body').on('click', '.qu-remove', profile.removeQu);
+            $('.qu-add').on('click', profile.addQu);
         },
 
         readURL: function(input, img){
@@ -136,6 +140,28 @@ $(document).ready(function(){
             return false
         },
 
+        addQu: function(){
+            let element = '';
+
+            countQuElement = countQuElement + 1;
+
+            element += '<div class="row qu-block qu-block-'+countQuElement+'">';
+                element += '<div class="col-3">';
+                    element += '<input type="text" name="quy['+countQuElement+']" value="" placeholder="Года">';
+                element += '</div>';
+                element += '<div class="col-5">';
+                    element += '<input type="text" name="qu['+countQuElement+']" value="" placeholder="Название организации">';
+                element += '</div>';
+                element += '<div class="col-4">';
+                    element += '<a href="#" class="qu-remove" data-id="'+countQuElement+'">Удалить</a>';
+                element += '</div>';
+            element += '</div>';
+
+            $(this).before(element);
+
+            return false
+        },
+
         removeSpec: function(){
             let itemID = $(this).attr('data-id');
             $('.spec-block-'+itemID).remove();
@@ -151,6 +177,12 @@ $(document).ready(function(){
         removeEd: function(){
             let itemID = $(this).attr('data-id');
             $('.ed-block-'+itemID).remove();
+            return false
+        },
+
+        removeQu: function(){
+            let itemID = $(this).attr('data-id');
+            $('.qu-block-'+itemID).remove();
             return false
         },
 

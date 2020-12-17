@@ -2,7 +2,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import User
-from .models import UserMain, UserDoctor, Document, Specialty, Associations, Education, Support, TimeZone
+from .models import UserMain, UserDoctor, Document, Specialty, Associations, Education, Qualification, Support, TimeZone
 
 
 class UserMainInline(admin.StackedInline):
@@ -37,8 +37,13 @@ class EducationInline(admin.StackedInline):
     model = Education
 
 
+class QualificationInline(admin.StackedInline):
+    extra = 0
+    model = Qualification
+
+
 class UserAdmin(UserAdmin):
-    inlines = (UserMainInline, UserDoctorInline, DocumentInline, SpecialtyInline, AssociationsInline, EducationInline)
+    inlines = (UserMainInline, UserDoctorInline, DocumentInline, SpecialtyInline, AssociationsInline, EducationInline, QualificationInline)
 
 
 admin.site.unregister(User)

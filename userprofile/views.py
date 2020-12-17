@@ -1,13 +1,13 @@
 from django.http import HttpResponse, Http404, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import UserMain, UserDoctor, User, Specialty, Associations, Education, Support, TimeZone
+from .models import UserMain, UserDoctor, User, Specialty, Associations, Education, Qualification, Support, TimeZone
 from django.urls import reverse
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import authenticate, login, logout
-from .forms import SignUpForm
+from .forms import SignUpForm, UserMainForm
 from django.contrib.auth.models import Group, User
 from blog.models import Article
-
+from .utility import UserFieldUtility
 
 def home(request):
     return render(request, 'home.html')
@@ -25,10 +25,9 @@ def profile_page_view(request):
         user_spec = Specialty.objects.filter(content=request.user)
         user_associations = Associations.objects.filter(content=request.user)
         user_education = Education.objects.filter(content=request.user)
+        user_qualification = Qualification.objects.filter(content=request.user)
         timezone = TimeZone.objects.all()
         articles = Article.objects.all()
-
-        print(articles)
 
         data = {
             'user_profile': user_profile,
@@ -36,6 +35,7 @@ def profile_page_view(request):
             'user_spec': user_spec,
             'user_associations': user_associations,
             'user_education': user_education,
+            'user_qualification': user_qualification,
             'timezone': timezone,
             'articles': articles
         }
@@ -69,27 +69,31 @@ def profile_page_view(request):
 
 
 def save_main_data(request):
-    user_profile = UserMain.objects.get(user=request.user)
-    user = User.objects.get(pk=request.user.id)
+    if request.method == 'POST':
+        form = UserMainForm(request.POST, request.FILES)
 
-    user.email = request.POST['email']
-    user.save()
+        if form.is_valid():
+            user_profile = UserMain.objects.get(user=request.user)
+            user = User.objects.get(pk=request.user.id)
 
-    user_profile.fio = request.POST['fio']
-    user_profile.dob = request.POST['dob']
-    user_profile.city = request.POST['city']
-    user_profile.gender = request.POST['gender']
-    user_profile.time_zone = request.POST['timezone']
-    user_profile.whatsapp = request.POST['whatsapp']
-    user_profile.skype = request.POST['skype']
+            user.email = request.POST['email']
+            user.save()
 
-    if 'avatar' in request.FILES:
-        user_profile.avatar = request.FILES['avatar']
+            user_profile.fio = request.POST['fio']
+            user_profile.dob = request.POST['dob']
+            user_profile.city = request.POST['city']
+            user_profile.gender = request.POST['gender']
+            user_profile.time_zone = request.POST['timezone']
+            user_profile.whatsapp = request.POST['whatsapp']
+            user_profile.skype = request.POST['skype']
 
-    if request.POST['avatar_none'] == 'y':
-        user_profile.avatar = ''
+            if 'avatar' in request.FILES:
+                user_profile.avatar = request.FILES['avatar']
 
-    user_profile.save()
+            if request.POST['avatar_none'] == 'y':
+                user_profile.avatar = ''
+
+            user_profile.save()
 
     return HttpResponseRedirect(reverse('user_profile_main'))
 
@@ -99,6 +103,7 @@ def save_doctor_data(request):
     user_spec = Specialty.objects.filter(content=request.user)
     user_associations = Associations.objects.filter(content=request.user)
     user_education = Education.objects.filter(content=request.user)
+    user_qualification = Qualification.objects.filter(content=request.user)
 
     user_doctor.specialty = request.POST['specialty']
     user_doctor.orgtype = request.POST['orgtype']
@@ -124,6 +129,10 @@ def save_doctor_data(request):
     Education.add(user_education, request)
     Education.update(user_education, request)
     Education.remove(user_education, request)
+
+    UserFieldUtility.add(user_qualification, Qualification, request, 'qu', 'quy')
+    UserFieldUtility.update(user_qualification, request, {'qu': 'name', 'quy': 'years'})
+    UserFieldUtility.remove(user_qualification, Qualification, request, 'qu')
 
     user_doctor.save()
 
@@ -181,7 +190,6 @@ def signup_doctor_view(request):
 
 
 def login_view(request):
-    form = SignUpForm(request.POST)
     if request.method == 'POST':
         form = AuthenticationForm(data=request.POST)
         if form.is_valid():

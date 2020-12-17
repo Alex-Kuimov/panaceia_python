@@ -31,16 +31,16 @@ class UserMain(models.Model):
     for i in queryset:
          time_zone_list.append((i.name, i.title))
 
-    gender = models.CharField(blank=True,  max_length=11, choices=gender_list, verbose_name='Пол')
+    gender = models.CharField(blank=True,  max_length=6, choices=gender_list, verbose_name='Пол')
     avatar = models.ImageField(blank=True, upload_to='images/users', verbose_name='Изображение')
 
     fio = models.CharField(blank=True, max_length=100, verbose_name='ФИО')
-    dob = models.CharField(blank=True, max_length=100, verbose_name='Дата рождения')
-    city = models.CharField(blank=True, max_length=100, verbose_name='Город')
-    time_zone = models.CharField(blank=True, max_length=2000, choices=time_zone_list, verbose_name='Временная зона')
+    dob = models.CharField(blank=True, max_length=10, verbose_name='Дата рождения')
+    city = models.CharField(blank=True, max_length=200, verbose_name='Город')
+    time_zone = models.CharField(blank=True, max_length=200, choices=time_zone_list, verbose_name='Временная зона')
     whatsapp = models.CharField(blank=True, max_length=20, verbose_name='WhatsApp')
-    skype = models.CharField(blank=True, max_length=100, verbose_name='Skype')
-    phone = models.CharField(blank=True, max_length=200, verbose_name='Номер телефона')
+    skype = models.CharField(blank=True, max_length=50, verbose_name='Skype')
+    phone = models.CharField(blank=True, max_length=20, verbose_name='Номер телефона')
 
     def __unicode__(self):
         return self.user
@@ -78,43 +78,11 @@ class UserDoctor(models.Model):
         return self.user.username
 
     def save_chk(self, name, request):
-
         if name in request.POST:
-            if name == 'doctor':
-                self.doctor = request.POST[name]
-
-            if name == 'consultant':
-                self.consultant = request.POST[name]
-
-            if name == 'fullDoctor':
-                self.fullDoctor = request.POST[name]
-
-            if name == 'author':
-                self.author = request.POST[name]
-
-            if name == 'patientGrown':
-                self.patientGrown = request.POST[name]
-
-            if name == 'patientChildren':
-                self.patientChildren = request.POST[name]
+            setattr(self, name, True)
         else:
-            if name == 'doctor':
-                self.doctor = False
+            setattr(self, name, False)
 
-            if name == 'consultant':
-                self.consultant = False
-
-            if name == 'fullDoctor':
-                self.fullDoctor = False
-
-            if name == 'author':
-                self.author = False
-
-            if name == 'patientGrown':
-                self.patientGrown = False
-
-            if name == 'patientChildren':
-                self.patientChildren = False
 
     class Meta:
         verbose_name = 'Профиль'
@@ -133,7 +101,7 @@ class Document(models.Model):
 
 class Specialty(models.Model):
     content = models.ForeignKey(User, on_delete=models.CASCADE)
-    title = models.CharField(max_length=200, verbose_name='Название')
+    title = models.CharField(max_length=100, verbose_name='Название')
 
     # add
     def add(self, request):
@@ -196,7 +164,7 @@ class Specialty(models.Model):
 
 class Associations(models.Model):
     content = models.ForeignKey(User, on_delete=models.CASCADE)
-    title = models.CharField(max_length=250, verbose_name='Название')
+    title = models.CharField(max_length=100, verbose_name='Название')
 
     # add
     def add(self, request):
@@ -260,8 +228,8 @@ class Associations(models.Model):
 
 class Education(models.Model):
     content = models.ForeignKey(User, on_delete=models.CASCADE)
-    years = models.CharField(max_length=250, verbose_name='Года')
-    name = models.CharField(max_length=1000, verbose_name='Название')
+    years = models.CharField(max_length=20, verbose_name='Года')
+    name = models.CharField(max_length=100, verbose_name='Название')
 
     # add
     def add(self, request):
@@ -326,9 +294,22 @@ class Education(models.Model):
         verbose_name_plural = 'Образование'
 
 
+class Qualification(models.Model):
+    content = models.ForeignKey(User, on_delete=models.CASCADE)
+    years = models.CharField(max_length=20, verbose_name='Года')
+    name = models.CharField(max_length=100, verbose_name='Название')
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = 'Повышение квалификации'
+        verbose_name_plural = 'Повышение квалификации'
+
+
 class Support(models.Model):
     user_id = models.IntegerField(blank=True)
-    user_name = models.CharField(blank=True, max_length=200)
+    user_name = models.CharField(blank=True, max_length=100)
     text = models.TextField(blank=True, max_length=3000)
 
     def __str__(self):

@@ -97,36 +97,28 @@
 
                     <div class="col-md-7 checkbox-block">
 
-                        <h5>*Общая</h5>
+                        <h5>*Как Вы будите принимать пациентов?</h5>
 
-                        {% if user_doctor.doctor == True %}
-                            <input type="checkbox" name="doctor" class="doctor_chk" value="True" checked> Я врач <img src="{% static 'img/question.png' %}" alt="Я врач" title="Здесь будет текст информации">
+                        {% if user_doctor.meet_online == True %}
+                            <input type="checkbox" name="meet_online" class="doctor_chk" value="True" checked> Прием онлайн <img src="{% static 'img/question.png' %}" alt="Прием онлайн" title="Здесь будет текст информации">
                         {% else %}
-                            <input type="checkbox" name="doctor" class="doctor_chk" value="False"> Я врач <img src="{% static 'img/question.png' %}" alt="Я врач" title="Здесь будет текст информации">
+                            <input type="checkbox" name="meet_online" class="doctor_chk" value="False"> Прием онлайн <img src="{% static 'img/question.png' %}" alt="Прием онлайн" title="Здесь будет текст информации">
                         {% endif %}
 
                         <br>
 
-                        {% if user_doctor.consultant == True %}
-                            <input type="checkbox" name="consultant" class="doctor_chk" value="True" checked> Я консультант <img src="{% static 'img/question.png' %}" alt="Я консультант" title="Здесь будет текст информации">
+                        {% if user_doctor.meet_offline == True %}
+                            <input type="checkbox" name="meet_offline" class="doctor_chk" value="True" checked> Прием оффлайн <img src="{% static 'img/question.png' %}" alt="Прием оффлайн" title="Здесь будет текст информации">
                         {% else %}
-                            <input type="checkbox" name="consultant" class="doctor_chk" value="False"> Я консультант <img src="{% static 'img/question.png' %}" alt="Я консультант" title="Здесь будет текст информации">
+                            <input type="checkbox" name="meet_offline" class="doctor_chk" value="False"> Прием оффлайн <img src="{% static 'img/question.png' %}" alt="Прием оффлайн" title="Здесь будет текст информации">
                         {% endif %}
 
                         <br>
 
-                        {% if user_doctor.fullDoctor == True %}
-                            <input type="checkbox" name="fullDoctor" class="doctor_chk" value="True" checked> Я врач и консультант <img src="{% static 'img/question.png' %}" alt="Я врач и консультант" title="Здесь будет текст информации">
+                        {% if user_doctor.meet_online_offline == True %}
+                            <input type="checkbox" name="meet_online_offline" class="doctor_chk" value="True" checked> Прием онлайн и оффлайн <img src="{% static 'img/question.png' %}" alt="Прием онлайн и оффлайн" title="Здесь будет текст информации">
                         {% else %}
-                            <input type="checkbox" name="fullDoctor" class="doctor_chk" value="False"> Я врач и консультант <img src="{% static 'img/question.png' %}" alt="Я врач и консультант" title="Здесь будет текст информации">
-                        {% endif %}
-
-                        <br>
-
-                        {% if user_doctor.author == True %}
-                            <input type="checkbox" name="author" class="doctor_chk" value="True" checked> Я автор видеолекций <img src="{% static 'img/question.png' %}" alt="Я автор видеолекций" title="Здесь будет текст информации">
-                        {% else %}
-                            <input type="checkbox" name="author" class="doctor_chk" value="False"> Я автор видеолекций <img src="{% static 'img/question.png' %}" alt="Я автор видеолекций" title="Здесь будет текст информации">
+                            <input type="checkbox" name="meet_online_offline" class="doctor_chk" value="False"> Прием онлайн и оффлайн <img src="{% static 'img/question.png' %}" alt="Прием онлайн и оффлайн" title="Здесь будет текст информации">
                         {% endif %}
 
                         <br>
@@ -153,40 +145,73 @@
 
                             <div class="row spec-block spec-block-{{ spec.id }}">
                                 <div class="col-8">
-                                    <input type="text" name="spec[{{ spec.id }}]" class="input-spec" id="input-spec-{{ spec.id }}" value="{{ spec.title }}" placeholder="специальность">
+                                    <input type="text" list="list-spec" name="spec[{{ spec.id }}]" class="input-spec" id="input-spec-{{ spec.id }}" value="{{ spec.title }}" placeholder="специальность">
                                 </div>
                                 <div class="col-4">
-                                    <a href="#" class="spec-remove" data-id="{{ spec.id }}">Удалить</a>
+                                    <a href="#" class="spec-remove item-remove" data-id="{{ spec.id }}" data-name="spec-block">Удалить</a>
                                 </div>
                             </div>
 
                         {% endfor %}
+
+                        <datalist id="list-spec">
+                            <select>
+                                {% for specialty in specialty_list%}
+                                    <option value="{{ specialty.name }}">{{ specialty.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </datalist>
 
                         <a href="#" class="spec-add">+ Добавить специальность</a>
                         <div class="line"></div>
                         <h4>Специализация</h4>
                         <input type="text" name="specialty" value="{{ user_doctor.specialty }}">
 
-
-                        {% if user_doctor.patientGrown == True %}
-                            <input type="checkbox" name="patientGrown" class="doctor_chk" value="True" checked> Взрослые
+                        {% if user_doctor.patient_grown == True %}
+                            <input type="checkbox" name="patient_grown" class="doctor_chk" value="True" checked> Взрослые
                         {% else %}
-                            <input type="checkbox" name="patientGrown" class="doctor_chk" value="False"> Взрослые
+                            <input type="checkbox" name="patient_grown" class="doctor_chk" value="False"> Взрослые
                         {% endif %}
 
-                        {% if user_doctor.patientChildren == True %}
-                            <input type="checkbox" name="patientChildren" class="doctor_chk" value="True" checked> Дети
+                        {% if user_doctor.patient_children == True %}
+                            <input type="checkbox" name="patient_children" class="doctor_chk" value="True" checked> Дети
                         {% else %}
-                            <input type="checkbox" name="patientChildren" class="doctor_chk" value="False"> Дети
+                            <input type="checkbox" name="patient_children" class="doctor_chk" value="False"> Дети
                         {% endif %}
 
                         <div class="line"></div>
 
                         <div class="row">
                             <div class="col-md-12 block-form">
+                                <h4>* Услуги</h4>
+
+                                {% for service in services %}
+                                    <div class="row se-block se-block-{{ service.id }}">
+                                        <div class="col-5">
+                                            <input type="text" name="se[{{ service.id }}]" value="{{ service.name }}" placeholder="Название">
+                                        </div>
+                                        <div class="col-3">
+                                            <input type="text" name="set[{{ service.id }}]" value="{{ service.time }}" placeholder="Время">
+                                        </div>
+                                        <div class="col-3">
+                                            <input type="text" name="sep[{{ service.id }}]" value="{{ service.price }}" placeholder="Цена">
+                                        </div>
+                                        <div class="col-1">
+                                            <a href="#" class="item-remove" data-id="" data-name="se-block">Удалить</a>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+
+                            </div>
+                        </div>
+
+                        <a href="#" class="se-add">+ Добавить услугу</a>
+
+                        <div class="row">
+                            <div class="col-md-12 block-form">
                                 <h4>Расскажите об опыте работы</h4>
-                                <textarea name="experienceText" rows="8" cols="80" placeholder="Расскажите ос воем опыте работы">{{user_doctor.experienceText}}</textarea>
-                                <input type="text" name="experienceYears" value="{{user_doctor.experienceYears}}" placeholder="Стаж">
+                                <textarea name="experience_text" rows="8" cols="80" placeholder="Расскажите ос воем опыте работы">{{user_doctor.experience_text}}</textarea>
+                                <input type="text" name="experience_years" value="{{user_doctor.experience_years}}" placeholder="Стаж">
                             </div>
                         </div>
 
@@ -203,14 +228,13 @@
                                     <input type="text" name="ed[{{ education.id }}]" value="{{ education.name }}" placeholder="Название организации">
                                 </div>
                                 <div class="col-4">
-                                    <a href="#" class="ed-remove" data-id="{{ education.id }}">Удалить</a>
+                                    <a href="#" class="ed-remove item-remove" data-id="{{ education.id }}" data-name="ed-block">Удалить</a>
                                 </div>
                             </div>
 
                         {% endfor %}
 
                         <a href="#" class="ed-add">+ Добавить учебное заведение</a>
-
 
                         <div class="line"></div>
                         <h4>Повышение квалификации</h4>
@@ -225,7 +249,7 @@
                                     <input type="text" name="qu[{{ qualification.id }}]" value="{{ qualification.name }}" placeholder="Название организации">
                                 </div>
                                 <div class="col-4">
-                                    <a href="#" class="qu-remove" data-id="{{ qualification.id }}">Удалить</a>
+                                    <a href="#" class="qu-remove item-remove" data-id="{{ qualification.id }}" data-name="qu-block">Удалить</a>
                                 </div>
                             </div>
 
@@ -243,7 +267,7 @@
                                     <input type="text" name="as[{{ association.id }}]" value="{{ association.title }}" placeholder="Название ассоциации">
                                 </div>
                                 <div class="col-4">
-                                    <a href="#" class="as-remove" data-id="{{ association.id }}">Удалить</a>
+                                    <a href="#" class="as-remove item-remove" data-id="{{ association.id }}" data-name="as-block">Удалить</a>
                                 </div>
                             </div>
 

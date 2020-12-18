@@ -1,13 +1,13 @@
 from django.http import HttpResponse, Http404, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import UserMain, UserDoctor, User, Specialty, Associations, Education, Qualification, Support, TimeZone
+from .models import UserMain, UserDoctor, User, Specialty, Associations, Education, Qualification, Support, TimeZone, SpecialtyList, Service
 from django.urls import reverse
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import authenticate, login, logout
 from .forms import SignUpForm, UserMainForm
 from django.contrib.auth.models import Group, User
 from blog.models import Article
-from .utility import UserFieldUtility
+from .utility import OneInputField, TwoInputField
 
 def home(request):
     return render(request, 'home.html')
@@ -28,6 +28,8 @@ def profile_page_view(request):
         user_qualification = Qualification.objects.filter(content=request.user)
         timezone = TimeZone.objects.all()
         articles = Article.objects.all()
+        specialty_list = SpecialtyList.objects.all()
+        services = Service.objects.all()
 
         data = {
             'user_profile': user_profile,
@@ -37,7 +39,9 @@ def profile_page_view(request):
             'user_education': user_education,
             'user_qualification': user_qualification,
             'timezone': timezone,
-            'articles': articles
+            'articles': articles,
+            'specialty_list': specialty_list,
+            'services': services
         }
 
         if request.path == '/profile/info/':
@@ -107,32 +111,31 @@ def save_doctor_data(request):
 
     user_doctor.specialty = request.POST['specialty']
     user_doctor.orgtype = request.POST['orgtype']
-    user_doctor.experienceText = request.POST['experienceText']
-    user_doctor.experienceYears = request.POST['experienceYears']
+    user_doctor.experience_text = request.POST['experience_text']
+    user_doctor.experience_years = request.POST['experience_years']
 
-    UserDoctor.save_chk(user_doctor, 'doctor', request)
-    UserDoctor.save_chk(user_doctor, 'consultant', request)
-    UserDoctor.save_chk(user_doctor, 'fullDoctor', request)
-    UserDoctor.save_chk(user_doctor, 'author', request)
+    UserDoctor.save_chk(user_doctor, 'meet_online', request)
+    UserDoctor.save_chk(user_doctor, 'meet_offline', request)
+    UserDoctor.save_chk(user_doctor, 'meet_online_offline', request)
 
-    UserDoctor.save_chk(user_doctor, 'patientGrown', request)
-    UserDoctor.save_chk(user_doctor, 'patientChildren', request)
+    UserDoctor.save_chk(user_doctor, 'patient_grown', request)
+    UserDoctor.save_chk(user_doctor, 'patient_children', request)
 
-    Specialty.add(user_spec, request)
-    Specialty.update(user_spec, request)
-    Specialty.remove(user_spec, request)
+    OneInputField.add(Specialty, user_spec, request, 'spec')
+    OneInputField.update(Specialty, user_spec, request, 'spec')
+    OneInputField.remove(Specialty, user_spec, request, 'spec')
 
-    Associations.add(user_associations, request)
-    Associations.update(user_associations, request)
-    Associations.remove(user_associations, request)
+    OneInputField.add(Associations, user_associations, request, 'as')
+    OneInputField.update(Associations, user_associations, request, 'as')
+    OneInputField.remove(Associations, user_associations, request, 'as')
 
-    Education.add(user_education, request)
-    Education.update(user_education, request)
-    Education.remove(user_education, request)
+    TwoInputField.add(Education, user_education, request, 'ed', 'edy')
+    TwoInputField.update(Education, user_education, request, {'ed': 'name', 'edy': 'years'})
+    TwoInputField.remove(Education, user_education, request, 'ed')
 
-    UserFieldUtility.add(user_qualification, Qualification, request, 'qu', 'quy')
-    UserFieldUtility.update(user_qualification, request, {'qu': 'name', 'quy': 'years'})
-    UserFieldUtility.remove(user_qualification, Qualification, request, 'qu')
+    TwoInputField.add(Qualification, user_qualification, request, 'qu', 'quy')
+    TwoInputField.update(Qualification, user_qualification, request, {'qu': 'name', 'quy': 'years'})
+    TwoInputField.remove(Qualification, user_qualification, request, 'qu')
 
     user_doctor.save()
 

@@ -13,15 +13,13 @@ $(document).ready(function(){
             $('.remove-avatar').on('click', profile.removeAvatar);
             $('.avatar').on('change', profile.changeAvatar);
             $('.doctor_chk').on('change', profile.typeSpecialty);
-            $('body').on('click', '.spec-remove', profile.removeSpec);
-            $('.spec-add').on('click', profile.addSpec);
-            $('body').on('click', '.as-remove', profile.removeAs);
-            $('.as-add').on('click', profile.addAs);
-            $('body').on('click', '.ed-remove', profile.removeEd);
-            $('.ed-add').on('click', profile.addEd);
 
-            $('body').on('click', '.qu-remove', profile.removeQu);
+            $('.spec-add').on('click', profile.addSpec);
+            $('.as-add').on('click', profile.addAs);
+            $('.ed-add').on('click', profile.addEd);
             $('.qu-add').on('click', profile.addQu);
+
+            $('body').on('click', '.item-remove', profile.removeItem);
         },
 
         readURL: function(input, img){
@@ -87,10 +85,10 @@ $(document).ready(function(){
 
             element += '<div class="row spec-block spec-block-'+countSpecElement+'">';
                 element += '<div class="col-8">';
-                    element += '<input type="text" name="spec['+countSpecElement+']" value="" placeholder="специальность">';
+                    element += '<input type="text" list="list-spec" name="spec['+countSpecElement+']" value="" placeholder="специальность">';
                 element += '</div>';
                 element += '<div class="col-4">';
-                    element += '<a href="#" class="spec-remove" data-id="'+countSpecElement+'">Удалить</a>';
+                    element += '<a href="#" class="spec-remove item-remove" data-id="'+countSpecElement+'" data-name="spec-block">Удалить</a>';
                 element += '</div>';
             element += '</div>';
 
@@ -109,7 +107,7 @@ $(document).ready(function(){
                     element += '<input type="text" name="as['+countElement+']" value="" placeholder="Название ассоциации">';
                 element += '</div>';
                 element += '<div class="col-4">';
-                    element += '<a href="#" class="as-remove" data-id="'+countElement+'">Удалить</a>';
+                    element += '<a href="#" class="as-remove item-remove" data-id="'+countElement+'" data-name="as-block">Удалить</a>';
                 element += '</div>';
             element += '</div>';
 
@@ -131,7 +129,7 @@ $(document).ready(function(){
                     element += '<input type="text" name="ed['+countEdElement+']" value="" placeholder="Название организации">';
                 element += '</div>';
                 element += '<div class="col-4">';
-                    element += '<a href="#" class="ed-remove" data-id="'+countEdElement+'">Удалить</a>';
+                    element += '<a href="#" class="ed-remove item-remove" data-id="'+countEdElement+'" data-name="ed-block">Удалить</a>';
                 element += '</div>';
             element += '</div>';
 
@@ -153,7 +151,7 @@ $(document).ready(function(){
                     element += '<input type="text" name="qu['+countQuElement+']" value="" placeholder="Название организации">';
                 element += '</div>';
                 element += '<div class="col-4">';
-                    element += '<a href="#" class="qu-remove" data-id="'+countQuElement+'">Удалить</a>';
+                    element += '<a href="#" class="qu-remove item-remove" data-id="'+countQuElement+'" data-name="qu-block">Удалить</a>';
                 element += '</div>';
             element += '</div>';
 
@@ -162,27 +160,10 @@ $(document).ready(function(){
             return false
         },
 
-        removeSpec: function(){
+        removeItem: function(){
             let itemID = $(this).attr('data-id');
-            $('.spec-block-'+itemID).remove();
-            return false
-        },
-
-        removeAs: function(){
-            let itemID = $(this).attr('data-id');
-            $('.as-block-'+itemID).remove();
-            return false
-        },
-
-        removeEd: function(){
-            let itemID = $(this).attr('data-id');
-            $('.ed-block-'+itemID).remove();
-            return false
-        },
-
-        removeQu: function(){
-            let itemID = $(this).attr('data-id');
-            $('.qu-block-'+itemID).remove();
+            let itemName = $(this).attr('data-name');
+            $('.'+itemName+'-'+itemID).remove();
             return false
         },
 

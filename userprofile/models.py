@@ -1,5 +1,3 @@
-import re
-
 from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
@@ -56,20 +54,22 @@ class UserMain(models.Model):
 class UserDoctor(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
 
-    ORGTYPES = [('ur', 'Юридическое лицо'),
-               ('fiz', 'Физическое лицо')]
+    org_types_list = [('ur', 'Юридическое лицо'),
+                    ('fiz', 'Физическое лицо')]
 
-    doctor = models.BooleanField(blank=True, null=True, verbose_name='Я врач')
-    consultant = models.BooleanField(blank=True, null=True, verbose_name='Я консультант')
-    fullDoctor = models.BooleanField(blank=True, null=True, verbose_name='Я врач и консультант')
+    meet_online = models.BooleanField(blank=True, null=True, verbose_name='Прием онлайн')
+    meet_offline = models.BooleanField(blank=True, null=True, verbose_name='Прием оффлайн')
+    meet_online_offline = models.BooleanField(blank=True, null=True, verbose_name='Прием онлайн и оффлайн')
+
     author = models.BooleanField(blank=True, null=True, verbose_name='Я автор видеолекций')
-    orgtype = models.CharField(blank=True, null=True, max_length=11, choices=ORGTYPES, verbose_name='Тип организации')
-    specialty = models.CharField(blank=True, max_length=100, verbose_name='Специализация')
-    patientGrown = models.BooleanField(blank=True, null=True, verbose_name='Взрослые')
-    patientChildren = models.BooleanField(blank=True, null=True, verbose_name='Дети')
 
-    experienceText = models.TextField(blank=True, max_length=3000, verbose_name='Опыт работы')
-    experienceYears = models.CharField(blank=True, max_length=2, verbose_name='Стаж')
+    orgtype = models.CharField(blank=True, null=True, max_length=11, choices=org_types_list, verbose_name='Тип организации')
+    specialty = models.CharField(blank=True, max_length=100, verbose_name='Специализация')
+    patient_grown = models.BooleanField(blank=True, null=True, verbose_name='Взрослые')
+    patient_children = models.BooleanField(blank=True, null=True, verbose_name='Дети')
+
+    experience_text = models.TextField(blank=True, max_length=3000, verbose_name='Опыт работы')
+    experience_years = models.CharField(blank=True, max_length=2, verbose_name='Стаж')
 
     def __unicode__(self):
         return self.user
@@ -103,57 +103,6 @@ class Specialty(models.Model):
     content = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=100, verbose_name='Название')
 
-    # add
-    def add(self, request):
-        post_list = []
-        model_list = []
-        pref = 'spec'
-
-        for key in request.POST:
-            if key.find(pref+'[') != -1:
-                post_list.append(key)
-
-        for key in self:
-            name = pref+'[{}]'.format(key.id)
-            model_list.append(name)
-
-        for item in post_list:
-            if not item in model_list:
-                if request.POST[item] != '':
-                    new_spec = Specialty.objects.create(title=request.POST[item], content_id=request.user.id)
-                    self.user = new_spec
-
-    # update
-    def update(self, request):
-        pref = 'spec'
-        for item in request.POST:
-            if item.find(pref+'[') != -1:
-                for i in self:
-                    name = pref+'[{}]'.format(i.id)
-                    if item == name:
-                        i.title = request.POST[name]
-                        i.save()
-
-    # remove
-    def remove(self, request):
-        post_list = []
-        model_list = []
-        pref = 'spec'
-
-        for key in request.POST:
-            if key.find(pref + '[') != -1:
-                post_list.append(key)
-
-        for key in self:
-            name = pref + '[{}]'.format(key.id)
-            model_list.append(name)
-
-        for item in model_list:
-            if not item in post_list:
-                index = re.sub(r'[^0-9.]+', r'', item)
-                instance = Specialty.objects.get(id=index)
-                instance.delete()
-
     def __str__(self):
         return self.title
 
@@ -165,58 +114,6 @@ class Specialty(models.Model):
 class Associations(models.Model):
     content = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=100, verbose_name='Название')
-
-    # add
-    def add(self, request):
-        post_list = []
-        model_list = []
-        pref = 'as'
-
-        for key in request.POST:
-            if key.find(pref + '[') != -1:
-                post_list.append(key)
-
-        for key in self:
-            name = pref + '[{}]'.format(key.id)
-            model_list.append(name)
-
-        for item in post_list:
-            if not item in model_list:
-                if request.POST[item] != '':
-                    index = re.sub(r'[^0-9.]+', r'', item)
-                    instance = Associations.objects.create(title=request.POST[pref+'[' + index + ']'], content_id=request.user.id)
-                    self.user = instance
-
-    # update
-    def update(self, request):
-        pref = 'as'
-        for item in request.POST:
-            if item.find(pref + '[') != -1:
-                for i in self:
-                    name = pref + '[{}]'.format(i.id)
-                    if item == name:
-                        i.title = request.POST[name]
-                        i.save()
-
-    # remove
-    def remove(self, request):
-        post_list = []
-        model_list = []
-        pref = 'as'
-
-        for key in request.POST:
-            if key.find(pref + '[') != -1:
-                post_list.append(key)
-
-        for key in self:
-            name = pref + '[{}]'.format(key.id)
-            model_list.append(name)
-
-        for item in model_list:
-            if not item in post_list:
-                item_id = re.sub(r'[^0-9.]+', r'', item)
-                instance = Associations.objects.get(id=item_id)
-                instance.delete()
 
     def __str__(self):
         return self.title
@@ -230,61 +127,6 @@ class Education(models.Model):
     content = models.ForeignKey(User, on_delete=models.CASCADE)
     years = models.CharField(max_length=20, verbose_name='Года')
     name = models.CharField(max_length=100, verbose_name='Название')
-
-    # add
-    def add(self, request):
-        post_list = []
-        model_list = []
-        pref = 'ed'
-
-        for key in request.POST:
-            if key.find(pref+'[') != -1:
-                post_list.append(key)
-
-        for key in self:
-            name = pref+'[{}]'.format(key.id)
-            model_list.append(name)
-
-        for item in post_list:
-            if not item in model_list:
-                if request.POST[item] != '':
-                    index = re.sub(r'[^0-9.]+', r'', item)
-                    instance = Education.objects.create(years=request.POST['edy['+index+']'], name=request.POST['ed['+index+']'], content_id=request.user.id)
-                    self.user = instance
-
-    # update
-    def update(self, request):
-        fields = {'ed': 'name', 'edy': 'years'}
-
-        for item in request.POST:
-            for key in fields.keys():
-                if item.find(key+'[') != -1:
-                    for i in self:
-                        name = key+'[{}]'.format(i.id)
-                        if item == name:
-                            val = fields.get(key)
-                            setattr(i, val, request.POST[name])
-                            i.save()
-
-    # remove
-    def remove(self, request):
-        post_list = []
-        model_list = []
-        pref = 'ed'
-
-        for key in request.POST:
-            if key.find(pref + '[') != -1:
-                post_list.append(key)
-
-        for key in self:
-            name = pref + '[{}]'.format(key.id)
-            model_list.append(name)
-
-        for item in model_list:
-            if not item in post_list:
-                index = re.sub(r'[^0-9.]+', r'', item)
-                instance = Education.objects.get(id=index)
-                instance.delete()
 
     def __str__(self):
         return self.name
@@ -307,6 +149,20 @@ class Qualification(models.Model):
         verbose_name_plural = 'Повышение квалификации'
 
 
+class Service(models.Model):
+    content = models.ForeignKey(User, on_delete=models.CASCADE)
+    name = models.CharField(max_length=100, verbose_name='Название')
+    time = models.CharField(max_length=20, verbose_name='Время')
+    price = models.CharField(max_length=20, verbose_name='Цена')
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = 'Услуга'
+        verbose_name_plural = 'Услуги'
+
+
 class Support(models.Model):
     user_id = models.IntegerField(blank=True)
     user_name = models.CharField(blank=True, max_length=100)
@@ -318,6 +174,17 @@ class Support(models.Model):
     class Meta:
         verbose_name = 'Сообщение в службу поддержки'
         verbose_name_plural = 'Сообщения в службу поддержки'
+
+
+class SpecialtyList(models.Model):
+    name = models.CharField(blank=True, max_length=100)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = 'Список специальностей'
+        verbose_name_plural = 'Список специальностей'
 
 
 @receiver(post_save, sender=User)

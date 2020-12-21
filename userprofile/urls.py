@@ -1,5 +1,4 @@
 from django.urls import path
-
 from . import views
 
 urlpatterns = [
@@ -21,4 +20,6 @@ urlpatterns = [
     path('change_user_pass', views.change_user_pass, name='change_user_pass'),
     path('save_user_settings', views.save_user_settings, name='save_user_settings'),
     path('save_support_message', views.save_support_message, name='save_support_message'),
+    path('save_user_doc', views.save_user_doc, name='save_user_doc'),
+    path('remove_user_doc/', views.remove_user_doc, name='remove_user_doc'),
 ]

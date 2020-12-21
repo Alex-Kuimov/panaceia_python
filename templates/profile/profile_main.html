@@ -92,10 +92,10 @@
             <div class="line"></div>
 
             {% if user.groups.all.0.name == "doctors" %}
-                <form action="{% url 'save_doctor_data' %}" method="POST" class="row">
-                    {% csrf_token %}
+                <div class="row">
 
-                    <div class="col-md-7 checkbox-block">
+                    <form action="{% url 'save_doctor_data' %}" method="POST" enctype="multipart/form-data" class="col-md-7 checkbox-block">
+                        {% csrf_token %}
 
                         <h5>*Как Вы будите принимать пациентов?</h5>
 
@@ -185,7 +185,7 @@
                             <div class="col-md-12 block-form">
                                 <h4>* Услуги</h4>
 
-                                {% for service in services %}
+                                {% for service in user_services %}
                                     <div class="row se-block se-block-{{ service.id }}">
                                         <div class="col-5">
                                             <input type="text" name="se[{{ service.id }}]" value="{{ service.name }}" placeholder="Название">
@@ -197,7 +197,7 @@
                                             <input type="text" name="sep[{{ service.id }}]" value="{{ service.price }}" placeholder="Цена">
                                         </div>
                                         <div class="col-1">
-                                            <a href="#" class="item-remove" data-id="" data-name="se-block">Удалить</a>
+                                            <a href="#" class="item-remove" data-id="{{ service.id }}" data-name="se-block">Удалить</a>
                                         </div>
                                     </div>
                                 {% endfor %}
@@ -275,60 +275,46 @@
 
                         <a href="#" class="as-add">+ Добавить ассоциацию</a>
 
-                    </div>
-                    <div class="col-md-5 documents-block">
+                        <div class="col-md-12">
+                            <button type="submit" name="button">Сохранить изменения</button>
+                        </div>
+
+                    </form>
+                    <form action="{% url 'save_user_doc' %}" method="POST" enctype="multipart/form-data" class="col-md-5 documents-block">
+                        {% csrf_token %}
                         <h4>Документы <img src="{% static 'img/question.png' %}" alt="Я врач" title="Здесь будет текст информации"></h4>
                         <div class="documents-specialist">
-                            <div class="row">
-                                <div class="col-4">
-                                    <img src="{% static 'img/foto.png' %}" alt="">
-                                </div>
-                                <div class="col-8">
-                                    Диплом о медицинском образовании (для врачей)
-                                    <a href="#">Загрузить</a> <a href="#">Удалить</a>
 
-                                </div>
-                            </div>
-                            <div class="line"></div>
-                            <div class="row">
-                                <div class="col-4">
-                                    <img src="{% static 'img/foto.png' %}" alt="">
-                                </div>
-                                <div class="col-8">
-                                    Диплом о медицинском образовании (для врачей)
-                                    <a href="#">Загрузить</a> <a href="#">Удалить</a>
+                            {% for documents in user_documents%}
 
+                                <div class="row">
+                                    <div class="col-4">
+                                        {% if documents.image != '' %}
+                                            <img src="/media/{{documents.image}}" alt="">
+                                        {% else %}
+                                            <img src="{% static 'img/foto.png' %}" alt="">
+                                        {% endif %}
+                                    </div>
+                                    <div class="col-8">
+                                        {{ documents.title }}
+                                        <p><a href="{% url 'remove_user_doc' %}?doc_id={{documents.id}}">Удалить</a></p>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="line"></div>
-                            <div class="row">
-                                <div class="col-4">
-                                    <img src="{% static 'img/foto.png' %}" alt="">
-                                </div>
-                                <div class="col-8">
-                                    Диплом о медицинском образовании (для врачей)
-                                    <a href="#">Загрузить</a> <a href="#">Удалить</a>
+                                <div class="line"></div>
 
-                                </div>
-                            </div>
-                            <div class="line"></div>
-                            <div class="row">
-                                <div class="col-4">
-                                    <img src="{% static 'img/foto.png' %}" alt="">
-                                </div>
-                                <div class="col-8">
-                                    Диплом о медицинском образовании (для врачей)
-                                    <a href="#">Загрузить</a> <a href="#">Удалить</a>
+                            {% endfor %}
 
-                                </div>
-                            </div>
                         </div>
-                    </div>
 
-                    <div class="col-md-12">
-                        <button type="submit" name="button">Сохранить изменения</button>
-                    </div>
-                </form>
+                        <input type="text" name="doc_name" placeholder="Название">
+                        <label for="doc_file" class="doc_file_label" style="cursor:pointer">Прикрепить файл</label>
+                        <input type="file" id="doc_file" name="doc_file" class="doc_file" style="display:none">
+                        <div class="col-md-12">
+                            <button type="submit" name="button">Добавить</button>
+                        </div>
+                    </form>
+
+                </div>
             {% endif %}
         </div>
     </div>

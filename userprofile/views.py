@@ -1,13 +1,14 @@
 from django.http import HttpResponse, Http404, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import UserMain, UserDoctor, User, Specialty, Associations, Education, Qualification, Support, TimeZone, SpecialtyList, Service
+from .models import UserMain, UserDoctor, User, Specialty, Associations, Education, Qualification, Support, TimeZone, SpecialtyList, Service, Document
 from django.urls import reverse
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import authenticate, login, logout
 from .forms import SignUpForm, UserMainForm
 from django.contrib.auth.models import Group, User
 from blog.models import Article
-from .utility import OneInputField, TwoInputField
+from .utility import OneInputField, TwoInputField, ThreeInputField
+from django.contrib.auth.decorators import login_required
 
 def home(request):
     return render(request, 'home.html')
@@ -18,6 +19,7 @@ def user_main(request):
     return render(request, 'base_generic.html', {'user_profile': user_profile})
 
 
+@login_required
 def profile_page_view(request):
     if request.user.is_authenticated:
         user_profile = UserMain.objects.get(user=request.user)
@@ -26,10 +28,13 @@ def profile_page_view(request):
         user_associations = Associations.objects.filter(content=request.user)
         user_education = Education.objects.filter(content=request.user)
         user_qualification = Qualification.objects.filter(content=request.user)
+        user_services = Service.objects.filter(content=request.user)
+        user_documents = Document.objects.filter(content=request.user)
+
         timezone = TimeZone.objects.all()
         articles = Article.objects.all()
         specialty_list = SpecialtyList.objects.all()
-        services = Service.objects.all()
+
 
         data = {
             'user_profile': user_profile,
@@ -38,10 +43,12 @@ def profile_page_view(request):
             'user_associations': user_associations,
             'user_education': user_education,
             'user_qualification': user_qualification,
+            'user_services': user_services,
+            'user_documents': user_documents,
             'timezone': timezone,
             'articles': articles,
             'specialty_list': specialty_list,
-            'services': services
+
         }
 
         if request.path == '/profile/info/':
@@ -72,6 +79,7 @@ def profile_page_view(request):
         return redirect('login')
 
 
+@login_required
 def save_main_data(request):
     if request.method == 'POST':
         form = UserMainForm(request.POST, request.FILES)
@@ -102,12 +110,14 @@ def save_main_data(request):
     return HttpResponseRedirect(reverse('user_profile_main'))
 
 
+@login_required
 def save_doctor_data(request):
     user_doctor = UserDoctor.objects.get(user=request.user)
     user_spec = Specialty.objects.filter(content=request.user)
     user_associations = Associations.objects.filter(content=request.user)
     user_education = Education.objects.filter(content=request.user)
     user_qualification = Qualification.objects.filter(content=request.user)
+    user_service = Service.objects.filter(content=request.user)
 
     user_doctor.specialty = request.POST['specialty']
     user_doctor.orgtype = request.POST['orgtype']
@@ -136,6 +146,10 @@ def save_doctor_data(request):
     TwoInputField.add(Qualification, user_qualification, request, 'qu', 'quy')
     TwoInputField.update(Qualification, user_qualification, request, {'qu': 'name', 'quy': 'years'})
     TwoInputField.remove(Qualification, user_qualification, request, 'qu')
+
+    ThreeInputField.add(Service, user_service, request, 'se', 'set', 'sep')
+    ThreeInputField.update(Service, user_service, request, {'se': 'name', 'set': 'time', 'sep': 'price'})
+    ThreeInputField.remove(Service, user_service, request, 'se')
 
     user_doctor.save()
 
@@ -218,6 +232,7 @@ def logout_view(request):
     return redirect('login')
 
 
+@login_required
 def change_user_pass(request):
     user = User.objects.get(pk=request.user.id)
 
@@ -231,6 +246,7 @@ def change_user_pass(request):
     return redirect('user_profile_settings')
 
 
+@login_required
 def save_user_settings(request):
     user_profile = UserMain.objects.get(user=request.user)
     user = User.objects.get(pk=request.user.id)
@@ -244,6 +260,26 @@ def save_user_settings(request):
     return redirect('user_profile_settings')
 
 
+@login_required
+def save_user_doc(request):
+    if request.method == 'POST':
+        if 'doc_file' in request.FILES:
+            instance = Document.objects.create(title=request.POST['doc_name'], image=request.FILES['doc_file'], content_id=request.user.id)
+            Document.user = instance
+
+    return HttpResponseRedirect(reverse('user_profile_main'))
+
+
+@login_required
+def remove_user_doc(request):
+    if request.method == 'GET':
+        index = request.GET['doc_id']
+        instance = Document.objects.get(id=index)
+        instance.delete()
+    return HttpResponseRedirect(reverse('user_profile_main'))
+
+
+@login_required
 def save_support_message(request):
     if request.method == 'POST':
         user_id = request.user.id

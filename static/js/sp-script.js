@@ -6,20 +6,25 @@ $(document).ready(function(){
     let countElement = 0;
     let countEdElement = 0;
     let countQuElement = 0;
+    let countSeElement = 0;
 
     let profile = {
 
         action: function(){
             $('.remove-avatar').on('click', profile.removeAvatar);
             $('.avatar').on('change', profile.changeAvatar);
+
             $('.doctor_chk').on('change', profile.typeSpecialty);
 
             $('.spec-add').on('click', profile.addSpec);
             $('.as-add').on('click', profile.addAs);
             $('.ed-add').on('click', profile.addEd);
             $('.qu-add').on('click', profile.addQu);
+            $('.se-add').on('click', profile.addSe);
 
             $('body').on('click', '.item-remove', profile.removeItem);
+
+            $('.doc_file').on('change', profile.changeDoc);
         },
 
         readURL: function(input, img){
@@ -158,6 +163,55 @@ $(document).ready(function(){
             $(this).before(element);
 
             return false
+        },
+
+        addSe: function(){
+            let element = '';
+
+            countSeElement = countSeElement + 1;
+
+            element += '<div class="row se-block se-block-'+countSeElement+'">';
+                element += '<div class="col-5">';
+                    element += '<input type="text" name="se['+countSeElement+']" value="" placeholder="Название">';
+                element += '</div>';
+                element += '<div class="col-3">';
+                    element += '<input type="text" name="set['+countSeElement+']" value="" placeholder="Время">';
+                element += '</div>';
+                element += '<div class="col-3">';
+                    element += '<input type="text" name="sep['+countSeElement+']" value="" placeholder="Цена">';
+                element += '</div>';
+                element += '<div class="col-1">';
+                    element += '<a href="#" class="item-remove" data-id="'+countSeElement+'" data-name="se-block">Удалить</a>';
+                element += '</div>';
+            element += '</div>';
+
+            $(this).before(element);
+
+            return false
+        },
+
+        changeDoc: function(){
+
+            let file = this.files;
+
+            if(typeof(file)!=='undefined'){
+                let size = file[0].size;
+                let type = file[0].type;
+                let name = file[0].name;
+
+                if(type == 'image/jpeg' || type == 'image/jpg' || type == 'image/png'){
+
+                    if(size <= 1500000){
+                        profile.readURL(this, '.doc_file');
+                        $('.doc_file_label').html(name)
+                    } else {
+                        alert('Error size!');
+                    }
+
+                } else {
+                    alert('Error format!');
+                }
+            }
         },
 
         removeItem: function(){

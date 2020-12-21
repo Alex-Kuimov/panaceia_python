@@ -94,6 +94,9 @@ class Document(models.Model):
     title = models.CharField(max_length=200, verbose_name='Название')
     image = models.ImageField(blank=True, upload_to='media/', verbose_name='Изображение')
 
+    def __str__(self):
+        return self.title
+
     class Meta:
         verbose_name = 'Документ'
         verbose_name_plural = 'Документы'

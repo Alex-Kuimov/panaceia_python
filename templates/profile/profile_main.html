@@ -7,8 +7,21 @@
     <div class="row">
         <div class="col-md-12 block-info">
             <div class="row">
+
                 <div class="col-md-5">
                     <h4>Инфомация в моем профиле</h4>
+                </div>
+
+                <div class="col-md-12">
+                    {% if user.groups.all.0.name == "doctors" %}
+
+                        {% if user_doctor.verified == True %}
+                            <div class="alert alert-success"><p>Аккаунт верифицирован!</p></div>
+                        {% else %}
+                            <div class="alert alert-danger"><p>Аккаунт не верифицирован. Для его верификации, отправьте копию паспора и копию диплома, используя форму на этой <a href="{% url 'user_profile_settings' %}">странице</a>.</p></div>
+                        {% endif %}
+
+                    {% endif %}
                 </div>
 
             </div>
@@ -80,8 +93,9 @@
                             </div>
                             <div class="col-md-9">
                                 <input type="text" name="email" value="{{user.email}}" minlength="5" maxlength="100" placeholder="E-mail">
+                                + <input type="number" name="phone" value="{{user_profile.phone}}" placeholder="Номер телефона">
                                 <input type="text" name="skype" value="{{user_profile.skype}}" minlength="5" maxlength="50" placeholder="Skype">
-                                <input type="text" name="whatsapp" value="{{user_profile.whatsapp}}" minlength="5" maxlength="20" placeholder="Whatsapp">
+                                + <input type="number" name="whatsapp" value="{{user_profile.whatsapp}}" minlength="5" maxlength="20" placeholder="Whatsapp">
                                 <br>
                                 <button type="submit" name="button">Сохранить изменения</button>
                             </div>
@@ -306,12 +320,13 @@
 
                         </div>
 
-                        <input type="text" name="doc_name" placeholder="Название">
+                        <input type="text" name="doc_name" placeholder="Название" required>
                         <label for="doc_file" class="doc_file_label" style="cursor:pointer">Прикрепить файл</label>
                         <input type="file" id="doc_file" name="doc_file" class="doc_file" style="display:none">
                         <div class="col-md-12">
                             <button type="submit" name="button">Добавить</button>
                         </div>
+
                     </form>
 
                 </div>

@@ -4,11 +4,12 @@ from .models import UserMain, UserDoctor, User, Specialty, Associations, Educati
 from django.urls import reverse
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import authenticate, login, logout
-from .forms import SignUpForm, UserMainForm
+from .forms import SignUpForm, UserMainForm, DocumentForm
 from django.contrib.auth.models import Group, User
 from blog.models import Article
 from .utility import OneInputField, TwoInputField, ThreeInputField
 from django.contrib.auth.decorators import login_required
+
 
 def home(request):
     return render(request, 'home.html')
@@ -48,7 +49,6 @@ def profile_page_view(request):
             'timezone': timezone,
             'articles': articles,
             'specialty_list': specialty_list,
-
         }
 
         if request.path == '/profile/info/':
@@ -98,6 +98,7 @@ def save_main_data(request):
             user_profile.time_zone = request.POST['timezone']
             user_profile.whatsapp = request.POST['whatsapp']
             user_profile.skype = request.POST['skype']
+            user_profile.phone = request.POST['phone']
 
             if 'avatar' in request.FILES:
                 user_profile.avatar = request.FILES['avatar']
@@ -107,53 +108,57 @@ def save_main_data(request):
 
             user_profile.save()
 
-    return HttpResponseRedirect(reverse('user_profile_main'))
+    return HttpResponseRedirect(reverse('save_data_success'))
 
 
 @login_required
 def save_doctor_data(request):
-    user_doctor = UserDoctor.objects.get(user=request.user)
-    user_spec = Specialty.objects.filter(content=request.user)
-    user_associations = Associations.objects.filter(content=request.user)
-    user_education = Education.objects.filter(content=request.user)
-    user_qualification = Qualification.objects.filter(content=request.user)
-    user_service = Service.objects.filter(content=request.user)
+    if request.method == 'POST':
 
-    user_doctor.specialty = request.POST['specialty']
-    user_doctor.orgtype = request.POST['orgtype']
-    user_doctor.experience_text = request.POST['experience_text']
-    user_doctor.experience_years = request.POST['experience_years']
+        # get data
+        user_doctor = UserDoctor.objects.get(user=request.user)
+        user_spec = Specialty.objects.filter(content=request.user)
+        user_associations = Associations.objects.filter(content=request.user)
+        user_education = Education.objects.filter(content=request.user)
+        user_qualification = Qualification.objects.filter(content=request.user)
+        user_service = Service.objects.filter(content=request.user)
 
-    UserDoctor.save_chk(user_doctor, 'meet_online', request)
-    UserDoctor.save_chk(user_doctor, 'meet_offline', request)
-    UserDoctor.save_chk(user_doctor, 'meet_online_offline', request)
+        # simple data save
+        user_doctor.orgtype = request.POST['orgtype']
+        user_doctor.specialty = request.POST['specialty']
+        user_doctor.experience_text = request.POST['experience_text']
+        user_doctor.experience_years = request.POST['experience_years']
+        user_doctor.save()
 
-    UserDoctor.save_chk(user_doctor, 'patient_grown', request)
-    UserDoctor.save_chk(user_doctor, 'patient_children', request)
+        # checkbox data save
+        UserDoctor.save_chk(user_doctor, 'meet_online', request)
+        UserDoctor.save_chk(user_doctor, 'meet_offline', request)
+        UserDoctor.save_chk(user_doctor, 'meet_online_offline', request)
+        UserDoctor.save_chk(user_doctor, 'patient_grown', request)
+        UserDoctor.save_chk(user_doctor, 'patient_children', request)
 
-    OneInputField.add(Specialty, user_spec, request, 'spec')
-    OneInputField.update(Specialty, user_spec, request, 'spec')
-    OneInputField.remove(Specialty, user_spec, request, 'spec')
+        # multi input field data save
+        OneInputField.add(Specialty, user_spec, request, 'spec')
+        OneInputField.update(Specialty, user_spec, request, 'spec')
+        OneInputField.remove(Specialty, user_spec, request, 'spec')
 
-    OneInputField.add(Associations, user_associations, request, 'as')
-    OneInputField.update(Associations, user_associations, request, 'as')
-    OneInputField.remove(Associations, user_associations, request, 'as')
+        OneInputField.add(Associations, user_associations, request, 'as')
+        OneInputField.update(Associations, user_associations, request, 'as')
+        OneInputField.remove(Associations, user_associations, request, 'as')
 
-    TwoInputField.add(Education, user_education, request, 'ed', 'edy')
-    TwoInputField.update(Education, user_education, request, {'ed': 'name', 'edy': 'years'})
-    TwoInputField.remove(Education, user_education, request, 'ed')
+        TwoInputField.add(Education, user_education, request, 'ed', 'edy')
+        TwoInputField.update(Education, user_education, request, {'ed': 'name', 'edy': 'years'})
+        TwoInputField.remove(Education, user_education, request, 'ed')
 
-    TwoInputField.add(Qualification, user_qualification, request, 'qu', 'quy')
-    TwoInputField.update(Qualification, user_qualification, request, {'qu': 'name', 'quy': 'years'})
-    TwoInputField.remove(Qualification, user_qualification, request, 'qu')
+        TwoInputField.add(Qualification, user_qualification, request, 'qu', 'quy')
+        TwoInputField.update(Qualification, user_qualification, request, {'qu': 'name', 'quy': 'years'})
+        TwoInputField.remove(Qualification, user_qualification, request, 'qu')
 
-    ThreeInputField.add(Service, user_service, request, 'se', 'set', 'sep')
-    ThreeInputField.update(Service, user_service, request, {'se': 'name', 'set': 'time', 'sep': 'price'})
-    ThreeInputField.remove(Service, user_service, request, 'se')
+        ThreeInputField.add(Service, user_service, request, 'se', 'set', 'sep')
+        ThreeInputField.update(Service, user_service, request, {'se': 'name', 'set': 'time', 'sep': 'price'})
+        ThreeInputField.remove(Service, user_service, request, 'se')
 
-    user_doctor.save()
-
-    return HttpResponseRedirect(reverse('user_profile_main'))
+    return HttpResponseRedirect(reverse('save_data_success'))
 
 
 def signup_user_view(request):
@@ -263,11 +268,14 @@ def save_user_settings(request):
 @login_required
 def save_user_doc(request):
     if request.method == 'POST':
-        if 'doc_file' in request.FILES:
-            instance = Document.objects.create(title=request.POST['doc_name'], image=request.FILES['doc_file'], content_id=request.user.id)
-            Document.user = instance
+        form = DocumentForm(request.POST, request.FILES)
 
-    return HttpResponseRedirect(reverse('user_profile_main'))
+        if form.is_valid():
+            if 'doc_file' in request.FILES:
+                instance = Document.objects.create(title=request.POST['doc_name'], image=request.FILES['doc_file'], content_id=request.user.id)
+                Document.user = instance
+
+    return HttpResponseRedirect(reverse('save_data_success'))
 
 
 @login_required
@@ -290,3 +298,8 @@ def save_support_message(request):
         s.save()
 
     return render(request, 'profile/settings.html', {'txt': 'Сообщение отправлено!'})
+
+
+@login_required
+def save_data_success(request):
+    return render(request, 'profile/success.html')

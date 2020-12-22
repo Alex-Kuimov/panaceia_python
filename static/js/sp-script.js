@@ -90,7 +90,7 @@ $(document).ready(function(){
 
             element += '<div class="row spec-block spec-block-'+countSpecElement+'">';
                 element += '<div class="col-8">';
-                    element += '<input type="text" list="list-spec" name="spec['+countSpecElement+']" value="" placeholder="специальность">';
+                    element += '<input type="text" list="list-spec" name="spec['+countSpecElement+']" value="" placeholder="специальность" required>';
                 element += '</div>';
                 element += '<div class="col-4">';
                     element += '<a href="#" class="spec-remove item-remove" data-id="'+countSpecElement+'" data-name="spec-block">Удалить</a>';
@@ -109,7 +109,7 @@ $(document).ready(function(){
 
             element += '<div class="row as-block as-block-'+countElement+'">';
                 element += '<div class="col-8">';
-                    element += '<input type="text" name="as['+countElement+']" value="" placeholder="Название ассоциации">';
+                    element += '<input type="text" name="as['+countElement+']" value="" placeholder="Название ассоциации" required>';
                 element += '</div>';
                 element += '<div class="col-4">';
                     element += '<a href="#" class="as-remove item-remove" data-id="'+countElement+'" data-name="as-block">Удалить</a>';
@@ -128,10 +128,10 @@ $(document).ready(function(){
 
             element += '<div class="row ed-block ed-block-'+countEdElement+'">';
                 element += '<div class="col-3">';
-                    element += '<input type="text" name="edy['+countEdElement+']" value="" placeholder="Года">';
+                    element += '<input type="text" name="edy['+countEdElement+']" value="" placeholder="Года" required>';
                 element += '</div>';
                 element += '<div class="col-5">';
-                    element += '<input type="text" name="ed['+countEdElement+']" value="" placeholder="Название организации">';
+                    element += '<input type="text" name="ed['+countEdElement+']" value="" placeholder="Название организации" required>';
                 element += '</div>';
                 element += '<div class="col-4">';
                     element += '<a href="#" class="ed-remove item-remove" data-id="'+countEdElement+'" data-name="ed-block">Удалить</a>';
@@ -150,10 +150,10 @@ $(document).ready(function(){
 
             element += '<div class="row qu-block qu-block-'+countQuElement+'">';
                 element += '<div class="col-3">';
-                    element += '<input type="text" name="quy['+countQuElement+']" value="" placeholder="Года">';
+                    element += '<input type="text" name="quy['+countQuElement+']" value="" placeholder="Года" required>';
                 element += '</div>';
                 element += '<div class="col-5">';
-                    element += '<input type="text" name="qu['+countQuElement+']" value="" placeholder="Название организации">';
+                    element += '<input type="text" name="qu['+countQuElement+']" value="" placeholder="Название организации" required>';
                 element += '</div>';
                 element += '<div class="col-4">';
                     element += '<a href="#" class="qu-remove item-remove" data-id="'+countQuElement+'" data-name="qu-block">Удалить</a>';
@@ -172,13 +172,13 @@ $(document).ready(function(){
 
             element += '<div class="row se-block se-block-'+countSeElement+'">';
                 element += '<div class="col-5">';
-                    element += '<input type="text" name="se['+countSeElement+']" value="" placeholder="Название">';
+                    element += '<input type="text" name="se['+countSeElement+']" value="" placeholder="Название" required>';
                 element += '</div>';
                 element += '<div class="col-3">';
-                    element += '<input type="text" name="set['+countSeElement+']" value="" placeholder="Время">';
+                    element += '<input type="text" name="set['+countSeElement+']" value="" placeholder="Время" required>';
                 element += '</div>';
                 element += '<div class="col-3">';
-                    element += '<input type="text" name="sep['+countSeElement+']" value="" placeholder="Цена">';
+                    element += '<input type="text" name="sep['+countSeElement+']" value="" placeholder="Цена" required>';
                 element += '</div>';
                 element += '<div class="col-1">';
                     element += '<a href="#" class="item-remove" data-id="'+countSeElement+'" data-name="se-block">Удалить</a>';

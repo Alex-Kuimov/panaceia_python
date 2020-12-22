@@ -22,4 +22,5 @@ urlpatterns = [
     path('save_support_message', views.save_support_message, name='save_support_message'),
     path('save_user_doc', views.save_user_doc, name='save_user_doc'),
     path('remove_user_doc/', views.remove_user_doc, name='remove_user_doc'),
+    path('save_data_success/', views.save_data_success, name='save_data_success'),
 ]

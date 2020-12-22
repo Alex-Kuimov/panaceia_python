@@ -71,6 +71,8 @@ class UserDoctor(models.Model):
     experience_text = models.TextField(blank=True, max_length=3000, verbose_name='Опыт работы')
     experience_years = models.CharField(blank=True, max_length=2, verbose_name='Стаж')
 
+    verified = models.BooleanField(blank=True, null=True, verbose_name='Аккаунт верифицирован')
+
     def __unicode__(self):
         return self.user
 
@@ -91,7 +93,7 @@ class UserDoctor(models.Model):
 
 class Document(models.Model):
     content = models.ForeignKey(User, on_delete=models.CASCADE)
-    title = models.CharField(max_length=200, verbose_name='Название')
+    title = models.CharField(max_length=100, verbose_name='Название')
     image = models.ImageField(blank=True, upload_to='media/', verbose_name='Изображение')
 
     def __str__(self):

@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from .models import UserMain
+from .models import UserMain, Document
 
 
 class SignUpForm(UserCreationForm):
@@ -63,3 +63,18 @@ class UserMainForm(forms.ModelForm):
     class Meta:
         model = UserMain
         fields = ['email', 'fio', 'dob', 'city', 'time_zone', 'gender', 'skype', 'whatsapp']
+
+
+class DocumentForm(forms.ModelForm):
+    doc_name = forms.CharField(
+        max_length=100,
+        min_length=3,
+        required=True,
+        label='Название',
+    )
+
+    doc_file = forms.ImageField(required=True, label='Изображение')
+
+    class Meta:
+        model = Document
+        fields = ['doc_name', 'doc_file']

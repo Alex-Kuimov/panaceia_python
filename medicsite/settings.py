@@ -130,3 +130,11 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = (
     os.path.join(BASE_DIR, 'media')
 )
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'mail.hosting.reg.ru'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'robots@u1233610.isp.regruhosting.ru'
+EMAIL_HOST_PASSWORD = 'H0g9P9y3'
+DEFAULT_FROM_EMAIL = 'robots@u1233610.isp.regruhosting.ru'

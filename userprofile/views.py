@@ -9,6 +9,7 @@ from django.contrib.auth.models import Group, User
 from blog.models import Article
 from .utility import OneInputField, TwoInputField, ThreeInputField
 from django.contrib.auth.decorators import login_required
+from django.core.mail import EmailMessage
 
 
 def home(request):
@@ -252,20 +253,6 @@ def change_user_pass(request):
 
 
 @login_required
-def save_user_settings(request):
-    user_profile = UserMain.objects.get(user=request.user)
-    user = User.objects.get(pk=request.user.id)
-
-    user.email = request.POST['email']
-    user.save()
-
-    user_profile.phone = request.POST['phone']
-    user_profile.save()
-
-    return redirect('user_profile_settings')
-
-
-@login_required
 def save_user_doc(request):
     if request.method == 'POST':
         form = DocumentForm(request.POST, request.FILES)
@@ -301,5 +288,57 @@ def save_support_message(request):
 
 
 @login_required
+def send_file_for_verified(request):
+    user_profile = UserMain.objects.get(user=request.user)
+    user_name = request.user.username
+
+    fio = user_profile.fio
+    phone = user_profile.phone
+    email = request.user.email
+
+    user_id = request.user.id
+    subject = 'Верификация пользователя - ' + user_name + '(' + str(user_id) + ')'
+    content = '<p>Пользователь <b>' + user_name + '</b> запросил верификацию.</p>'
+
+    if fio != '':
+        content += '<p><b>ФИО:</b> ' + fio + '</p>'
+
+    if email != '':
+        content += '<p><b>E-mail:</b> ' + email + '</p>'
+
+    if phone != '':
+        content += '<p><b>Телефон:</b> ' + phone + '</p>'
+
+    contact_email = 'robots@u1233610.isp.regruhosting.ru'
+    to = ['spoot@bk.ru']
+
+    email = EmailMessage(
+        subject,
+        content,
+        contact_email,
+        to,
+        headers={'Reply-To': contact_email}
+    )
+
+    if request.FILES:
+        passport_photo = request.FILES['passport_photo']
+        diplom_photo = request.FILES['diplom_photo']
+        email.attach(passport_photo.name, passport_photo.read(), passport_photo.content_type)
+        email.attach(diplom_photo.name, diplom_photo.read(), diplom_photo.content_type)
+
+    email.content_subtype = 'html'
+    email.send()
+
+    return HttpResponseRedirect(reverse('save_verification_success'))
+
+
+@login_required
 def save_data_success(request):
-    return render(request, 'profile/success.html')
+    user_profile = UserMain.objects.get(user=request.user)
+    return render(request, 'profile/success.html', {'user_profile': user_profile})
+
+
+@login_required
+def save_verification_success(request):
+    user_profile = UserMain.objects.get(user=request.user)
+    return render(request, 'profile/verification_success.html', {'user_profile': user_profile})

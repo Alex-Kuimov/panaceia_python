@@ -25,6 +25,9 @@ $(document).ready(function(){
             $('body').on('click', '.item-remove', profile.removeItem);
 
             $('.doc_file').on('change', profile.changeDoc);
+
+            $('.passport_photo').on('change', profile.changePassport);
+            $('.diplom_photo').on('change', profile.changeDiplom);
         },
 
         readURL: function(input, img){
@@ -204,6 +207,54 @@ $(document).ready(function(){
                     if(size <= 1500000){
                         profile.readURL(this, '.doc_file');
                         $('.doc_file_label').html(name)
+                    } else {
+                        alert('Error size!');
+                    }
+
+                } else {
+                    alert('Error format!');
+                }
+            }
+        },
+
+        changePassport: function(){
+
+            let file = this.files;
+
+            if(typeof(file)!=='undefined'){
+                let size = file[0].size;
+                let type = file[0].type;
+                let name = file[0].name;
+
+                if(type == 'image/jpeg' || type == 'image/jpg' || type == 'image/png'){
+
+                    if(size <= 1500000){
+                        profile.readURL(this, '.doc_file');
+                        $('.passport_photo_label').html(name)
+                    } else {
+                        alert('Error size!');
+                    }
+
+                } else {
+                    alert('Error format!');
+                }
+            }
+        },
+
+        changeDiplom: function(){
+
+            let file = this.files;
+
+            if(typeof(file)!=='undefined'){
+                let size = file[0].size;
+                let type = file[0].type;
+                let name = file[0].name;
+
+                if(type == 'image/jpeg' || type == 'image/jpg' || type == 'image/png'){
+
+                    if(size <= 1500000){
+                        profile.readURL(this, '.doc_file');
+                        $('.diplom_photo_label').html(name)
                     } else {
                         alert('Error size!');
                     }

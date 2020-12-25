@@ -177,6 +177,22 @@ def signup_user_view(request):
             user_profile.fio = request.POST['first_name']
             user_profile.save()
 
+            subject = 'Регистрация на сайте Panaceia'
+            content = '<p>Поздравляем! Вы успешно зарегистрированы на сайте Panaceia.</p>'
+            to = [request.POST['email']]
+            contact_email = 'robots@u1233610.isp.regruhosting.ru'
+
+            email = EmailMessage(
+                subject,
+                content,
+                contact_email,
+                to,
+                headers={'Reply-To': contact_email}
+            )
+
+            email.content_subtype = 'html'
+            email.send()
+
             return render(request, 'profile/login.html', {'msg': 'Вы успешно зарегестрированы!'})
         else:
             return render(request, 'profile/registration_user_form.html', {'form': form})
@@ -201,6 +217,22 @@ def signup_doctor_view(request):
             user_profile = UserMain.objects.get(user=signup_user)
             user_profile.fio = request.POST['first_name']
             user_profile.save()
+
+            subject = 'Регистрация на сайте Panaceia'
+            content = '<p>Поздравляем! Вы успешно зарегистрированы на сайте Panaceia.</p>'
+            to = [request.POST['email']]
+            contact_email = 'robots@u1233610.isp.regruhosting.ru'
+
+            email = EmailMessage(
+                subject,
+                content,
+                contact_email,
+                to,
+                headers={'Reply-To': contact_email}
+            )
+
+            email.content_subtype = 'html'
+            email.send()
 
             return render(request, 'profile/login.html', {'msg': 'Вы успешно зарегестрированы!'})
         else:
@@ -294,7 +326,7 @@ def send_file_for_verified(request):
 
     fio = user_profile.fio
     phone = user_profile.phone
-    email = request.user.email
+    user_email = request.user.email
 
     user_id = request.user.id
     subject = 'Верификация пользователя - ' + user_name + '(' + str(user_id) + ')'
@@ -303,8 +335,8 @@ def send_file_for_verified(request):
     if fio != '':
         content += '<p><b>ФИО:</b> ' + fio + '</p>'
 
-    if email != '':
-        content += '<p><b>E-mail:</b> ' + email + '</p>'
+    if user_email != '':
+        content += '<p><b>E-mail:</b> ' + user_email + '</p>'
 
     if phone != '':
         content += '<p><b>Телефон:</b> ' + phone + '</p>'
@@ -342,3 +374,11 @@ def save_data_success(request):
 def save_verification_success(request):
     user_profile = UserMain.objects.get(user=request.user)
     return render(request, 'profile/verification_success.html', {'user_profile': user_profile})
+
+
+def error_404(request, exception):
+    return render(request, 'errs/404.html')
+
+
+def error_500(request):
+    return render(request, 'errs/500.html')

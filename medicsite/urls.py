@@ -19,6 +19,7 @@ from django.urls import path, include
 from django.conf.urls.static import static
 from django.conf import settings
 
+
 from django.views.generic import TemplateView
 
 urlpatterns = [
@@ -28,3 +29,6 @@ urlpatterns = [
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+handler404 = 'userprofile.views.error_404'
+handler500 = 'userprofile.views.error_500'

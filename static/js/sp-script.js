@@ -12,8 +12,6 @@ $(document).ready(function(){
 
         action: function(){
             $('.remove-avatar').on('click', profile.removeAvatar);
-            $('.avatar').on('change', profile.changeAvatar);
-
             $('.doctor_chk').on('change', profile.typeSpecialty);
 
             $('.spec-add').on('click', profile.addSpec);
@@ -24,10 +22,10 @@ $(document).ready(function(){
 
             $('body').on('click', '.item-remove', profile.removeItem);
 
-            $('.doc_file').on('change', profile.changeDoc);
-
-            $('.passport_photo').on('change', profile.changePassport);
-            $('.diplom_photo').on('change', profile.changeDiplom);
+            $('.avatar').on('change', profile.checkFileBeforeUpload);
+            $('.doc_file').on('change', profile.checkFileBeforeUpload);
+            $('.passport_photo').on('change', profile.checkFileBeforeUpload);
+            $('.diplom_photo').on('change', profile.checkFileBeforeUpload);
         },
 
         readURL: function(input, img){
@@ -48,17 +46,24 @@ $(document).ready(function(){
             return false;
         },
 
-        changeAvatar: function(){
+        checkFileBeforeUpload: function(){
+
             let file = this.files;
+            let cls = $(this).attr('class');
+            let useLabel = $(this).attr('use-label');
 
             if(typeof(file)!=='undefined'){
                 let size = file[0].size;
                 let type = file[0].type;
+                let name = file[0].name;
 
                 if(type == 'image/jpeg' || type == 'image/jpg' || type == 'image/png'){
 
                     if(size <= 1500000){
-                        profile.readURL(this, '.avatar_image');
+                        profile.readURL(this, '.'+cls+'_image');
+                        if(useLabel == 'y'){
+                            $('.'+cls+'_label').html(name);
+                        }
                     } else {
                         alert('Error size!');
                     }
@@ -67,6 +72,7 @@ $(document).ready(function(){
                     alert('Error format!');
                 }
             }
+
         },
 
         dob: function(){
@@ -191,78 +197,6 @@ $(document).ready(function(){
             $(this).before(element);
 
             return false
-        },
-
-        changeDoc: function(){
-
-            let file = this.files;
-
-            if(typeof(file)!=='undefined'){
-                let size = file[0].size;
-                let type = file[0].type;
-                let name = file[0].name;
-
-                if(type == 'image/jpeg' || type == 'image/jpg' || type == 'image/png'){
-
-                    if(size <= 1500000){
-                        profile.readURL(this, '.doc_file');
-                        $('.doc_file_label').html(name)
-                    } else {
-                        alert('Error size!');
-                    }
-
-                } else {
-                    alert('Error format!');
-                }
-            }
-        },
-
-        changePassport: function(){
-
-            let file = this.files;
-
-            if(typeof(file)!=='undefined'){
-                let size = file[0].size;
-                let type = file[0].type;
-                let name = file[0].name;
-
-                if(type == 'image/jpeg' || type == 'image/jpg' || type == 'image/png'){
-
-                    if(size <= 1500000){
-                        profile.readURL(this, '.doc_file');
-                        $('.passport_photo_label').html(name)
-                    } else {
-                        alert('Error size!');
-                    }
-
-                } else {
-                    alert('Error format!');
-                }
-            }
-        },
-
-        changeDiplom: function(){
-
-            let file = this.files;
-
-            if(typeof(file)!=='undefined'){
-                let size = file[0].size;
-                let type = file[0].type;
-                let name = file[0].name;
-
-                if(type == 'image/jpeg' || type == 'image/jpg' || type == 'image/png'){
-
-                    if(size <= 1500000){
-                        profile.readURL(this, '.doc_file');
-                        $('.diplom_photo_label').html(name)
-                    } else {
-                        alert('Error size!');
-                    }
-
-                } else {
-                    alert('Error format!');
-                }
-            }
         },
 
         removeItem: function(){

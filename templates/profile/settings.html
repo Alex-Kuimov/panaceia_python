@@ -12,10 +12,10 @@
                 {% csrf_token %}
 
                 <p><label for="passport_photo" class="passport_photo_label" style="cursor:pointer">Фото паспорта</label>
-                    <input type="file" id="passport_photo" name="passport_photo" class="passport_photo" style="display:none"></p>
+                    <input type="file" id="passport_photo" name="passport_photo" class="passport_photo" style="display:none" use-label="y"></p>
 
                 <p><label for="diplom_photo" class="diplom_photo_label" style="cursor:pointer">Фото диплома</label>
-                    <input type="file" id="diplom_photo" name="diplom_photo" class="diplom_photo" style="display:none"></p>
+                    <input type="file" id="diplom_photo" name="diplom_photo" class="diplom_photo" style="display:none" use-label="y"></p>
 
                 <div class="col-md-12">
                     <button type="submit" name="button">Отправить</button>

@@ -162,7 +162,7 @@ def save_doctor_data(request):
     return HttpResponseRedirect(reverse('save_data_success'))
 
 
-def signup_user_view(request):
+def signup_view(request, user_group_type, template):
     form = SignUpForm(request.POST)
     if request.method == "POST":
         if form.is_valid():
@@ -170,7 +170,7 @@ def signup_user_view(request):
             username = form.cleaned_data.get('username')
             signup_user = User.objects.get(username=username)
             signup_user.active = True
-            user_group = Group.objects.get(name='users')
+            user_group = Group.objects.get(name=user_group_type)
             user_group.user_set.add(signup_user)
 
             user_profile = UserMain.objects.get(user=signup_user)
@@ -195,53 +195,36 @@ def signup_user_view(request):
 
             return render(request, 'profile/login.html', {'msg': 'Вы успешно зарегестрированы!'})
         else:
-            return render(request, 'profile/registration_user_form.html', {'form': form})
+            return render(request, template, {'form': form})
 
     if request.user.is_authenticated:
         return redirect('user_profile')
     else:
-        return render(request, 'profile/registration_user_form.html')
+        return render(request, template)
+
+
+def signup_user_view(request):
+    user_group = 'users'
+    template = 'profile/registration_user_form.html'
+
+    try:
+        result = signup_view(request, user_group, template)
+    except:
+        result = render(request, 'profile/login.html', {'msg': 'Возможно произошла ошибка!'})
+
+    return result
 
 
 def signup_doctor_view(request):
-    form = SignUpForm(request.POST)
-    if request.method == "POST":
-        if form.is_valid():
-            form.save()
-            username = form.cleaned_data.get('username')
-            signup_user = User.objects.get(username=username)
-            signup_user.active = True
-            user_group = Group.objects.get(name='doctors')
-            user_group.user_set.add(signup_user)
+    user_group = 'doctors'
+    template = 'profile/registration_doctor_form.html'
 
-            user_profile = UserMain.objects.get(user=signup_user)
-            user_profile.fio = request.POST['first_name']
-            user_profile.save()
+    try:
+        result = signup_view(request, user_group, template)
+    except:
+        result = render(request, 'profile/login.html', {'msg': 'Возможно произошла ошибка!'})
 
-            subject = 'Регистрация на сайте Panaceia'
-            content = '<p>Поздравляем! Вы успешно зарегистрированы на сайте Panaceia.</p>'
-            to = [request.POST['email']]
-            contact_email = 'robots@u1233610.isp.regruhosting.ru'
-
-            email = EmailMessage(
-                subject,
-                content,
-                contact_email,
-                to,
-                headers={'Reply-To': contact_email}
-            )
-
-            email.content_subtype = 'html'
-            email.send()
-
-            return render(request, 'profile/login.html', {'msg': 'Вы успешно зарегестрированы!'})
-        else:
-            return render(request, 'profile/registration_doctor_form.html', {'form': form})
-
-    if request.user.is_authenticated:
-        return redirect('user_profile')
-    else:
-        return render(request, 'profile/registration_doctor_form.html')
+    return result
 
 
 def login_view(request):

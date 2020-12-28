@@ -47,6 +47,7 @@
                         <input type="text" name="fio" value="{{user_profile.fio}}" minlength="3" maxlength="100" placeholder="ФИО" required>
                         <input type="text" name="dob" class="dob" value="{{user_profile.dob}}" maxlength="10" placeholder="Дата рождения (дд.мм.гггг)" required>
                         <input type="text" name="city" id="user-city" value="{{user_profile.city}}" minlength="3" maxlength="100" placeholder="Город" required>
+                        <input type="hidden" name="coords" id="coords" value="{{user_profile.coords}}" maxlength="200">
 
                         <select class="" name="timezone">
 
@@ -93,9 +94,9 @@
                             </div>
                             <div class="col-md-9">
                                 <input type="text" name="email" value="{{user.email}}" minlength="5" maxlength="100" placeholder="E-mail">
-                                + <input type="number" name="phone" value="{{user_profile.phone}}" placeholder="Номер телефона">
+                                + <input type="number" name="phone" value="{{user_profile.phone}}" maxlength="20" placeholder="Номер телефона" required>
                                 <input type="text" name="skype" value="{{user_profile.skype}}" minlength="5" maxlength="50" placeholder="Skype">
-                                + <input type="number" name="whatsapp" value="{{user_profile.whatsapp}}" minlength="5" maxlength="20" placeholder="Whatsapp">
+                                + <input type="number" name="whatsapp" value="{{user_profile.whatsapp}}" maxlength="20" placeholder="Whatsapp">
                                 <br>
                                 <button type="submit" name="button">Сохранить изменения</button>
                             </div>
@@ -225,7 +226,7 @@
                             <div class="col-md-12 block-form">
                                 <h4>Расскажите об опыте работы</h4>
                                 <textarea name="experience_text" rows="8" cols="80" placeholder="Расскажите ос воем опыте работы">{{user_doctor.experience_text}}</textarea>
-                                <input type="text" name="experience_years" value="{{user_doctor.experience_years}}" placeholder="Стаж">
+                                <input type="number" maxlength="100" name="experience_years" value="{{user_doctor.experience_years}}" placeholder="Стаж">
                             </div>
                         </div>
 

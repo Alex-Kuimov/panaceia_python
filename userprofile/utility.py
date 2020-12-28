@@ -106,7 +106,6 @@ class TwoInputField():
                 instance.delete()
 
 
-
 class ThreeInputField():
     # add
     def add(self, obj, request, pref1, pref2, pref3):
@@ -159,3 +158,14 @@ class ThreeInputField():
                 index = re.sub(r'[^0-9.]+', r'', item)
                 instance = self.objects.get(id=index)
                 instance.delete()
+
+
+class CheckboxField():
+
+    def save(self, name, request):
+        if name in request.POST:
+            print(name+' true')
+            setattr(self, name, True)
+        else:
+            print(name + ' false')
+            setattr(self, name, False)

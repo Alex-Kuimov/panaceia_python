@@ -207,9 +207,26 @@ $(document).ready(function(){
         },
 
         cityAutocomplete: function(){
-            let city = document.getElementById('user-city');
-            if(city){
-                let autoCity = new google.maps.places.Autocomplete(city);
+            if ($('#user-city').length){
+                ymaps.load(function () {
+                    let city;
+
+                    var suggestView = new ymaps.SuggestView('user-city', {
+                        offset: [10, 10]
+                    });
+
+                    suggestView.events.add("select", function(e) {
+                        city = e.get('item').value;
+                        ymaps.geocode(city, {
+                            results: 1
+                        }).then(function (res) {
+                            let first 	= res.geoObjects.get(0),
+                                coords 	= first.geometry.getCoordinates();
+
+                            document.getElementById('coords').value = coords;
+                        });
+                    });
+                });
             }
         },
 

@@ -1,7 +1,9 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from .models import UserMain, Document
+from django.db.models import F
+
+from .models import UserMain, UserDoctor, Document
 
 
 class SignUpForm(UserCreationForm):
@@ -63,6 +65,31 @@ class UserMainForm(forms.ModelForm):
     class Meta:
         model = UserMain
         fields = ['email', 'fio', 'dob', 'city', 'time_zone', 'gender', 'skype', 'whatsapp']
+
+
+class UserDoctorForm(forms.ModelForm):
+    specialty = forms.CharField(
+        min_length=3,
+        max_length=100,
+        required=False,
+        label='Специализация',
+    )
+    experience_text = forms.CharField(
+        min_length=3,
+        max_length=3000,
+        required=False,
+        label='Опыт работы',
+    )
+    experience_years = forms.IntegerField(
+        min_value=1,
+        max_value=100,
+        required=False,
+        label='Стаж'
+    )
+
+    class Meta:
+        model = UserDoctor
+        fields = ['specialty', 'experience_text', 'experience_years']
 
 
 class DocumentForm(forms.ModelForm):

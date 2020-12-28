@@ -4,10 +4,10 @@ from .models import UserMain, UserDoctor, User, Specialty, Associations, Educati
 from django.urls import reverse
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import authenticate, login, logout
-from .forms import SignUpForm, UserMainForm, DocumentForm
+from .forms import SignUpForm, UserMainForm, UserDoctorForm, DocumentForm
 from django.contrib.auth.models import Group, User
 from blog.models import Article
-from .utility import OneInputField, TwoInputField, ThreeInputField
+from .utility import OneInputField, TwoInputField, ThreeInputField, CheckboxField
 from django.contrib.auth.decorators import login_required
 from django.core.mail import EmailMessage
 
@@ -36,7 +36,6 @@ def profile_page_view(request):
         timezone = TimeZone.objects.all()
         articles = Article.objects.all()
         specialty_list = SpecialtyList.objects.all()
-
 
         data = {
             'user_profile': user_profile,
@@ -95,6 +94,7 @@ def save_main_data(request):
             user_profile.fio = request.POST['fio']
             user_profile.dob = request.POST['dob']
             user_profile.city = request.POST['city']
+            user_profile.coords = request.POST['coords']
             user_profile.gender = request.POST['gender']
             user_profile.time_zone = request.POST['timezone']
             user_profile.whatsapp = request.POST['whatsapp']
@@ -115,49 +115,53 @@ def save_main_data(request):
 @login_required
 def save_doctor_data(request):
     if request.method == 'POST':
+        form = UserDoctorForm(request.POST)
 
-        # get data
-        user_doctor = UserDoctor.objects.get(user=request.user)
-        user_spec = Specialty.objects.filter(content=request.user)
-        user_associations = Associations.objects.filter(content=request.user)
-        user_education = Education.objects.filter(content=request.user)
-        user_qualification = Qualification.objects.filter(content=request.user)
-        user_service = Service.objects.filter(content=request.user)
+        if form.is_valid():
 
-        # simple data save
-        user_doctor.orgtype = request.POST['orgtype']
-        user_doctor.specialty = request.POST['specialty']
-        user_doctor.experience_text = request.POST['experience_text']
-        user_doctor.experience_years = request.POST['experience_years']
-        user_doctor.save()
+            # get data
+            user_doctor = UserDoctor.objects.get(user=request.user)
+            user_spec = Specialty.objects.filter(content=request.user)
+            user_associations = Associations.objects.filter(content=request.user)
+            user_education = Education.objects.filter(content=request.user)
+            user_qualification = Qualification.objects.filter(content=request.user)
+            user_service = Service.objects.filter(content=request.user)
 
-        # checkbox data save
-        UserDoctor.save_chk(user_doctor, 'meet_online', request)
-        UserDoctor.save_chk(user_doctor, 'meet_offline', request)
-        UserDoctor.save_chk(user_doctor, 'meet_online_offline', request)
-        UserDoctor.save_chk(user_doctor, 'patient_grown', request)
-        UserDoctor.save_chk(user_doctor, 'patient_children', request)
+            # simple data save
+            user_doctor.orgtype = request.POST['orgtype']
+            user_doctor.specialty = request.POST['specialty']
+            user_doctor.experience_text = request.POST['experience_text']
+            user_doctor.experience_years = request.POST['experience_years']
 
-        # multi input field data save
-        OneInputField.add(Specialty, user_spec, request, 'spec')
-        OneInputField.update(Specialty, user_spec, request, 'spec')
-        OneInputField.remove(Specialty, user_spec, request, 'spec')
+            # checkbox data save
+            CheckboxField.save(user_doctor, 'meet_online', request)
+            CheckboxField.save(user_doctor, 'meet_offline', request)
+            CheckboxField.save(user_doctor, 'meet_online_offline', request)
+            CheckboxField.save(user_doctor, 'patient_grown', request)
+            CheckboxField.save(user_doctor, 'patient_children', request)
 
-        OneInputField.add(Associations, user_associations, request, 'as')
-        OneInputField.update(Associations, user_associations, request, 'as')
-        OneInputField.remove(Associations, user_associations, request, 'as')
+            user_doctor.save()
 
-        TwoInputField.add(Education, user_education, request, 'ed', 'edy')
-        TwoInputField.update(Education, user_education, request, {'ed': 'name', 'edy': 'years'})
-        TwoInputField.remove(Education, user_education, request, 'ed')
+            # multi input field data save
+            OneInputField.add(Specialty, user_spec, request, 'spec')
+            OneInputField.update(Specialty, user_spec, request, 'spec')
+            OneInputField.remove(Specialty, user_spec, request, 'spec')
 
-        TwoInputField.add(Qualification, user_qualification, request, 'qu', 'quy')
-        TwoInputField.update(Qualification, user_qualification, request, {'qu': 'name', 'quy': 'years'})
-        TwoInputField.remove(Qualification, user_qualification, request, 'qu')
+            OneInputField.add(Associations, user_associations, request, 'as')
+            OneInputField.update(Associations, user_associations, request, 'as')
+            OneInputField.remove(Associations, user_associations, request, 'as')
 
-        ThreeInputField.add(Service, user_service, request, 'se', 'set', 'sep')
-        ThreeInputField.update(Service, user_service, request, {'se': 'name', 'set': 'time', 'sep': 'price'})
-        ThreeInputField.remove(Service, user_service, request, 'se')
+            TwoInputField.add(Education, user_education, request, 'ed', 'edy')
+            TwoInputField.update(Education, user_education, request, {'ed': 'name', 'edy': 'years'})
+            TwoInputField.remove(Education, user_education, request, 'ed')
+
+            TwoInputField.add(Qualification, user_qualification, request, 'qu', 'quy')
+            TwoInputField.update(Qualification, user_qualification, request, {'qu': 'name', 'quy': 'years'})
+            TwoInputField.remove(Qualification, user_qualification, request, 'qu')
+
+            ThreeInputField.add(Service, user_service, request, 'se', 'set', 'sep')
+            ThreeInputField.update(Service, user_service, request, {'se': 'name', 'set': 'time', 'sep': 'price'})
+            ThreeInputField.remove(Service, user_service, request, 'se')
 
     return HttpResponseRedirect(reverse('save_data_success'))
 

@@ -36,9 +36,10 @@ class UserMain(models.Model):
     dob = models.CharField(blank=True, max_length=10, verbose_name='Дата рождения')
     city = models.CharField(blank=True, max_length=200, verbose_name='Город')
     time_zone = models.CharField(blank=True, max_length=200, choices=time_zone_list, verbose_name='Временная зона')
-    whatsapp = models.CharField(blank=True, max_length=20, verbose_name='WhatsApp')
     skype = models.CharField(blank=True, max_length=50, verbose_name='Skype')
+    whatsapp = models.CharField(blank=True, max_length=20, verbose_name='WhatsApp')
     phone = models.CharField(blank=True, max_length=20, verbose_name='Номер телефона')
+    coords = models.CharField(blank=True, max_length=200, verbose_name='Координаты')
 
     def __unicode__(self):
         return self.user
@@ -57,34 +58,24 @@ class UserDoctor(models.Model):
     org_types_list = [('ur', 'Юридическое лицо'),
                     ('fiz', 'Физическое лицо')]
 
+    orgtype = models.CharField(blank=True, null=True, max_length=11, choices=org_types_list, verbose_name='Тип организации')
+
     meet_online = models.BooleanField(blank=True, null=True, verbose_name='Прием онлайн')
     meet_offline = models.BooleanField(blank=True, null=True, verbose_name='Прием оффлайн')
     meet_online_offline = models.BooleanField(blank=True, null=True, verbose_name='Прием онлайн и оффлайн')
-
-    author = models.BooleanField(blank=True, null=True, verbose_name='Я автор видеолекций')
-
-    orgtype = models.CharField(blank=True, null=True, max_length=11, choices=org_types_list, verbose_name='Тип организации')
-    specialty = models.CharField(blank=True, max_length=100, verbose_name='Специализация')
     patient_grown = models.BooleanField(blank=True, null=True, verbose_name='Взрослые')
     patient_children = models.BooleanField(blank=True, null=True, verbose_name='Дети')
+    verified = models.BooleanField(blank=True, null=True, verbose_name='Аккаунт верифицирован')
 
+    specialty = models.CharField(blank=True, max_length=100, verbose_name='Специализация')
     experience_text = models.TextField(blank=True, max_length=3000, verbose_name='Опыт работы')
     experience_years = models.CharField(blank=True, max_length=2, verbose_name='Стаж')
-
-    verified = models.BooleanField(blank=True, null=True, verbose_name='Аккаунт верифицирован')
 
     def __unicode__(self):
         return self.user
 
     def __str__(self):
         return self.user.username
-
-    def save_chk(self, name, request):
-        if name in request.POST:
-            setattr(self, name, True)
-        else:
-            setattr(self, name, False)
-
 
     class Meta:
         verbose_name = 'Профиль'

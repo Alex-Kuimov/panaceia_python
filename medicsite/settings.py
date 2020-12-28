@@ -23,7 +23,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = '(je8_n511xr-n%_)dk1x!=j_4gapsp7_c9udajsadi492s&tzh'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['127.0.0.1']
 
@@ -136,5 +136,5 @@ EMAIL_HOST = 'mail.hosting.reg.ru'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'robots@u1233610.isp.regruhosting.ru'
-EMAIL_HOST_PASSWORD = ''
+EMAIL_HOST_PASSWORD = 'H0g9P9y3'
 DEFAULT_FROM_EMAIL = 'robots@u1233610.isp.regruhosting.ru'

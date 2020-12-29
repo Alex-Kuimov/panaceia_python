@@ -238,6 +238,36 @@ $(document).ready(function(){
 
     }
 
+
+    let doctorMap ={
+
+        action: function(){
+
+        },
+
+        loadMap: function(){
+
+            if ($('#doctor-map').length){
+
+                ymaps.ready(function(){
+
+                    let map = new ymaps.Map('doctor-map', {
+                        center: [0, 0],
+                        zoom: 12,
+                    });
+
+                });
+            }
+        },
+
+        init: function(){
+            doctorMap.action();
+            doctorMap.loadMap();
+        }
+
+    }
+
     profile.init();
+    doctorMap.init();
 
 });

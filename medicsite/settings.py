@@ -33,6 +33,7 @@ ALLOWED_HOSTS = ['127.0.0.1']
 INSTALLED_APPS = [
     'userprofile',
     'blog',
+    'doctors',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -136,5 +137,5 @@ EMAIL_HOST = 'mail.hosting.reg.ru'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'robots@u1233610.isp.regruhosting.ru'
-EMAIL_HOST_PASSWORD = ''
+EMAIL_HOST_PASSWORD = 'H0g9P9y3'
 DEFAULT_FROM_EMAIL = 'robots@u1233610.isp.regruhosting.ru'

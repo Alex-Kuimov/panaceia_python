@@ -1,0 +1,142 @@
+{% extends "home.html" %}
+{% load static %}
+
+{% block content %}
+
+<div class="top-search">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm">
+                <div class="search-title">
+                    Запишитесь на приём к специалисту онлайн
+                </div>
+            </div>
+        </div>
+        <div class="row popup-login">
+            <div class="col-sm">
+                <div class="search-form">
+                    <div class="form-offer">
+                        <form class="mainform">
+                            <p class="name">
+                                <input type="text" name="name" value="Имя автора" />
+                            </p>
+                            <p class="email">
+                                <input type="text" name="email" value="name@example.com" />
+                            </p>
+                            <p class="send">
+                                <input type="submit" value="Отправить" />
+                            </p>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="doctor-search">
+    <div class="container">
+        <div class="row">
+            <div class="col-ms">
+                <div class="breadcrumbs">
+                    <a href="index.html">Главная</a>/ <a href="#">Психосоматика</a>/ <a href="">м.Полежаевская</a>
+                </div>
+            </div>
+        </div>
+        <div class="line-left">
+        </div>
+        <div class="row">
+            <div class="col-sm">
+                <h2>Гинекологи на метро Автозаводская <span>(311)</span></h2>
+                <ul class="nav nav-tabs doctor-tab" id="myTab" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active" id="popular-tab" data-toggle="tab" href="#popular" role="tab" aria-controls="popular" aria-selected="true">Популярные</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="rating-tab" data-toggle="tab" href="#rating" role="tab" aria-controls="rating" aria-selected="false">Рейтинг</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="experience-tab" data-toggle="tab" href="#experience" role="tab" aria-controls="experience" aria-selected="false">Стаж</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="price-tab" data-toggle="tab" href="#price" role="tab" aria-controls="price" aria-selected="false">Стоимость</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="reviews-tab" data-toggle="tab" href="#reviews" role="tab" aria-controls="reviews" aria-selected="false">Отзывы</a>
+                    </li>
+                </ul>
+                <div id="tabs">
+                     <div class="map-list tabs-nav">
+                         <div class="list-icon icon">
+                             <a href="#tab-1"><img src="{% static 'img/list.png' %}" alt=""></a>
+                         </div>
+                         <div class="map-icon icon">
+                            <a href="#tab-2"> <img src="{% static 'img/place.png' %}" alt=""></a>
+                         </div>
+                     </div>
+                     <div class="tab-maps">
+                        <div class="tab-content tab-map list tabs-target" href="#tabs" data-id="#tab-1">
+                            <div class="tab-pane fade show active" id="popular" role="tabpanel" aria-labelledby="popular-tab">
+                                <div class="doctor-info">
+                                    <div class="row">
+                                        <div class="col-2">
+                                            <div class="avatar-doctor">
+                                                <img src="{% static 'img/image.png' %}" alt="">
+                                            </div>
+                                            <div class="reviews-coin">
+                                                690 отзывов
+                                            </div>
+                                            <div class="rating-profi">
+                                                Профессионализм
+                                            </div>
+                                            <div class="rating-qualities">
+                                                Личные качества
+                                            </div>
+                                        </div>
+                                        <div class="col-4 info-doctor">
+                                            <h4>Имя специалиста</h4>
+                                            <h6>Специальность</h6>
+                                            <h5>Врач первой категории</h5>
+                                            <div class="price">
+                                                <b>4800</b>₽
+                                            </div>
+                                            <div class="phone-record">
+                                                <h5>Телефон для записи</h5>
+                                                <h4>8(900)000-хх-хх <span>Показать номер</span> </h4>
+                                                <h5>Всего записались N кол-во</h5>
+                                            </div>
+                                        </div>
+                                        <div class="col-3 recording">
+                                            <h3>Выберите время приема для записи онлайн:</h3>
+                                            <div id="calendar_table_online"></div>
+                                        </div>
+                                         <div class="col-3 recording-time">
+                                            <div class="time">9:00</div>
+                                            <div class="time">9:00</div>
+                                            <div class="time">9:00</div>
+                                            <div class="time">9:00</div>
+                                            <div class="time">9:00</div>
+                                            <div class="time">9:00</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="rating" role="tabpanel" aria-labelledby="rating-tab">...</div>
+                            <div class="tab-pane fade" id="experience" role="tabpanel" aria-labelledby="experience-tab">...</div>
+                            <div class="tab-pane fade" id="price" role="tabpanel" aria-labelledby="price-tab">...</div>
+                            <div class="tab-pane fade" id="reviews" role="tabpanel" aria-labelledby="reviews-tab">...</div>
+                        </div>
+                        <div class="tab-map-content tabs-target">
+                            <div class="map" id="doctor-map" style="height:400px">
+                            </div>
+                        </div>
+                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+{% endblock %}

@@ -248,12 +248,48 @@ $(document).ready(function(){
         loadMap: function(){
 
             if ($('#doctor-map').length){
-
                 ymaps.ready(function(){
+
+                    let page = window.location.href;
 
                     let map = new ymaps.Map('doctor-map', {
                         center: [0, 0],
                         zoom: 12,
+                    });
+
+                    $.ajax({
+                        url: page + 'map_list/',
+                        type: 'get',
+                        success: function(data) {
+                            let mapEl = data
+
+                            for (var key in mapEl) {
+                                let coords = mapEl[key]['coords'].split(',');
+                                let fio = mapEl[key]['fio'];
+                                let phone = mapEl[key]['phone'];
+                                let city = mapEl[key]['city'];
+                                let objects = new ymaps.Placemark(coords);
+
+                                let content = '<p>'+fio+'</p>';
+                                content += '<p>'+phone+'</p>';
+                                content += '<p>'+city+'</p>';
+
+                                objects.options.set('preset', 'islands#redIcon');
+                                objects.properties.set('iconCaption', fio);
+                                objects.properties.set('balloonContentBody', content);
+
+                                map.geoObjects.add(objects);
+                            }
+
+                            map.setBounds(map.geoObjects.getBounds(), {
+                                checkZoomRange: true,
+                                zoomMargin: 35
+                            });
+
+                        },
+                        failure: function(data) {
+                            console.log('err');
+                        }
                     });
 
                 });

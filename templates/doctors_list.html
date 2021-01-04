@@ -65,24 +65,34 @@
                         <a class="nav-link" id="reviews-tab" data-toggle="tab" href="#reviews" role="tab" aria-controls="reviews" aria-selected="false">Отзывы</a>
                     </li>
                 </ul>
-                <div id="tabs">
+                <div>
                      <div class="map-list tabs-nav">
                          <div class="list-icon icon">
-                             <a href="#tab-1"><img src="{% static 'img/list.png' %}" alt=""></a>
+                             <a href="{% url 'doctors_list' %}"><img src="{% static 'img/list.png' %}" alt=""></a>
                          </div>
                          <div class="map-icon icon">
-                            <a href="#tab-2"> <img src="{% static 'img/place.png' %}" alt=""></a>
+                            <a href="{% url 'doctors_map' %}"> <img src="{% static 'img/place.png' %}" alt=""></a>
                          </div>
                      </div>
                      <div class="tab-maps">
-                        <div class="tab-content tab-map list tabs-target" href="#tabs" data-id="#tab-1">
+                        <div class="tab-content">
                             <div class="tab-pane fade show active" id="popular" role="tabpanel" aria-labelledby="popular-tab">
-                                <div class="doctor-info">
+
+                                {% for doctor in doctors %}
+                                    <div class="doctor-info">
                                     <div class="row">
                                         <div class="col-2">
-                                            <div class="avatar-doctor">
-                                                <img src="{% static 'img/image.png' %}" alt="">
-                                            </div>
+
+                                            {% if doctor.avatar != '' %}
+                                                <div class="avatar-doctor">
+                                                    <img src="/media/{{doctor.avatar}}" alt="">
+                                                </div>
+                                            {% else %}
+                                                <div class="avatar-doctor">
+                                                    <img src="{% static 'img/user.png' %}" alt="">
+                                                </div>
+                                            {% endif %}
+
                                             <div class="reviews-coin">
                                                 690 отзывов
                                             </div>
@@ -94,15 +104,25 @@
                                             </div>
                                         </div>
                                         <div class="col-4 info-doctor">
-                                            <h4>Имя специалиста</h4>
-                                            <h6>Специальность</h6>
-                                            <h5>Врач первой категории</h5>
+                                            {% if doctor.fio != '' %}
+                                                <h4>{{ doctor.fio }}</h4>
+                                            {% endif %}
+
+                                            {% if doctor.specialty != '' %}
+                                                <h6>{{ doctor.specialty }}</h6>
+                                            {% endif %}
+
+                                            {% if doctor.experience_years != '' %}
+                                                <h5>Стаж {{ doctor.experience_years }} лет</h5>
+                                            {% endif %}
+
                                             <div class="price">
-                                                <b>4800</b>₽
+                                                <b>4800</b> ₽
                                             </div>
+
                                             <div class="phone-record">
                                                 <h5>Телефон для записи</h5>
-                                                <h4>8(900)000-хх-хх <span>Показать номер</span> </h4>
+                                                <h4>{{ doctor.phone }} <span>Показать номер</span> </h4>
                                                 <h5>Всего записались N кол-во</h5>
                                             </div>
                                         </div>
@@ -117,18 +137,17 @@
                                             <div class="time">9:00</div>
                                             <div class="time">9:00</div>
                                             <div class="time">9:00</div>
+                                             <p>{{ doctor.city }}</p>
                                         </div>
                                     </div>
                                 </div>
+                                {% endfor %}
+
                             </div>
                             <div class="tab-pane fade" id="rating" role="tabpanel" aria-labelledby="rating-tab">...</div>
                             <div class="tab-pane fade" id="experience" role="tabpanel" aria-labelledby="experience-tab">...</div>
                             <div class="tab-pane fade" id="price" role="tabpanel" aria-labelledby="price-tab">...</div>
                             <div class="tab-pane fade" id="reviews" role="tabpanel" aria-labelledby="reviews-tab">...</div>
-                        </div>
-                        <div class="tab-map-content tabs-target">
-                            <div class="map" id="doctor-map" style="height:400px">
-                            </div>
                         </div>
                      </div>
                 </div>

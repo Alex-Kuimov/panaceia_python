@@ -251,6 +251,7 @@ $(document).ready(function(){
                 ymaps.ready(function(){
 
                     let page = window.location.href;
+                    let siteUrl = window.location.origin;
 
                     let map = new ymaps.Map('doctor-map', {
                         center: [0, 0],
@@ -258,7 +259,7 @@ $(document).ready(function(){
                     });
 
                     $.ajax({
-                        url: page + 'map_list/',
+                        url: page + 'get_doctors_list/',
                         type: 'get',
                         success: function(data) {
                             let mapEl = data
@@ -266,13 +267,29 @@ $(document).ready(function(){
                             for (var key in mapEl) {
                                 let coords = mapEl[key]['coords'].split(',');
                                 let fio = mapEl[key]['fio'];
+                                let specialty = mapEl[key]['specialty'];
+                                let experience_years = mapEl[key]['experience_years'];
                                 let phone = mapEl[key]['phone'];
                                 let city = mapEl[key]['city'];
+                                let avatar = mapEl[key]['avatar'];
                                 let objects = new ymaps.Placemark(coords);
 
-                                let content = '<p>'+fio+'</p>';
-                                content += '<p>'+phone+'</p>';
-                                content += '<p>'+city+'</p>';
+                                let content = '';
+                                content += '<div class="doctor-map-content">';
+
+                                    content += '<div class="doctor-map-left">';
+                                        content += '<img src="'+ siteUrl +'/'+ avatar +'" class="doctor-map-image">';
+                                    content += '</div>';
+
+                                    content += '<div class="doctor-map-right">';
+                                        content += '<p class="doctor-map-fio">' + fio + '</p>';
+                                        content += '<p class="doctor-map-specialty">' + specialty + '</p>';
+                                        content += '<p class="doctor-map-experience-years">' + experience_years + '</p>';
+                                        content += '<p class="doctor-map-phone-title">Телефон для записи</p>';
+                                        content += '<p class="doctor-map-phone">' + phone + '</p>';
+                                    content += '</div>';
+
+                                content += '</div>';
 
                                 objects.options.set('preset', 'islands#redIcon');
                                 objects.properties.set('iconCaption', fio);

@@ -3,6 +3,7 @@ import json
 from django.shortcuts import render
 from django.http import HttpResponse, Http404, HttpResponseRedirect
 from userprofile.models import UserMain, UserDoctor, User
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 
 def doctors_map_view(request):
@@ -11,8 +12,17 @@ def doctors_map_view(request):
 
 
 def doctors_list_view(request):
-    users = User.objects.filter(groups__name='doctors')
+    object_list = User.objects.filter(groups__name='doctors')
+    paginator = Paginator(object_list, 1)
+    page = request.GET.get('page')
     doctors = list()
+
+    try:
+        users = paginator.page(page)
+    except PageNotAnInteger:
+        users = paginator.page(1)
+    except EmptyPage:
+        users = paginator.page(paginator.num_pages)
 
     for user in users:
         doctor_main = UserMain.objects.get(user=user)
@@ -30,7 +40,7 @@ def doctors_list_view(request):
 
         doctors.append(_doctor)
 
-    data = {'doctors': doctors}
+    data = {'doctors': doctors, 'page': page, 'users': users}
 
     return render(request, 'doctors_list.html', data)
 
@@ -46,7 +56,7 @@ def get_doctors_list(request):
         if doctor_main.avatar != '':
             avatar = 'media/' + str(doctor_main.avatar)
         else:
-            avatar = 'static/img/user.png'
+            avatar = 'medicsite/static/img/user.png'
 
         _doctor = {
             'id': doctor_main.id,

@@ -291,7 +291,7 @@ $(document).ready(function(){
 
                                 content += '</div>';
 
-                                objects.options.set('preset', 'islands#redIcon');
+                                objects.options.set('preset', 'islands#greenMedicalIcon');
                                 objects.properties.set('iconCaption', fio);
                                 objects.properties.set('balloonContentBody', content);
 

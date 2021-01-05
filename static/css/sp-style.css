@@ -75,3 +75,39 @@
     width: 500px;
     padding: 10px;
 }
+
+.pagination{
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.pagination span,
+.pagination a{
+    border-left: 1px solid #DDEBEE;
+    border-top: 1px solid #DDEBEE;
+    border-bottom: 1px solid #DDEBEE;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.pagination .start{
+    color: #1D9D73;
+}
+
+.pagination .end{
+    color: #1D9D73;
+    border-right: 1px solid #DDEBEE;
+}
+
+.pagination .active{
+    background: #1D9D73;
+    color: #fff;
+}
+
+.pagination a:hover{
+   text-decoration: none;
+}

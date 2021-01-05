@@ -80,69 +80,70 @@
 
                                 {% for doctor in doctors %}
                                     <div class="doctor-info">
-                                    <div class="row">
-                                        <div class="col-2">
+                                        <div class="row">
+                                            <div class="col-2">
 
-                                            {% if doctor.avatar != '' %}
-                                                <div class="avatar-doctor">
-                                                    <img src="/media/{{doctor.avatar}}" alt="">
+                                                {% if doctor.avatar != '' %}
+                                                    <div class="avatar-doctor">
+                                                        <img src="/media/{{doctor.avatar}}" alt="">
+                                                    </div>
+                                                {% else %}
+                                                    <div class="avatar-doctor">
+                                                        <img src="{% static 'img/user.png' %}" alt="">
+                                                    </div>
+                                                {% endif %}
+
+                                                <div class="reviews-coin">
+                                                    690 отзывов
                                                 </div>
-                                            {% else %}
-                                                <div class="avatar-doctor">
-                                                    <img src="{% static 'img/user.png' %}" alt="">
+                                                <div class="rating-profi">
+                                                    Профессионализм
                                                 </div>
-                                            {% endif %}
-
-                                            <div class="reviews-coin">
-                                                690 отзывов
+                                                <div class="rating-qualities">
+                                                    Личные качества
+                                                </div>
                                             </div>
-                                            <div class="rating-profi">
-                                                Профессионализм
-                                            </div>
-                                            <div class="rating-qualities">
-                                                Личные качества
-                                            </div>
-                                        </div>
-                                        <div class="col-4 info-doctor">
-                                            {% if doctor.fio != '' %}
-                                                <h4>{{ doctor.fio }}</h4>
-                                            {% endif %}
+                                            <div class="col-4 info-doctor">
+                                                {% if doctor.fio != '' %}
+                                                    <h4>{{ doctor.fio }}</h4>
+                                                {% endif %}
 
-                                            {% if doctor.specialty != '' %}
-                                                <h6>{{ doctor.specialty }}</h6>
-                                            {% endif %}
+                                                {% if doctor.specialty != '' %}
+                                                    <h6>{{ doctor.specialty }}</h6>
+                                                {% endif %}
 
-                                            {% if doctor.experience_years != '' %}
-                                                <h5>Стаж {{ doctor.experience_years }} лет</h5>
-                                            {% endif %}
+                                                {% if doctor.experience_years != '' %}
+                                                    <h5>Стаж {{ doctor.experience_years }} лет</h5>
+                                                {% endif %}
 
-                                            <div class="price">
-                                                <b>4800</b> ₽
+                                                <div class="price">
+                                                    <b>4800</b> ₽
+                                                </div>
+
+                                                <div class="phone-record">
+                                                    <h5>Телефон для записи</h5>
+                                                    <h4>{{ doctor.phone }} <span>Показать номер</span> </h4>
+                                                    <h5>Всего записались N кол-во</h5>
+                                                </div>
                                             </div>
-
-                                            <div class="phone-record">
-                                                <h5>Телефон для записи</h5>
-                                                <h4>{{ doctor.phone }} <span>Показать номер</span> </h4>
-                                                <h5>Всего записались N кол-во</h5>
+                                            <div class="col-3 recording">
+                                                <h3>Выберите время приема для записи онлайн:</h3>
+                                                <div id="calendar_table_online"></div>
                                             </div>
-                                        </div>
-                                        <div class="col-3 recording">
-                                            <h3>Выберите время приема для записи онлайн:</h3>
-                                            <div id="calendar_table_online"></div>
-                                        </div>
-                                         <div class="col-3 recording-time">
-                                            <div class="time">9:00</div>
-                                            <div class="time">9:00</div>
-                                            <div class="time">9:00</div>
-                                            <div class="time">9:00</div>
-                                            <div class="time">9:00</div>
-                                            <div class="time">9:00</div>
-                                             <p>{{ doctor.city }}</p>
+                                             <div class="col-3 recording-time">
+                                                <div class="time">9:00</div>
+                                                <div class="time">9:00</div>
+                                                <div class="time">9:00</div>
+                                                <div class="time">9:00</div>
+                                                <div class="time">9:00</div>
+                                                <div class="time">9:00</div>
+                                                 <p>{{ doctor.city }}</p>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
                                 {% endfor %}
 
+                                {% include "pagination.html" with page=users %}
                             </div>
                             <div class="tab-pane fade" id="rating" role="tabpanel" aria-labelledby="rating-tab">...</div>
                             <div class="tab-pane fade" id="experience" role="tabpanel" aria-labelledby="experience-tab">...</div>

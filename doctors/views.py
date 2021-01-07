@@ -3,7 +3,9 @@ import json
 from django.shortcuts import render
 from django.http import HttpResponse, Http404, HttpResponseRedirect
 from userprofile.models import UserMain, UserDoctor, User
+from .models import Meeting
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from .utility import decl_of_num
 
 
 def doctors_map_view(request):
@@ -28,6 +30,14 @@ def doctors_list_view(request):
         doctor_main = UserMain.objects.get(user=user)
         doctor = UserDoctor.objects.get(user=user)
 
+        if doctor.experience_years != '':
+            words = ['год', 'года', 'лет']
+            num = int(doctor.experience_years)
+            years = decl_of_num(num, words)
+            experience = 'Стаж: ' + str(num) + ' ' + years
+        else:
+            experience = ''
+
         _doctor = {
             'id': doctor_main.id,
             'fio': doctor_main.fio,
@@ -35,7 +45,7 @@ def doctors_list_view(request):
             'phone': doctor_main.phone,
             'avatar': doctor_main.avatar,
             'specialty': doctor.specialty,
-            'experience_years': doctor.experience_years
+            'experience_years': experience
         }
 
         doctors.append(_doctor)
@@ -53,6 +63,14 @@ def get_doctors_list(request):
         doctor_main = UserMain.objects.get(user=user)
         doctor = UserDoctor.objects.get(user=user)
 
+        if doctor.experience_years != '':
+            words = ['год', 'года', 'лет']
+            num = int(doctor.experience_years)
+            years = decl_of_num(num, words)
+            experience = 'Стаж: ' + str(num) + ' ' + years
+        else:
+            experience = ''
+
         if doctor_main.avatar != '':
             avatar = 'media/' + str(doctor_main.avatar)
         else:
@@ -65,7 +83,7 @@ def get_doctors_list(request):
             'phone': doctor_main.phone,
             'avatar': avatar,
             'specialty': doctor.specialty,
-            'experience_years': 'Стаж: ' + doctor.experience_years + ' лет',
+            'experience_years': experience,
             'coords': doctor_main.coords,
         }
 
@@ -73,5 +91,26 @@ def get_doctors_list(request):
 
     return HttpResponse(
         json.dumps(doctors),
+        content_type="application/json"
+    )
+
+
+def create_meeting(request):
+    data = '2021-01-10'
+    time = '10:00:00'
+    doctor_id = '23'
+    user_id = '5'
+    title = 'Консультация'
+
+    meeting = Meeting.objects.create(title=title, data=data, time=time, doctor_id=doctor_id, user_id=user_id)
+
+    try:
+        meeting.save()
+        result = 'ok'
+    except:
+        result = 'err'
+
+    return HttpResponse(
+        json.dumps(result),
         content_type="application/json"
     )

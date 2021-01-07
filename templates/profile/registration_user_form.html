@@ -18,9 +18,9 @@
              <h3>Зарегистрироваться</h3>
              <form method="post">
                  {% csrf_token %}
-                 <input type="text" name="username" placeholder="Введите логин" required>
-                 <input type="text" name="email" placeholder="Введите E-mail" required>
-                 <input type="text" name="first_name" placeholder="Введите ФИО" required>
+                 <input type="text" name="username" placeholder="Введите логин" value="{{ form.username.value }}" required>
+                 <input type="text" name="email" placeholder="Введите E-mail" value="{{ form.email.value }}"  required>
+                 <input type="text" name="first_name" placeholder="Введите ФИО" value="{{ form.first_name.value }}"  required>
                  <input type="password" name="password1" placeholder="Введите Пароль" required>
                  <input type="password" name="password2" placeholder="Повторите Пароль" required>
                  <div class="col-12 submit-login">

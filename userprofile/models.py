@@ -67,7 +67,10 @@ class UserDoctor(models.Model):
     patient_children = models.BooleanField(blank=True, null=True, verbose_name='Дети')
     verified = models.BooleanField(blank=True, null=True, verbose_name='Аккаунт верифицирован')
 
+    # надо удалить!
     specialty = models.CharField(blank=True, max_length=100, verbose_name='Специализация')
+    # надо удалить!
+
     experience_text = models.TextField(blank=True, max_length=3000, verbose_name='Опыт работы')
     experience_years = models.CharField(blank=True, max_length=2, verbose_name='Стаж')
 

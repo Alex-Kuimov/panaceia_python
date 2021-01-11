@@ -1,4 +1,5 @@
 import json
+from datetime import datetime
 
 from django.shortcuts import render
 from django.http import HttpResponse, Http404, HttpResponseRedirect
@@ -15,7 +16,7 @@ def doctors_map_view(request):
 
 def doctors_list_view(request):
     object_list = User.objects.filter(groups__name='doctors')
-    paginator = Paginator(object_list, 1)
+    paginator = Paginator(object_list, 2)
     page = request.GET.get('page')
     doctors = list()
 
@@ -39,7 +40,7 @@ def doctors_list_view(request):
             experience = ''
 
         _doctor = {
-            'id': doctor_main.id,
+            'id': user.id,
             'fio': doctor_main.fio,
             'city': doctor_main.city,
             'phone': doctor_main.phone,
@@ -77,7 +78,7 @@ def get_doctors_list(request):
             avatar = 'medicsite/static/img/user.png'
 
         _doctor = {
-            'id': doctor_main.id,
+            'id': user.id,
             'fio': doctor_main.fio,
             'city': doctor_main.city,
             'phone': doctor_main.phone,
@@ -96,11 +97,18 @@ def get_doctors_list(request):
 
 
 def create_meeting(request):
-    data = '2021-01-10'
-    time = '10:00:00'
-    doctor_id = '23'
-    user_id = '5'
+
+    data = request.GET['app-date']
+    time = request.GET['app-time']
+    doctor_id = request.GET['app-doctor-id']
+    user_id = request.GET['app-user-id']
     title = 'Консультация'
+
+    dateString = data
+    dateFormatter = "%d.%m.%Y"
+    date = datetime.strptime(dateString, dateFormatter)
+
+    data = date.strftime("%Y-%m-%d")
 
     meeting = Meeting.objects.create(title=title, data=data, time=time, doctor_id=doctor_id, user_id=user_id)
 

@@ -122,25 +122,19 @@
 
                                                 <div class="phone-record">
                                                     <h5>Телефон для записи</h5>
-                                                    <h4>{{ doctor.phone }} <span>Показать номер</span> </h4>
-                                                    <h5>Всего записались N кол-во</h5>
+                                                    <h4>{{ doctor.phone }} </h4>
+
+                                                    <h5>{{ doctor.city }}</h5>
                                                 </div>
                                             </div>
-                                            <div class="col-3 recording">
-                                                <h3>Выберите время приема для записи онлайн:</h3>
-                                                <div id="calendar_table_online"></div>
+                                            <div class="col-6 recording">
+                                                <div class="appointment-btn set-doctor-id show-modal" doctor-id="{{doctor.id}}">Записаться на прием</div>
+                                                <h5>Всего записались N кол-во</h5>
                                             </div>
-                                             <div class="col-3 recording-time">
-                                                <div class="time">9:00</div>
-                                                <div class="time">9:00</div>
-                                                <div class="time">9:00</div>
-                                                <div class="time">9:00</div>
-                                                <div class="time">9:00</div>
-                                                <div class="time">9:00</div>
-                                                 <p>{{ doctor.city }}</p>
-                                            </div>
+
                                         </div>
                                     </div>
+
                                 {% endfor %}
 
                                 {% include "pagination.html" with page=users %}
@@ -157,6 +151,29 @@
     </div>
 </div>
 
-
+<div class="modal-cover">
+    <div class="modal-wrap">
+        <div class="modal-header">
+            <p class="modal-title">Запись на консультацию</p>
+            <img src="{% static 'img/cross.png' %}" class="modal-close hide-modal">
+        </div>
+        <div class="modal-body">
+            <form action="#" class="registry">
+                <p>Выберите дату и время</p>
+                <p><input type="text" id="datepicker" name="app-date" class="app-date" placeholder="Дата"></p>
+                <p>
+                    <select name="app-time" class="app-time">
+                        <option value="12:00">12:00</option>
+                        <option value="12:30">12:30</option>
+                        <option value="13:00">13:00</option>
+                    </select>
+                </p>
+                <input type="hidden" name="app-user-id" class="app-user-id" value="{{user.id}}">
+                <input type="hidden" name="app-doctor-id" class="app-doctor-id" value="">
+                <input type="submit" class="appointment-btn" value="Записаться">
+            </form>
+        </div>
+    </div>
+</div>
 
 {% endblock %}

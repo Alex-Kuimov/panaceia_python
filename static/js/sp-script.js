@@ -238,12 +238,7 @@ $(document).ready(function(){
 
     }
 
-
     let doctorMap ={
-
-        action: function(){
-
-        },
 
         loadMap: function(){
 
@@ -314,13 +309,115 @@ $(document).ready(function(){
         },
 
         init: function(){
-            doctorMap.action();
             doctorMap.loadMap();
         }
 
     }
 
+    let userCalendar = {
+
+        init: function(){
+
+            let year = new Date().getFullYear();
+            let month = new Date().getMonth();
+            let day = new Date().getDate();
+
+            $.each($('.calendar'), function() {
+
+                let eventData = {
+                    events : [
+                       {"id":1, "start": new Date(year, month, day, 12), "end": new Date(year, month, day, 13, 35),"title":"Lunch with Mike"},
+                       {"id":2, "start": new Date(year, month, day, 14), "end": new Date(year, month, day, 14, 45),"title":"Dev Meeting"},
+                       {"id":3, "start": new Date(year, month, day + 1, 18), "end": new Date(year, month, day + 1, 18, 45),"title":"Hair cut"},
+                       {"id":4, "start": new Date(year, month, day - 1, 8), "end": new Date(year, month, day - 1, 9, 30),"title":"Team breakfast"},
+                       {"id":5, "start": new Date(year, month, day + 1, 14), "end": new Date(year, month, day + 1, 15),"title":"Product showcase"}
+                    ]
+                };
+
+                $('#'+this.id).weekCalendar({
+                    timeslotsPerHour: 4,
+                    eventNew : function(calEvent, $event) {
+                    //
+                    },
+                    data:eventData
+                });
+
+            });
+
+        }
+
+    }
+
+    let modal = {
+       action: function(){
+            $('.show-modal').on('click', modal.show);
+            $('.hide-modal').on('click', modal.hide);
+       },
+
+       show: function(){
+            $('.modal-cover').fadeIn('500').css('display', 'flex');
+            return false;
+       },
+
+       hide: function(){
+            $('.modal-cover').fadeOut('500');
+       },
+
+       init: function(){
+            modal.action();
+       },
+    }
+
+    let datePicker = {
+        init: function(){
+            $('#datepicker').datepicker();
+        }
+    }
+
+    let registry = {
+
+        action: function(){
+            $('.registry').on('submit', registry.send);
+            $('.set-doctor-id').on('click', registry.setID);
+        },
+
+        setID: function(){
+            let doctorID = $(this).attr('doctor-id');
+            $('.app-doctor-id').val(doctorID);
+        },
+
+        send: function(){
+            let page = window.location.href;
+            let form = $('.registry')
+            let data = form.serialize();
+
+            console.log(data);
+
+            $.ajax({
+                url: page + 'create_meeting/',
+                type: 'get',
+                data: data,
+                success: function(data) {
+                    //console.log(data)
+                },
+
+                failure: function(data) {
+                    //console.log('err');
+                }
+            });
+
+            return false;
+        },
+
+        init: function(){
+            registry.action();
+        },
+    }
+
     profile.init();
     doctorMap.init();
+    datePicker.init();
+    modal.init();
+    registry.init();
 
 });

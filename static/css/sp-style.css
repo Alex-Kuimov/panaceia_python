@@ -114,9 +114,8 @@
 
 .wc-scrollable-grid{
     overflow-y: scroll;
-    height: 200px;
+    height: 600px;
 }
-
 
 .appointment-btn{
     width: 180px;

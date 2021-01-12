@@ -318,37 +318,59 @@ $(document).ready(function(){
 
         init: function(){
 
-            let year = new Date().getFullYear();
-            let month = new Date().getMonth();
-            let day = new Date().getDate();
+            let page = 'http://127.0.0.1:8000/';
 
-            $.each($('.calendar'), function() {
+            $.ajax({
+                url: page + 'doctors/get_calendar/',
+                type: 'get',
 
-                let eventData = {
-                    events : [
-                       {"id":1, "start": new Date(year, month, day, 12), "end": new Date(year, month, day, 13, 35),"title":"Lunch with Mike"},
-                       {"id":2, "start": new Date(year, month, day, 14), "end": new Date(year, month, day, 14, 45),"title":"Dev Meeting"},
-                       {"id":3, "start": new Date(year, month, day + 1, 18), "end": new Date(year, month, day + 1, 18, 45),"title":"Hair cut"},
-                       {"id":4, "start": new Date(year, month, day - 1, 8), "end": new Date(year, month, day - 1, 9, 30),"title":"Team breakfast"},
-                       {"id":5, "start": new Date(year, month, day + 1, 14), "end": new Date(year, month, day + 1, 15),"title":"Product showcase"}
-                    ]
-                };
+                success: function(data) {
 
-                $('#'+this.id).weekCalendar({
-                    timeslotsPerHour: 4,
-                    eventNew : function(calEvent, $event) {
+                    let dataEvent = {events : []}
+
+                    for (var key in data) {
+
+                        let year = new Date(data[key]['data']).getFullYear();
+                        let month = new Date(data[key]['data']).getMonth();
+                        let day = new Date(data[key]['data']).getDate();
+
+                        let hStart = new Date(data[key]['data']+' '+data[key]['time_start']).getHours();
+                        let mStart = new Date(data[key]['data']+' '+data[key]['time_start']).getMinutes();
+
+                        let hEnd = new Date(data[key]['data']+' '+data[key]['time_end']).getHours();
+                        let mEnd = new Date(data[key]['data']+' '+data[key]['time_end']).getMinutes();
+
+                        let _event = {
+                            "id": data[key]['id'],
+                            "start": new Date(year, month, day, hStart, mStart),
+                            "end": new Date(year, month, day, hEnd, mEnd),
+                            "title": data[key]['title'],
+                        }
+                        dataEvent.events.push(_event)
+                    }
+
+                    console.log(dataEvent)
+
+                    $('#doctor_grafik').weekCalendar({
+                        timeslotsPerHour: 4,
+                        eventNew : function(calEvent, $event) {
+                        //
+                        },
+                        data:dataEvent
+                    });
+
+
+                },
+
+                failure: function(data) {
                     //
-                    },
-                    data:eventData
-                });
-
+                }
             });
-
         }
-
     }
 
     let modal = {
+
        action: function(){
             $('.show-modal').on('click', modal.show);
             $('.hide-modal').on('click', modal.hide);
@@ -366,6 +388,7 @@ $(document).ready(function(){
        init: function(){
             modal.action();
        },
+
     }
 
     let datePicker = {
@@ -391,18 +414,16 @@ $(document).ready(function(){
             let form = $('.registry')
             let data = form.serialize();
 
-            console.log(data);
-
             $.ajax({
                 url: page + 'create_meeting/',
                 type: 'get',
                 data: data,
                 success: function(data) {
-                    //console.log(data)
+                    $('.registry').html('<p>Вы успешно записаны на приём!</p>');
                 },
 
                 failure: function(data) {
-                    //console.log('err');
+                    $('.registry').html('<p>Возникла ошибка!</p>');
                 }
             });
 
@@ -414,6 +435,8 @@ $(document).ready(function(){
         },
     }
 
+
+    userCalendar.init();
     profile.init();
     doctorMap.init();
     datePicker.init();

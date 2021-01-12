@@ -128,7 +128,13 @@
                                                 </div>
                                             </div>
                                             <div class="col-6 recording">
-                                                <div class="appointment-btn set-doctor-id show-modal" doctor-id="{{doctor.id}}">Записаться на прием</div>
+                                                {% if request.user.is_authenticated %}
+                                                    {% if user.groups.all.0.name == "users" %}
+                                                        <div class="appointment-btn set-doctor-id show-modal" doctor-id="{{doctor.id}}">Записаться на прием</div>
+                                                    {% endif %}
+                                                {% else %}
+                                                    <p>Чтобы записаться на прием, нужно <a href="{% url 'login' %}">авторизоваться</a> сайте.</p>
+                                                {% endif %}
                                                 <h5>Всего записались N кол-во</h5>
                                             </div>
 
@@ -160,7 +166,7 @@
         <div class="modal-body">
             <form action="#" class="registry">
                 <p>Выберите дату и время</p>
-                <p><input type="text" id="datepicker" name="app-date" class="app-date" placeholder="Дата"></p>
+                <p><input type="text" id="datepicker" name="app-date" class="app-date" placeholder="Дата" required></p>
                 <p>
                     <select name="app-time" class="app-time">
                         <option value="12:00">12:00</option>

@@ -4,7 +4,7 @@ from datetime import datetime
 from django.shortcuts import render
 from django.http import HttpResponse, Http404, HttpResponseRedirect
 from userprofile.models import UserMain, UserDoctor, User
-from .models import Meeting
+from .models import Meeting, Calendar
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from .utility import decl_of_num
 
@@ -97,26 +97,56 @@ def get_doctors_list(request):
 
 
 def create_meeting(request):
+    if request.user.is_authenticated:
+        data = request.GET['app-date']
+        time = request.GET['app-time']
+        doctor_id = request.GET['app-doctor-id']
+        user_id = request.GET['app-user-id']
+        title = 'Консультация'
 
-    data = request.GET['app-date']
-    time = request.GET['app-time']
-    doctor_id = request.GET['app-doctor-id']
-    user_id = request.GET['app-user-id']
-    title = 'Консультация'
+        if data != '' and time != '' and doctor_id != '' and user_id != '':
+            date_format = "%d.%m.%Y"
+            date = datetime.strptime(data, date_format)
+            data = date.strftime("%Y-%m-%d")
+            meeting = Meeting.objects.create(title=title, data=data, time=time, doctor_id=doctor_id, user_id=user_id)
+        try:
+            meeting.save()
+            result = 'ok'
+        except:
+            result = 'save err'
+    else:
+        result = 'auth err'
 
-    dateString = data
-    dateFormatter = "%d.%m.%Y"
-    date = datetime.strptime(dateString, dateFormatter)
+    return HttpResponse(
+        json.dumps(result),
+        content_type="application/json"
+    )
 
-    data = date.strftime("%Y-%m-%d")
 
-    meeting = Meeting.objects.create(title=title, data=data, time=time, doctor_id=doctor_id, user_id=user_id)
+def get_calendar(request):
+    if request.user.is_authenticated:
+        doctor_id = request.user.id
+        calendar_object_list = Calendar.objects.filter(doctor_id=doctor_id)
+        calendar = list()
+        i = 0
 
-    try:
-        meeting.save()
-        result = 'ok'
-    except:
-        result = 'err'
+        for calendar_item in calendar_object_list:
+            i = i + 1
+
+            _calendar = {
+                'id': i,
+                'title': calendar_item.title,
+                'data': str(calendar_item.data),
+                'time_start': str(calendar_item.time_start),
+                'time_end': str(calendar_item.time_end),
+            }
+
+            calendar.append(_calendar)
+
+        result = calendar
+
+    else:
+        result = 'auth err'
 
     return HttpResponse(
         json.dumps(result),

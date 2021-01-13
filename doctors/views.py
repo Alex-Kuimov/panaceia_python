@@ -128,13 +128,10 @@ def get_calendar(request):
         doctor_id = request.user.id
         calendar_object_list = Calendar.objects.filter(doctor_id=doctor_id)
         calendar = list()
-        i = 0
 
         for calendar_item in calendar_object_list:
-            i = i + 1
-
             _calendar = {
-                'id': i,
+                'id': calendar_item.id,
                 'title': calendar_item.title,
                 'data': str(calendar_item.data),
                 'time_start': str(calendar_item.time_start),
@@ -145,6 +142,53 @@ def get_calendar(request):
 
         result = calendar
 
+    else:
+        result = 'auth err'
+
+    return HttpResponse(
+        json.dumps(result),
+        content_type="application/json"
+    )
+
+
+def create_event(request):
+    if request.user.is_authenticated:
+        title = 'Консультация'
+
+        data = request.GET['date']
+        date_format = "%d.%m.%Y"
+        date = datetime.strptime(data, date_format)
+        date = date.strftime("%Y-%m-%d")
+
+        time_start = request.GET['time_start']
+        time_end = request.GET['time_end']
+
+        doctor_id = request.user.id
+
+        event = Calendar.objects.create(title=title, data=date, time_start=time_start, time_end=time_end, doctor_id=doctor_id)
+
+        try:
+            event.save()
+            result = event.id
+        except:
+            result = 'save err'
+
+    else:
+        result = 'auth err'
+
+    return HttpResponse(
+        json.dumps(result),
+        content_type="application/json"
+    )
+
+
+def delete_event(request):
+    if request.user.is_authenticated:
+        event_id = request.GET['event_id']
+
+        instance = Calendar.objects.get(id=event_id)
+        instance.delete()
+        result = 'ok'
     else:
         result = 'auth err'
 

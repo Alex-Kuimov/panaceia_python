@@ -584,7 +584,7 @@
                self._renderEvents(options.data, $weekDayColumns);
             }
 
-         self._disableTextSelect($weekDayColumns);
+         //self._disableTextSelect($weekDayColumns);
 
 
       },
@@ -704,7 +704,7 @@
          var eventClass, eventHtml, $calEvent, $modifiedEvent;
 
          eventClass = calEvent.id ? "wc-cal-event" : "wc-cal-event wc-new-cal-event";
-         eventHtml = "<div class=\"" + eventClass + " ui-corner-all\">\
+         eventHtml = "<div data-id='" + calEvent.id + "' class=\"" + eventClass + " ui-corner-all\">\
                 <div class=\"wc-time ui-corner-all\"></div>\
                 <div class=\"wc-title\"></div></div>";
 

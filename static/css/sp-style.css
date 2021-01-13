@@ -117,6 +117,10 @@
     height: 600px;
 }
 
+.wc-title{
+    display:none;
+}
+
 .appointment-btn{
     width: 180px;
     height: 52px;

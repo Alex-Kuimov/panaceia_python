@@ -315,57 +315,100 @@ $(document).ready(function(){
     }
 
     let userCalendar = {
-
         init: function(){
+            if ($('#doctor_grafik').length){
+                let page = location.origin;
 
-            let page = 'http://127.0.0.1:8000/';
+                $.ajax({
+                    url: page + '/doctors/get_calendar/',
+                    type: 'get',
 
-            $.ajax({
-                url: page + 'doctors/get_calendar/',
-                type: 'get',
+                    success: function(data) {
 
-                success: function(data) {
+                        let dataEvent = {events : []}
 
-                    let dataEvent = {events : []}
+                        for (var key in data) {
 
-                    for (var key in data) {
+                            let year = new Date(data[key]['data']).getFullYear();
+                            let month = new Date(data[key]['data']).getMonth();
+                            let day = new Date(data[key]['data']).getDate();
 
-                        let year = new Date(data[key]['data']).getFullYear();
-                        let month = new Date(data[key]['data']).getMonth();
-                        let day = new Date(data[key]['data']).getDate();
+                            let hStart = new Date(data[key]['data']+' '+data[key]['time_start']).getHours();
+                            let mStart = new Date(data[key]['data']+' '+data[key]['time_start']).getMinutes();
 
-                        let hStart = new Date(data[key]['data']+' '+data[key]['time_start']).getHours();
-                        let mStart = new Date(data[key]['data']+' '+data[key]['time_start']).getMinutes();
+                            let hEnd = new Date(data[key]['data']+' '+data[key]['time_end']).getHours();
+                            let mEnd = new Date(data[key]['data']+' '+data[key]['time_end']).getMinutes();
 
-                        let hEnd = new Date(data[key]['data']+' '+data[key]['time_end']).getHours();
-                        let mEnd = new Date(data[key]['data']+' '+data[key]['time_end']).getMinutes();
-
-                        let _event = {
-                            "id": data[key]['id'],
-                            "start": new Date(year, month, day, hStart, mStart),
-                            "end": new Date(year, month, day, hEnd, mEnd),
-                            "title": data[key]['title'],
+                            let _event = {
+                                "id": data[key]['id'],
+                                "start": new Date(year, month, day, hStart, mStart),
+                                "end": new Date(year, month, day, hEnd, mEnd),
+                                "title": data[key]['title'],
+                            }
+                            dataEvent.events.push(_event)
                         }
-                        dataEvent.events.push(_event)
+
+                        $('#doctor_grafik').weekCalendar({
+                            timeslotsPerHour: 4,
+                            eventNew : function(calEvent, $event) {
+
+                                console.log(calEvent.start);
+                                console.log(calEvent.end);
+
+                                let year = calEvent.start.getFullYear();
+                                let month = calEvent.start.getMonth()+1;
+                                let day = calEvent.start.getDate();
+                                let date = day + '.' + month + '.' + year;
+
+                                let time_start = calEvent.start.getHours() + ':' + calEvent.start.getMinutes();
+                                let time_end = calEvent.end.getHours() + ':' + calEvent.end.getMinutes();
+
+                                $.ajax({
+                                    url: page + '/doctors/create_event/',
+                                    type: 'get',
+                                    data:{'date': date, 'time_start': time_start, 'time_end': time_end},
+                                    success: function(data) {
+                                        console.log(data);
+                                        $event.attr('data-id', data)
+                                    },
+
+                                    failure: function(data) {
+                                        console.log(data);
+                                    },
+                                });
+
+                            },
+                            eventClick : function(calEvent, $event) {
+                                let event_id = $event.attr('data-id')
+
+                                if(event_id == 'undefined'){
+                                    $event.remove();
+                                } else {
+                                    $.ajax({
+                                        url: page + '/doctors/delete_event/',
+                                        type: 'get',
+                                        data:{'event_id': event_id},
+                                        success: function(data) {
+                                            $event.remove();
+                                            console.log(data);
+                                        },
+
+                                        failure: function(data) {
+                                            console.log(data);
+                                        },
+                                    });
+                                }
+                            },
+                            data:dataEvent,
+
+                        });
+                    },
+
+                    failure: function(data) {
+                        console.log(data);
                     }
-
-                    console.log(dataEvent)
-
-                    $('#doctor_grafik').weekCalendar({
-                        timeslotsPerHour: 4,
-                        eventNew : function(calEvent, $event) {
-                        //
-                        },
-                        data:dataEvent
-                    });
-
-
-                },
-
-                failure: function(data) {
-                    //
-                }
-            });
+                });
+            }
         }
     }
 

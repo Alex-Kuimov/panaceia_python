@@ -98,17 +98,17 @@ def get_doctors_list(request):
 
 def create_meeting(request):
     if request.user.is_authenticated:
-        data = request.GET['app-date']
+        date = request.GET['app-date']
         time = request.GET['app-time']
         doctor_id = request.GET['app-doctor-id']
         user_id = request.GET['app-user-id']
         title = 'Консультация'
 
-        if data != '' and time != '' and doctor_id != '' and user_id != '':
+        if date != '' and time != '' and doctor_id != '' and user_id != '':
             date_format = "%d.%m.%Y"
-            date = datetime.strptime(data, date_format)
-            data = date.strftime("%Y-%m-%d")
-            meeting = Meeting.objects.create(title=title, data=data, time=time, doctor_id=doctor_id, user_id=user_id)
+            date = datetime.strptime(date, date_format)
+            date = date.strftime("%Y-%m-%d")
+            meeting = Meeting.objects.create(title=title, date=date, time=time, doctor_id=doctor_id, user_id=user_id)
         try:
             meeting.save()
             result = 'ok'
@@ -133,7 +133,7 @@ def get_calendar(request):
             _calendar = {
                 'id': calendar_item.id,
                 'title': calendar_item.title,
-                'data': str(calendar_item.data),
+                'date': str(calendar_item.date),
                 'time_start': str(calendar_item.time_start),
                 'time_end': str(calendar_item.time_end),
             }
@@ -155,9 +155,9 @@ def create_event(request):
     if request.user.is_authenticated:
         title = 'Консультация'
 
-        data = request.GET['date']
+        date = request.GET['date']
         date_format = "%d.%m.%Y"
-        date = datetime.strptime(data, date_format)
+        date = datetime.strptime(date, date_format)
         date = date.strftime("%Y-%m-%d")
 
         time_start = request.GET['time_start']
@@ -165,7 +165,7 @@ def create_event(request):
 
         doctor_id = request.user.id
 
-        event = Calendar.objects.create(title=title, data=date, time_start=time_start, time_end=time_end, doctor_id=doctor_id)
+        event = Calendar.objects.create(title=title, date=date, time_start=time_start, time_end=time_end, doctor_id=doctor_id)
 
         try:
             event.save()
@@ -173,6 +173,29 @@ def create_event(request):
         except:
             result = 'save err'
 
+    else:
+        result = 'auth err'
+
+    return HttpResponse(
+        json.dumps(result),
+        content_type="application/json"
+    )
+
+
+def update_event(request):
+    if request.user.is_authenticated:
+        event_id = request.GET['event_id']
+        date = request.GET['date']
+        date_format = "%d.%m.%Y"
+        date = datetime.strptime(date, date_format)
+        date = date.strftime("%Y-%m-%d")
+
+        time_start = request.GET['time_start']
+        time_end = request.GET['time_end']
+
+        event = Calendar.objects.filter(pk=event_id)
+        event.update(date=date, time_start=time_start, time_end=time_end)
+        result = 'ok'
     else:
         result = 'auth err'
 

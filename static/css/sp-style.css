@@ -112,6 +112,8 @@
    text-decoration: none;
 }
 
+/**Calendar**/
+
 .wc-scrollable-grid{
     overflow-y: scroll;
     height: 600px;
@@ -120,6 +122,19 @@
 .wc-title{
     display:none;
 }
+
+.wc-business-hours {
+    font-size: 15px;
+}
+
+.wc-container div,
+.wc-container div:before,
+.wc-container div:after {
+    -webkit-box-sizing: content-box !important;
+    -moz-box-sizing: content-box !important;
+    box-sizing: content-box !important;
+}
+
 
 .appointment-btn{
     width: 180px;

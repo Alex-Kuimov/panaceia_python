@@ -104,6 +104,11 @@ def create_meeting(request):
         user_id = request.GET['app-user-id']
         title = 'Консультация'
 
+        print(date)
+        print(time)
+        print(doctor_id)
+        print(user_id)
+
         if date != '' and time != '' and doctor_id != '' and user_id != '':
             date_format = "%d.%m.%Y"
             date = datetime.strptime(date, date_format)
@@ -125,7 +130,12 @@ def create_meeting(request):
 
 def get_calendar(request):
     if request.user.is_authenticated:
-        doctor_id = request.user.id
+
+        if request.method == 'GET' and 'doctor_id' in request.GET:
+            doctor_id = request.GET['doctor_id']
+        else:
+            doctor_id = request.user.id
+
         calendar_object_list = Calendar.objects.filter(doctor_id=doctor_id)
         calendar = list()
 
@@ -153,7 +163,7 @@ def get_calendar(request):
 
 def create_event(request):
     if request.user.is_authenticated:
-        title = 'Консультация'
+        title = 'График'
 
         date = request.GET['date']
         date_format = "%d.%m.%Y"

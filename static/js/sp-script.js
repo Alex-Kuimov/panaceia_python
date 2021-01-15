@@ -470,17 +470,12 @@ $(document).ready(function(){
 
     }
 
-    let datePicker = {
-        init: function(){
-            $('#datepicker').datepicker();
-        }
-    }
-
     let registry = {
 
         action: function(){
             $('.registry').on('submit', registry.send);
             $('.set-doctor-id').on('click', registry.setID);
+            $('.appointment').on('click', registry.show);
         },
 
         setID: function(){
@@ -489,12 +484,12 @@ $(document).ready(function(){
         },
 
         send: function(){
-            let page = window.location.href;
+            let page = location.origin;
             let form = $('.registry')
             let data = form.serialize();
 
             $.ajax({
-                url: page + 'create_meeting/',
+                url: page + '/doctors/list/create_meeting/',
                 type: 'get',
                 data: data,
                 success: function(data) {
@@ -509,16 +504,84 @@ $(document).ready(function(){
             return false;
         },
 
+        show: function(){
+            let page = location.origin;
+            let doctor_id = $(this).attr('doctor-id');
+
+            $.ajax({
+                url: page + '/doctors/get_calendar/',
+                type: 'get',
+                data:{'doctor_id': doctor_id},
+                success: function(data) {
+                    let date_array = [];
+                    let html = '';
+
+                    for (var key in data) {
+                        let date = data[key]['date'];
+                        date_array.push(date)
+                    }
+
+                    html += '<p><input type="text" id="datepicker" name="app-date" class="app-date" placeholder="Дата" required></p>';
+                    html += '<div class="app-time-result"></div>';
+
+                    $('.registry-ajax').html(html);
+
+                    $('#datepicker').datepicker({
+                        beforeShowDay: function(date){
+                            let string = jQuery.datepicker.formatDate('yy-mm-dd', date);
+                            return [ date_array.indexOf(string) != -1 ]
+                        },
+                        onSelect: function(dateText) {
+                            let datePattern = /(\d{2})\.(\d{2})\.(\d{4})/;
+                            let checkDate = new Date(dateText.replace(datePattern,'$3-$2-$1'));
+                            let time_arr = [];
+                            let html = '';
+
+                            for (var key in data) {
+                                let current = new Date(data[key]['date']);
+
+                                if(+current === +checkDate){
+                                    let time_obj = {}
+                                    let time = data[key]['time_start'].substring(0, data[key]['time_start'].length-3) + ' - ' + data[key]['time_end'].substring(0, data[key]['time_end'].length-3)
+                                    let timeStart = data[key]['time_start'].substring(0, data[key]['time_start'].length-3);
+
+                                    time_obj['value'] = timeStart;
+                                    time_obj['title'] = time;
+
+                                    time_arr.push(time_obj);
+                                }
+                            }
+
+                            html += '<p>2. Выберите время</p>';
+
+                            console.log(time_arr);
+
+                            html += '<p><select name="app-time" class="app-time">';
+                                for (var key in time_arr) {
+                                    html += '<option value="' + time_arr[key]['value']  + '">' + time_arr[key]['title'] + '</option>';
+                                }
+                            html += '</select></p>';
+
+                            $('.app-time-result').html(html);
+
+                        },
+                    });
+                },
+
+                failure: function(data) {
+                    console.log(data);
+                }
+            });
+        },
+
         init: function(){
             registry.action();
         },
     }
 
-
     userCalendar.init();
     profile.init();
     doctorMap.init();
-    datePicker.init();
     modal.init();
     registry.init();
 

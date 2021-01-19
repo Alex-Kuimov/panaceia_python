@@ -241,7 +241,6 @@ $(document).ready(function(){
     let doctorMap ={
 
         loadMap: function(){
-
             if ($('#doctor-map').length){
                 ymaps.ready(function(){
 
@@ -476,6 +475,7 @@ $(document).ready(function(){
             $('.registry').on('submit', registry.send);
             $('.set-doctor-id').on('click', registry.setID);
             $('.appointment').on('click', registry.show);
+            $('body').on('change', '.service-list', registry.service);
         },
 
         setID: function(){
@@ -513,6 +513,7 @@ $(document).ready(function(){
                 type: 'get',
                 data:{'doctor_id': doctor_id},
                 success: function(data) {
+
                     let date_array = [];
                     let html = '';
 
@@ -522,9 +523,8 @@ $(document).ready(function(){
                     }
 
                     html += '<p><input type="text" id="datepicker" name="app-date" class="app-date" placeholder="Дата" required></p>';
-                    html += '<div class="app-time-result"></div>';
 
-                    $('.registry-ajax').html(html);
+                    $('.app-date-result').html(html);
 
                     $('#datepicker').datepicker({
                         beforeShowDay: function(date){
@@ -534,35 +534,29 @@ $(document).ready(function(){
                         onSelect: function(dateText) {
                             let datePattern = /(\d{2})\.(\d{2})\.(\d{4})/;
                             let checkDate = new Date(dateText.replace(datePattern,'$3-$2-$1'));
-                            let time_arr = [];
                             let html = '';
+                            let service_obj = {};
 
                             for (var key in data) {
                                 let current = new Date(data[key]['date']);
 
                                 if(+current === +checkDate){
-                                    let time_obj = {}
-                                    let time = data[key]['time_start'].substring(0, data[key]['time_start'].length-3) + ' - ' + data[key]['time_end'].substring(0, data[key]['time_end'].length-3)
-                                    let timeStart = data[key]['time_start'].substring(0, data[key]['time_start'].length-3);
-
-                                    time_obj['value'] = timeStart;
-                                    time_obj['title'] = time;
-
-                                    time_arr.push(time_obj);
+                                    service_obj = data[key]['services'];
                                 }
                             }
 
-                            html += '<p>2. Выберите время</p>';
+                            html += '<p>2. Выберите услугу:</p>';
 
-                            console.log(time_arr);
+                            html += '<p><select name="app-service" class="service-list" required>';
+                            html += '<option value="" disable>---</option>';
+                            for (var key in service_obj) {
+                                html += '<option value="' + service_obj[key]['id'] + '">' + service_obj[key]['name'] + '</option>';
+                            }
 
-                            html += '<p><select name="app-time" class="app-time">';
-                                for (var key in time_arr) {
-                                    html += '<option value="' + time_arr[key]['value']  + '">' + time_arr[key]['title'] + '</option>';
-                                }
                             html += '</select></p>';
 
-                            $('.app-time-result').html(html);
+                            $('.app-service-result').html(html);
+                            $('.app-time-result').html('');
 
                         },
                     });
@@ -570,6 +564,96 @@ $(document).ready(function(){
 
                 failure: function(data) {
                     console.log(data);
+                }
+            });
+        },
+
+        service: function(){
+            let service_id = $(this).val();
+            let doctor_id = $('.app-doctor-id').val();
+            let page = location.origin;
+
+            $.ajax({
+                url: page + '/doctors/get_calendar/',
+                type: 'get',
+                data:{'doctor_id': doctor_id},
+                success: function(data) {
+                    let dateText = $('.app-date').val();
+                    let datePattern = /(\d{2})\.(\d{2})\.(\d{4})/;
+                    let checkDate = new Date(dateText.replace(datePattern,'$3-$2-$1'));
+                    let time_arr = [];
+                    let html = '';
+
+                    for (var key in data) {
+                        let current = new Date(data[key]['date']);
+
+                        if(+current === +checkDate){
+                            let time_obj = {};
+
+                            let timeStart = data[key]['time_start'].substring(0, data[key]['time_start'].length-3);
+                            let timeEnd = data[key]['time_end'].substring(0, data[key]['time_end'].length-3);
+                            let services = data[key]['services'];
+
+                            for (var i in services) {
+                                if (services[i]['id'] == service_id){
+                                    var interval = services[i]['time'];
+                                }
+                            }
+
+                            let count = parseInt(timeEnd) - parseInt(timeStart);
+
+                            if(interval == 30){
+                                count = count * 2;
+                                count = count - 1;
+                            }
+
+                            if(interval == 60){
+                                count = count - 1;
+                            }
+
+                            time_obj['time_start'] = timeStart;
+                            time_obj['time_end'] = timeEnd;
+                            time_obj['count'] = count;
+                            time_obj['interval'] = parseInt(interval);
+
+                            time_arr.push(time_obj);
+                        }
+                    }
+
+                    html += '<p>3. Выберите время</p>';
+
+                    html += '<p><select name="app-time" class="app-time" required>';
+
+                        html += '<option value="">---</option>';
+
+                        for (var key in time_arr) {
+                            let count = parseInt(time_arr[key]['count']);
+                            let getDate = (string) => new Date(0,0,0, string.split(':')[0], string.split(':')[1]);
+                            let start = getDate(time_arr[key]['time_start']);
+                            let end = getDate(time_arr[key]['time_end']);
+                            let interval = parseInt(time_arr[key]['interval']);
+
+                            html += '<option value="' + time_arr[key]['time_start']  + '">' + time_arr[key]['time_start'] + '</option>';
+
+                            for (var i = 0; i < count; i++) {
+                                start.setMinutes(start.getMinutes() + interval);
+
+                                let m = start.getMinutes();
+                                let h = start.getHours()
+
+                                if(start.getMinutes() == 0){
+                                    m = '00';
+                                }
+
+                                let s = h + ':' + m;
+
+                                html += '<option value="' + s + '">' + s + '</option>';
+                            }
+                        }
+
+                    html += '</select></p>';
+
+                    $('.app-time-result').html(html);
                 }
             });
         },

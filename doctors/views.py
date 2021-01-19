@@ -3,7 +3,7 @@ from datetime import datetime
 
 from django.shortcuts import render
 from django.http import HttpResponse, Http404, HttpResponseRedirect
-from userprofile.models import UserMain, UserDoctor, User
+from userprofile.models import UserMain, UserDoctor, User, Service
 from .models import Meeting, Calendar
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from .utility import decl_of_num
@@ -102,18 +102,23 @@ def create_meeting(request):
         time = request.GET['app-time']
         doctor_id = request.GET['app-doctor-id']
         user_id = request.GET['app-user-id']
+        service_id = request.GET['app-service']
         title = 'Консультация'
 
-        print(date)
-        print(time)
-        print(doctor_id)
-        print(user_id)
-
-        if date != '' and time != '' and doctor_id != '' and user_id != '':
+        if date != '' and time != '' and doctor_id != '' and user_id != '' and service_id != '':
             date_format = "%d.%m.%Y"
             date = datetime.strptime(date, date_format)
             date = date.strftime("%Y-%m-%d")
-            meeting = Meeting.objects.create(title=title, date=date, time=time, doctor_id=doctor_id, user_id=user_id)
+
+            meeting = Meeting.objects.create(
+                title=title,
+                date=date,
+                time=time,
+                doctor_id=doctor_id,
+                user_id=user_id,
+                service_id=service_id
+            )
+
         try:
             meeting.save()
             result = 'ok'
@@ -137,7 +142,20 @@ def get_calendar(request):
             doctor_id = request.user.id
 
         calendar_object_list = Calendar.objects.filter(doctor_id=doctor_id)
+        user_services = Service.objects.filter(content=doctor_id)
+
         calendar = list()
+        services = list()
+
+        for service in user_services:
+            print(service)
+            _services = {
+                'id': service.id,
+                'name': service.name,
+                'time': service.time,
+            }
+
+            services.append(_services)
 
         for calendar_item in calendar_object_list:
             _calendar = {
@@ -146,6 +164,7 @@ def get_calendar(request):
                 'date': str(calendar_item.date),
                 'time_start': str(calendar_item.time_start),
                 'time_end': str(calendar_item.time_end),
+                'services': services,
             }
 
             calendar.append(_calendar)

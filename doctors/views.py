@@ -7,6 +7,7 @@ from userprofile.models import UserMain, UserDoctor, User, Service
 from .models import Meeting, Calendar
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from .utility import decl_of_num
+from django.views.decorators.csrf import requires_csrf_token
 
 
 def doctors_map_view(request):
@@ -56,39 +57,49 @@ def doctors_list_view(request):
     return render(request, 'doctors_list.html', data)
 
 
+@requires_csrf_token
 def get_doctors_list(request):
-    users = User.objects.filter(groups__name='doctors')
-    doctors = list()
 
-    for user in users:
-        doctor_main = UserMain.objects.get(user=user)
-        doctor = UserDoctor.objects.get(user=user)
+    csrf_token = request.headers.get("api-csrftoken")
+    csrf_cookie = request.META.get("CSRF_COOKIE")
 
-        if doctor.experience_years != '':
-            words = ['год', 'года', 'лет']
-            num = int(doctor.experience_years)
-            years = decl_of_num(num, words)
-            experience = 'Стаж: ' + str(num) + ' ' + years
-        else:
-            experience = ''
+    if csrf_token == csrf_cookie:
 
-        if doctor_main.avatar != '':
-            avatar = 'media/' + str(doctor_main.avatar)
-        else:
-            avatar = 'medicsite/static/img/user.png'
+        users = User.objects.filter(groups__name='doctors')
+        doctors = list()
 
-        _doctor = {
-            'id': user.id,
-            'fio': doctor_main.fio,
-            'city': doctor_main.city,
-            'phone': doctor_main.phone,
-            'avatar': avatar,
-            'specialty': doctor.specialty,
-            'experience_years': experience,
-            'coords': doctor_main.coords,
-        }
+        for user in users:
+            doctor_main = UserMain.objects.get(user=user)
+            doctor = UserDoctor.objects.get(user=user)
 
-        doctors.append(_doctor)
+            if doctor.experience_years != '':
+                words = ['год', 'года', 'лет']
+                num = int(doctor.experience_years)
+                years = decl_of_num(num, words)
+                experience = 'Стаж: ' + str(num) + ' ' + years
+            else:
+                experience = ''
+
+            if doctor_main.avatar != '':
+                avatar = 'media/' + str(doctor_main.avatar)
+            else:
+                avatar = 'medicsite/static/img/user.png'
+
+            _doctor = {
+                'id': user.id,
+                'fio': doctor_main.fio,
+                'city': doctor_main.city,
+                'phone': doctor_main.phone,
+                'avatar': avatar,
+                'specialty': doctor.specialty,
+                'experience_years': experience,
+                'coords': doctor_main.coords,
+            }
+
+            doctors.append(_doctor)
+
+    else:
+        doctors = 'csrf err'
 
     return HttpResponse(
         json.dumps(doctors),
@@ -96,83 +107,142 @@ def get_doctors_list(request):
     )
 
 
+@requires_csrf_token
 def create_meeting(request):
-    if request.user.is_authenticated:
-        date = request.GET['app-date']
-        time = request.GET['app-time']
-        doctor_id = request.GET['app-doctor-id']
-        user_id = request.GET['app-user-id']
-        service_id = request.GET['app-service']
-        title = 'Консультация'
+    csrf_token = request.headers.get("api-csrftoken")
+    csrf_cookie = request.META.get("CSRF_COOKIE")
 
-        if date != '' and time != '' and doctor_id != '' and user_id != '' and service_id != '':
+    if csrf_token == csrf_cookie:
+
+        if request.user.is_authenticated:
+
+            date = request.GET['app-date']
+            time = request.GET['app-time']
+            doctor_id = request.GET['app-doctor-id']
+            user_id = request.GET['app-user-id']
+            service_id = request.GET['app-service']
+            title = 'Консультация'
+
+            if date != '' and time != '' and doctor_id != '' and user_id != '' and service_id != '':
+                date_format = "%d.%m.%Y"
+                date = datetime.strptime(date, date_format)
+                date = date.strftime("%Y-%m-%d")
+
+                meeting = Meeting.objects.create(
+                    title=title,
+                    date=date,
+                    time=time,
+                    doctor_id=doctor_id,
+                    user_id=user_id,
+                    service_id=service_id
+                )
+
+            try:
+                meeting.save()
+                result = 'ok'
+            except:
+                result = 'save err'
+        else:
+            result = 'auth err'
+
+    else:
+        result = 'csrf err'
+
+    return HttpResponse(
+        json.dumps(result),
+        content_type="application/json"
+    )
+
+
+@requires_csrf_token
+def get_calendar(request):
+    csrf_token = request.headers.get("api-csrftoken")
+    csrf_cookie = request.META.get("CSRF_COOKIE")
+
+    if csrf_token == csrf_cookie:
+
+        if request.user.is_authenticated:
+
+            if request.method == 'GET' and 'doctor_id' in request.GET:
+                doctor_id = request.GET['doctor_id']
+            else:
+                doctor_id = request.user.id
+
+            calendar_object_list = Calendar.objects.filter(doctor_id=doctor_id)
+            user_services = Service.objects.filter(content=doctor_id)
+
+            calendar = list()
+            services = list()
+
+            for service in user_services:
+
+                _services = {
+                    'id': service.id,
+                    'name': service.name,
+                    'time': service.time,
+                }
+
+                services.append(_services)
+
+            for calendar_item in calendar_object_list:
+                _calendar = {
+                    'id': calendar_item.id,
+                    'title': calendar_item.title,
+                    'date': str(calendar_item.date),
+                    'time_start': str(calendar_item.time_start),
+                    'time_end': str(calendar_item.time_end),
+                    'services': services,
+                }
+
+                calendar.append(_calendar)
+
+            result = calendar
+
+        else:
+            result = 'auth err'
+
+    else:
+        result = 'csrf err'
+
+    return HttpResponse(
+        json.dumps(result),
+        content_type="application/json"
+    )
+
+
+@requires_csrf_token
+def create_event(request):
+    csrf_token = request.headers.get("api-csrftoken")
+    csrf_cookie = request.META.get("CSRF_COOKIE")
+
+    if csrf_token == csrf_cookie:
+
+        if request.user.is_authenticated:
+            title = 'График'
+
+            date = request.GET['date']
             date_format = "%d.%m.%Y"
             date = datetime.strptime(date, date_format)
             date = date.strftime("%Y-%m-%d")
 
-            meeting = Meeting.objects.create(
-                title=title,
-                date=date,
-                time=time,
-                doctor_id=doctor_id,
-                user_id=user_id,
-                service_id=service_id
-            )
+            time_start = request.GET['time_start']
+            time_end = request.GET['time_end']
 
-        try:
-            meeting.save()
-            result = 'ok'
-        except:
-            result = 'save err'
-    else:
-        result = 'auth err'
-
-    return HttpResponse(
-        json.dumps(result),
-        content_type="application/json"
-    )
-
-
-def get_calendar(request):
-    if request.user.is_authenticated:
-
-        if request.method == 'GET' and 'doctor_id' in request.GET:
-            doctor_id = request.GET['doctor_id']
-        else:
             doctor_id = request.user.id
 
-        calendar_object_list = Calendar.objects.filter(doctor_id=doctor_id)
-        user_services = Service.objects.filter(content=doctor_id)
+            event = Calendar.objects.create(title=title, date=date, time_start=time_start, time_end=time_end, doctor_id=doctor_id)
 
-        calendar = list()
-        services = list()
+            try:
+                event.save()
+                result = event.id
+            except:
+                result = 'save err'
 
-        for service in user_services:
-            print(service)
-            _services = {
-                'id': service.id,
-                'name': service.name,
-                'time': service.time,
-            }
-
-            services.append(_services)
-
-        for calendar_item in calendar_object_list:
-            _calendar = {
-                'id': calendar_item.id,
-                'title': calendar_item.title,
-                'date': str(calendar_item.date),
-                'time_start': str(calendar_item.time_start),
-                'time_end': str(calendar_item.time_end),
-                'services': services,
-            }
-
-            calendar.append(_calendar)
-
-        result = calendar
+        else:
+            result = 'auth err'
 
     else:
-        result = 'auth err'
+        result = 'csrf err'
 
     return HttpResponse(
         json.dumps(result),
@@ -180,53 +250,31 @@ def get_calendar(request):
     )
 
 
-def create_event(request):
-    if request.user.is_authenticated:
-        title = 'График'
-
-        date = request.GET['date']
-        date_format = "%d.%m.%Y"
-        date = datetime.strptime(date, date_format)
-        date = date.strftime("%Y-%m-%d")
-
-        time_start = request.GET['time_start']
-        time_end = request.GET['time_end']
-
-        doctor_id = request.user.id
-
-        event = Calendar.objects.create(title=title, date=date, time_start=time_start, time_end=time_end, doctor_id=doctor_id)
-
-        try:
-            event.save()
-            result = event.id
-        except:
-            result = 'save err'
-
-    else:
-        result = 'auth err'
-
-    return HttpResponse(
-        json.dumps(result),
-        content_type="application/json"
-    )
-
-
+@requires_csrf_token
 def update_event(request):
-    if request.user.is_authenticated:
-        event_id = request.GET['event_id']
-        date = request.GET['date']
-        date_format = "%d.%m.%Y"
-        date = datetime.strptime(date, date_format)
-        date = date.strftime("%Y-%m-%d")
+    csrf_token = request.headers.get("api-csrftoken")
+    csrf_cookie = request.META.get("CSRF_COOKIE")
 
-        time_start = request.GET['time_start']
-        time_end = request.GET['time_end']
+    if csrf_token == csrf_cookie:
 
-        event = Calendar.objects.filter(pk=event_id)
-        event.update(date=date, time_start=time_start, time_end=time_end)
-        result = 'ok'
+        if request.user.is_authenticated:
+            event_id = request.GET['event_id']
+            date = request.GET['date']
+            date_format = "%d.%m.%Y"
+            date = datetime.strptime(date, date_format)
+            date = date.strftime("%Y-%m-%d")
+
+            time_start = request.GET['time_start']
+            time_end = request.GET['time_end']
+
+            event = Calendar.objects.filter(pk=event_id)
+            event.update(date=date, time_start=time_start, time_end=time_end)
+            result = 'ok'
+        else:
+            result = 'auth err'
+
     else:
-        result = 'auth err'
+        result = 'csrf err'
 
     return HttpResponse(
         json.dumps(result),
@@ -234,15 +282,24 @@ def update_event(request):
     )
 
 
+@requires_csrf_token
 def delete_event(request):
-    if request.user.is_authenticated:
-        event_id = request.GET['event_id']
+    csrf_token = request.headers.get("api-csrftoken")
+    csrf_cookie = request.META.get("CSRF_COOKIE")
 
-        instance = Calendar.objects.get(id=event_id)
-        instance.delete()
-        result = 'ok'
+    if csrf_token == csrf_cookie:
+
+        if request.user.is_authenticated:
+            event_id = request.GET['event_id']
+
+            instance = Calendar.objects.get(id=event_id)
+            instance.delete()
+            result = 'ok'
+        else:
+            result = 'auth err'
+
     else:
-        result = 'auth err'
+        result = 'csrf err'
 
     return HttpResponse(
         json.dumps(result),

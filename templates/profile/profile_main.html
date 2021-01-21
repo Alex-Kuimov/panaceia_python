@@ -206,7 +206,19 @@
                                             <input type="text" name="se[{{ service.id }}]" value="{{ service.name }}" placeholder="Название">
                                         </div>
                                         <div class="col-3">
-                                            <input type="text" name="set[{{ service.id }}]" value="{{ service.time }}" placeholder="Время">
+                                            <select name="set[{{ service.id }}]" required>
+
+                                                {% if service.time != '' %}
+                                                    <option value="{{ service.time }}">{{ service.time }} мин.</option>
+                                                    <option value="" disabled>---</option>
+                                                {% endif %}
+
+                                                <option value="30">30 мин.</option>
+                                                <option value="45">45 мин.</option>
+                                                <option value="60">60 мин.</option>
+                                                <option value="90">90 мин.</option>
+                                                <option value="120">120 мин.</option>
+                                            </select>
                                         </div>
                                         <div class="col-3">
                                             <input type="text" name="sep[{{ service.id }}]" value="{{ service.price }}" placeholder="Цена">
@@ -300,7 +312,7 @@
                         <h4>Документы <img src="{% static 'img/question.png' %}" alt="Я врач" title="Здесь будет текст информации"></h4>
                         <div class="documents-specialist">
 
-                            {% for documents in user_documents%}
+                            {% for documents in user_documents %}
 
                                 <div class="row">
                                     <div class="col-4">

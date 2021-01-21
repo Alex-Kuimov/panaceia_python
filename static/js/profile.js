@@ -203,7 +203,6 @@ $(document).ready(function(){
 
                     element += '<select name="set['+countSeElement+']" required>';
                         element += '<option value="30">30 мин.</option>';
-                        element += '<option value="45">45 мин.</option>';
                         element += '<option value="60">60 мин.</option>';
                         element += '<option value="90">90 мин.</option>';
                         element += '<option value="120">120 мин.</option>';

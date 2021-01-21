@@ -101,7 +101,8 @@ $(document).ready(function(){
             $('.registry').on('submit', registry.send);
             $('.set-doctor-id').on('click', registry.setID);
             $('.appointment').on('click', registry.show);
-            $('body').on('change', '.service-list', registry.service);
+            $('body').on('change', '.service-list', registry.getService);
+            $('body').on('change', '.app-time', registry.setTimeEnd);
         },
 
         setID: function(){
@@ -190,11 +191,12 @@ $(document).ready(function(){
             });
         },
 
-        service: function(){
+        getService: function(){
             let service_id = $(this).val();
             let doctor_id = $('.app-doctor-id').val();
             let page = location.origin;
 
+            //получаем данный по графику работы для доктора
             $.ajax({
                 url: page + '/doctors/get_calendar/',
                 type: 'get',
@@ -207,6 +209,7 @@ $(document).ready(function(){
                     let time_arr = [];
                     let html = '';
 
+                    //формируем массив времени приема
                     for (var key in data) {
                         let current = new Date(data[key]['date']);
 
@@ -217,89 +220,145 @@ $(document).ready(function(){
                             let timeEnd = data[key]['time_end'].substring(0, data[key]['time_end'].length-3);
                             let services = data[key]['services'];
 
+                            //вытягиваем интревал
                             for (var i in services) {
                                 if (services[i]['id'] == service_id){
                                     var interval = services[i]['time'];
                                 }
                             }
 
+                            //узнаем кол-во часов в промежутке веремени
                             let difference = parseInt(timeEnd) - parseInt(timeStart);
+
+                            //значения по умолчанию
                             let count = 0;
-                            let cof = 0;
+                            let cof = 1;
 
-                            if(interval == 30){
-                                cof = 2;
-                            }
+                            //в зависимости от интервала(длительность услуги) задается коэффициент
+                            if(interval == 30) cof = 2;
+                            if(interval == 45) cof = 1.25;
+                            if(interval == 60) cof = 1;
+                            if(interval == 90) cof = 0.75;
+                            if(interval == 120) cof = 0.5;
 
-                            if(interval == 45){
-                                cof = 1.25;
-                            }
-
-                            if(interval == 60){
-                                cof = 1;
-                            }
-
-                            if(interval == 90){
-                                cof = 0.75;
-                            }
-
-                            if(interval == 120){
-                                cof = 0.5;
-                            }
-
+                            //задаем количество итераций для цикла
                             count = difference * cof;
 
+                            //формируем объект с параметрами
                             time_obj['time_start'] = timeStart;
                             time_obj['time_end'] = timeEnd;
                             time_obj['count'] = count;
                             time_obj['interval'] = parseInt(interval);
 
+                            //добавлем его в массив
                             time_arr.push(time_obj);
                         }
                     }
 
-                    html += '<p>3. Выберите время</p>';
+                    //анонимная функция для конвертирование из строки в дату
+                    let getDate = (string) => new Date(0,0,0, string.split(':')[0], string.split(':')[1]);
 
-                    html += '<p><select name="app-time" class="app-time" required>';
+                    /*
+                    let meeting_arr = [
+                        {'id': '10', 'time_start': getDate('10:00'), 'time_end': getDate('11:00')},
+                        {'id': '10', 'time_start': getDate('11:00'), 'time_end': getDate('12:00')},
+                        {'id': '10', 'time_start': getDate('12:00'), 'time_end': getDate('13:00')},
+                    ]
+                    */
 
-                        html += '<option value="">---</option>';
+                    $.ajax({
+                        url: page + '/doctors/get_meeting/',
+                        type: 'get',
+                        data:{'doctor_id': doctor_id, 'date': dateText},
+                        headers: {'api-csrftoken': csrftoken},
+                        success: function(data) {
+                            let meeting_arr = data;
 
-                        for (var key in time_arr) {
-                            let count = parseInt(time_arr[key]['count']);
-                            let getDate = (string) => new Date(0,0,0, string.split(':')[0], string.split(':')[1]);
-                            let start = getDate(time_arr[key]['time_start']);
-                            let end = getDate(time_arr[key]['time_end']);
-                            let interval = parseInt(time_arr[key]['interval']);
+                            html += '<p>3. Выберите время</p>';
 
-                            end.setMinutes(end.getMinutes() - interval);
+                            html += '<p><select name="app-time-start" class="app-time" required>';
 
-                            html += '<option value="' + time_arr[key]['time_start']  + '">' + time_arr[key]['time_start'] + '</option>';
+                                html += '<option value="">---</option>';
 
-                            for (var i = 0; i < count; i++) {
-                                start.setMinutes(start.getMinutes() + interval);
+                                //выводим время
+                                for (var key in time_arr) {
+                                    let count = parseInt(time_arr[key]['count']);
+                                    let start = getDate(time_arr[key]['time_start']);
+                                    let end = getDate(time_arr[key]['time_end']);
+                                    let interval = parseInt(time_arr[key]['interval']);
 
-                                let m = start.getMinutes();
-                                let h = start.getHours()
+                                    $('.app-time-interval').val(interval);
 
-                                if(start.getMinutes() == 0){
-                                    m = '00';
+                                    end.setMinutes(end.getMinutes() - interval);
+
+                                    html += '<option value="' + time_arr[key]['time_start']  + '">' + time_arr[key]['time_start'] + '</option>';
+
+                                    //выводим время по интервалу
+                                    for (var i = 0; i < count; i++) {
+                                        start.setMinutes(start.getMinutes() + interval);
+
+                                        let m = start.getMinutes();
+                                        let h = start.getHours()
+
+                                        if(start.getMinutes() == 0) m = '00';
+
+                                        let displayTime = h + ':' + m;
+                                        let time = getDate(displayTime);
+                                        let finded = false;
+
+                                        //проверка что не выйти за пределы
+                                        if(time <= end){
+
+                                            //поиск в записях для исключения
+                                            for(var k = 0; k < meeting_arr.length; k++) {
+
+                                                let find_time_start = getDate(meeting_arr[k].time_start);
+                                                let find_time_end = getDate(meeting_arr[k].time_end);
+
+                                                //если попадает в интревал, то исключаем "disabled"
+                                                if(find_time_start <= time && find_time_end > time) {
+                                                    console.log(time);
+                                                    html += '<option value="' + displayTime + '" disabled>' + displayTime + '</option>';
+                                                    finded = true;
+                                                    break;
+                                                } else {
+                                                    finded = false;
+                                                }
+                                            }
+
+                                            //если не попал в интрвал, то продолжаем вывод
+                                            if(finded == false){
+                                                html += '<option value="' + displayTime + '">' + displayTime + '</option>';
+                                            }
+                                        }
+                                    }
                                 }
 
-                                let displayTime = h + ':' + m;
-                                let time = getDate(displayTime);
+                            html += '</select></p>';
 
-                                if(time <= end){
-                                    html += '<option value="' + displayTime + '">' + displayTime + '</option>';
-                                }
-                            }
-
+                            $('.app-time-result').html(html);
                         }
-
-                    html += '</select></p>';
-
-                    $('.app-time-result').html(html);
+                    });
                 }
             });
+        },
+
+        setTimeEnd: function(){
+            let time_start = $(this).val();
+            let interval = parseInt($('.app-time-interval').val());
+            let getDate = (string) => new Date(0,0,0, string.split(':')[0], string.split(':')[1]);
+            let time_end = getDate(time_start);
+
+            time_end.setMinutes(time_end.getMinutes() + interval);
+
+            let m = time_end.getMinutes();
+            let h = time_end.getHours()
+
+            if(time_end.getMinutes() == 0) m = '00';
+
+            let displayTime = h + ':' + m;
+
+            $('.app-time-end').val(displayTime);
         },
 
         init: function(){

@@ -117,13 +117,14 @@ def create_meeting(request):
         if request.user.is_authenticated:
 
             date = request.GET['app-date']
-            time = request.GET['app-time']
+            time_start = request.GET['app-time-start']
+            time_end = request.GET['app-time-end']
             doctor_id = request.GET['app-doctor-id']
             user_id = request.GET['app-user-id']
             service_id = request.GET['app-service']
             title = 'Консультация'
 
-            if date != '' and time != '' and doctor_id != '' and user_id != '' and service_id != '':
+            if date != '' and time_start != '' and time_end != '' and doctor_id != '' and user_id != '' and service_id != '':
                 date_format = "%d.%m.%Y"
                 date = datetime.strptime(date, date_format)
                 date = date.strftime("%Y-%m-%d")
@@ -131,7 +132,8 @@ def create_meeting(request):
                 meeting = Meeting.objects.create(
                     title=title,
                     date=date,
-                    time=time,
+                    time_start=time_start,
+                    time_end=time_end,
                     doctor_id=doctor_id,
                     user_id=user_id,
                     service_id=service_id
@@ -142,6 +144,48 @@ def create_meeting(request):
                 result = 'ok'
             except:
                 result = 'save err'
+        else:
+            result = 'auth err'
+
+    else:
+        result = 'csrf err'
+
+    return HttpResponse(
+        json.dumps(result),
+        content_type="application/json"
+    )
+
+
+@requires_csrf_token
+def get_meeting(request):
+    csrf_token = request.headers.get("api-csrftoken")
+    csrf_cookie = request.META.get("CSRF_COOKIE")
+
+    if csrf_token == csrf_cookie:
+
+        if request.user.is_authenticated:
+            doctor_id = request.GET['doctor_id']
+            date = request.GET['date']
+
+            date_format = "%d.%m.%Y"
+            date = datetime.strptime(date, date_format)
+            date = date.strftime("%Y-%m-%d")
+
+            meetings = list()
+            meeting_object_list = Meeting.objects.filter(doctor_id=doctor_id, date=date)
+
+            for meeting in meeting_object_list:
+
+                _meeting = {
+                    'id': meeting.id,
+                    'time_start': str(meeting.time_start),
+                    'time_end': str(meeting.time_end),
+                }
+
+                meetings.append(_meeting)
+
+            result = meetings
+
         else:
             result = 'auth err'
 

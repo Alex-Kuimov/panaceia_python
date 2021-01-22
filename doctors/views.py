@@ -3,11 +3,12 @@ from datetime import datetime
 
 from django.shortcuts import render
 from django.http import HttpResponse, Http404, HttpResponseRedirect
-from userprofile.models import UserMain, UserDoctor, User, Service
+from userprofile.models import UserMain, UserDoctor, User, Service, Specialty
 from .models import Meeting, Calendar
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from .utility import decl_of_num
 from django.views.decorators.csrf import requires_csrf_token
+from django.urls import reverse
 
 
 def doctors_map_view(request):
@@ -31,6 +32,8 @@ def doctors_list_view(request):
     for user in users:
         doctor_main = UserMain.objects.get(user=user)
         doctor = UserDoctor.objects.get(user=user)
+        services = Service.objects.filter(content=user.id)
+        user_spec = ', '.join([str(i) for i in Specialty.objects.filter(content=user.id) .order_by('?')[:4]])
 
         if doctor.experience_years != '':
             words = ['год', 'года', 'лет']
@@ -46,8 +49,9 @@ def doctors_list_view(request):
             'city': doctor_main.city,
             'phone': doctor_main.phone,
             'avatar': doctor_main.avatar,
-            'specialty': doctor.specialty,
-            'experience_years': experience
+            'specialty': user_spec,
+            'experience_years': experience,
+            'services': services,
         }
 
         doctors.append(_doctor)
@@ -72,6 +76,8 @@ def get_doctors_list(request):
             doctor_main = UserMain.objects.get(user=user)
             doctor = UserDoctor.objects.get(user=user)
 
+            user_spec = ', '.join([str(i) for i in Specialty.objects.filter(content=user.id).order_by('?')[:4]])
+
             if doctor.experience_years != '':
                 words = ['год', 'года', 'лет']
                 num = int(doctor.experience_years)
@@ -91,7 +97,7 @@ def get_doctors_list(request):
                 'city': doctor_main.city,
                 'phone': doctor_main.phone,
                 'avatar': avatar,
-                'specialty': doctor.specialty,
+                'specialty': user_spec,
                 'experience_years': experience,
                 'coords': doctor_main.coords,
             }
@@ -136,7 +142,8 @@ def create_meeting(request):
                     time_end=time_end,
                     doctor_id=doctor_id,
                     user_id=user_id,
-                    service_id=service_id
+                    service_id=service_id,
+                    status='new',
                 )
 
             try:
@@ -172,7 +179,7 @@ def get_meeting(request):
             date = date.strftime("%Y-%m-%d")
 
             meetings = list()
-            meeting_object_list = Meeting.objects.filter(doctor_id=doctor_id, date=date)
+            meeting_object_list = Meeting.objects.filter(doctor_id=doctor_id, date=date, status='new') | Meeting.objects.filter(doctor_id=doctor_id, date=date, status='work')
 
             for meeting in meeting_object_list:
 
@@ -349,3 +356,12 @@ def delete_event(request):
         json.dumps(result),
         content_type="application/json"
     )
+
+
+def delete_meeting(request):
+    if request.user.is_authenticated:
+        meeting_id = request.GET['meeting_id']
+        meeting = Meeting.objects.filter(pk=meeting_id)
+        meeting.update(status='reject')
+
+    return HttpResponseRedirect(reverse('save_consalt_success'))

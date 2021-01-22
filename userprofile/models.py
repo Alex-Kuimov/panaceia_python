@@ -55,8 +55,10 @@ class UserMain(models.Model):
 class UserDoctor(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
 
-    org_types_list = [('ur', 'Юридическое лицо'),
-                    ('fiz', 'Физическое лицо')]
+    org_types_list = [
+        ('ur', 'Юридическое лицо'),
+        ('fiz', 'Физическое лицо')
+    ]
 
     orgtype = models.CharField(blank=True, null=True, max_length=11, choices=org_types_list, verbose_name='Тип организации')
 
@@ -66,10 +68,6 @@ class UserDoctor(models.Model):
     patient_grown = models.BooleanField(blank=True, null=True, verbose_name='Взрослые')
     patient_children = models.BooleanField(blank=True, null=True, verbose_name='Дети')
     verified = models.BooleanField(blank=True, null=True, verbose_name='Аккаунт верифицирован')
-
-    # надо удалить!
-    specialty = models.CharField(blank=True, max_length=100, verbose_name='Специализация')
-    # надо удалить!
 
     experience_text = models.TextField(blank=True, max_length=3000, verbose_name='Опыт работы')
     experience_years = models.CharField(blank=True, max_length=2, verbose_name='Стаж')

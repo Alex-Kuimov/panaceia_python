@@ -130,7 +130,9 @@
                                             <div class="col-6 recording">
                                                 {% if request.user.is_authenticated %}
                                                     {% if user.groups.all.0.name == "users" %}
-                                                        <div class="appointment appointment-btn set-doctor-id show-modal" doctor-id="{{doctor.id}}">Записаться на прием</div>
+                                                        {% if doctor.services != '' %}
+                                                            <div class="appointment appointment-btn set-doctor-id show-modal" doctor-id="{{doctor.id}}">Записаться на прием</div>
+                                                        {% endif %}
                                                     {% endif %}
                                                 {% else %}
                                                     <p>Чтобы записаться на прием, нужно <a href="{% url 'login' %}">авторизоваться</a> сайте.</p>

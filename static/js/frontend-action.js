@@ -258,14 +258,6 @@ $(document).ready(function(){
                     //анонимная функция для конвертирование из строки в дату
                     let getDate = (string) => new Date(0,0,0, string.split(':')[0], string.split(':')[1]);
 
-                    /*
-                    let meeting_arr = [
-                        {'id': '10', 'time_start': getDate('10:00'), 'time_end': getDate('11:00')},
-                        {'id': '10', 'time_start': getDate('11:00'), 'time_end': getDate('12:00')},
-                        {'id': '10', 'time_start': getDate('12:00'), 'time_end': getDate('13:00')},
-                    ]
-                    */
-
                     $.ajax({
                         url: page + '/doctors/get_meeting/',
                         type: 'get',
@@ -291,11 +283,8 @@ $(document).ready(function(){
 
                                     end.setMinutes(end.getMinutes() - interval);
 
-                                    html += '<option value="' + time_arr[key]['time_start']  + '">' + time_arr[key]['time_start'] + '</option>';
-
                                     //выводим время по интервалу
                                     for (var i = 0; i < count; i++) {
-                                        start.setMinutes(start.getMinutes() + interval);
 
                                         let m = start.getMinutes();
                                         let h = start.getHours()
@@ -306,7 +295,7 @@ $(document).ready(function(){
                                         let time = getDate(displayTime);
                                         let finded = false;
 
-                                        //проверка что не выйти за пределы
+                                        //проверка что бы не выйти за пределы
                                         if(time <= end){
 
                                             //поиск в записях для исключения
@@ -331,6 +320,8 @@ $(document).ready(function(){
                                                 html += '<option value="' + displayTime + '">' + displayTime + '</option>';
                                             }
                                         }
+
+                                        start.setMinutes(start.getMinutes() + interval);
                                     }
                                 }
 

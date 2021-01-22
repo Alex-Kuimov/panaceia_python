@@ -11,6 +11,15 @@ class Meeting(models.Model):
     user_id = models.IntegerField(blank=True, verbose_name='Пациент', default=1)
     service_id = models.IntegerField(blank=True, verbose_name='Услуга', default=1)
 
+    status_list = [
+        ('new', 'Новая'),
+        ('work', 'В работе'),
+        ('success', 'Выполнено'),
+        ('reject', 'Отказ'),
+    ]
+
+    status = models.CharField(blank=True, null=True, max_length=11, choices=status_list, verbose_name='Статус')
+
     def __str__(self):
         return self.title
 

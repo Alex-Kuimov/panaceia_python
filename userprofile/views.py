@@ -7,6 +7,7 @@ from django.contrib.auth import authenticate, login, logout
 from .forms import SignUpForm, UserMainForm, UserDoctorForm, DocumentForm
 from django.contrib.auth.models import Group, User
 from blog.models import Article
+from doctors.models import Meeting
 from .utility import OneInputField, TwoInputField, ThreeInputField, CheckboxField
 from django.contrib.auth.decorators import login_required
 from django.core.mail import EmailMessage
@@ -37,6 +38,27 @@ def profile_page_view(request):
         articles = Article.objects.all()
         specialty_list = SpecialtyList.objects.all()
 
+        meetings = list()
+        if request.path == '/profile/consalt_user/':
+            meeting_object_list = Meeting.objects.filter(user_id=request.user.id).exclude(status='reject').order_by('id').reverse()
+
+            for meeting in meeting_object_list:
+                doctor_id = meeting.doctor_id
+                specialty = ', '.join([str(i) for i in Specialty.objects.filter(content=doctor_id).order_by('?')[:4]])
+
+                _meeting = {
+                    'id': meeting.id,
+                    'date': meeting.date,
+                    'doctor': UserMain.objects.filter(user=doctor_id).values('fio')[0],
+                    'image': UserMain.objects.filter(user=doctor_id).values('avatar')[0],
+                    'time_start': str(meeting.time_start),
+                    'time_end': str(meeting.time_end),
+                    'specialty': specialty,
+                    'status': meeting.status,
+                }
+
+                meetings.append(_meeting)
+
         data = {
             'user_profile': user_profile,
             'user_doctor': user_doctor,
@@ -49,7 +71,20 @@ def profile_page_view(request):
             'timezone': timezone,
             'articles': articles,
             'specialty_list': specialty_list,
+            'meetings': meetings,
         }
+
+        if request.path == '/profile/consalt_doctor/':
+            if request.user.groups.filter(name='doctors').exists():
+                return render(request, 'profile/consalt_doctor.html', data)
+            else:
+                return render(request, 'profile/consalt_user.html', data)
+
+        if request.path == '/profile/grafik/':
+            if request.user.groups.filter(name='doctors').exists():
+                return render(request, 'profile/grafik.html', data)
+            else:
+                return render(request, 'profile/consalt_user.html', data)
 
         if request.path == '/profile/info/':
             return render(request, 'profile/profile.html', data)
@@ -60,11 +95,8 @@ def profile_page_view(request):
         if request.path == '/profile/recomend/':
             return render(request, 'profile/recomend.html', data)
 
-        if request.path == '/profile/grafik/':
-            return render(request, 'profile/grafik.html', data)
-
-        if request.path == '/profile/consalt/':
-            return render(request, 'profile/consalt.html', data)
+        if request.path == '/profile/consalt_user/':
+            return render(request, 'profile/consalt_user.html', data)
 
         if request.path == '/profile/videos/':
             return render(request, 'profile/videos.html', data)
@@ -129,7 +161,6 @@ def save_doctor_data(request):
 
             # simple data save
             user_doctor.orgtype = request.POST['orgtype']
-            user_doctor.specialty = request.POST['specialty']
             user_doctor.experience_text = request.POST['experience_text']
             user_doctor.experience_years = request.POST['experience_years']
 
@@ -361,6 +392,12 @@ def save_data_success(request):
 def save_verification_success(request):
     user_profile = UserMain.objects.get(user=request.user)
     return render(request, 'profile/verification_success.html', {'user_profile': user_profile})
+
+
+@login_required
+def save_consalt_success(request):
+    user_profile = UserMain.objects.get(user=request.user)
+    return render(request, 'profile/success_consalt.html', {'user_profile': user_profile})
 
 
 def error_404(request, exception):

@@ -10,5 +10,6 @@ urlpatterns = [
     path('list/', views.doctors_list_view, name='doctors_list'),
     path('list/create_meeting/', views.create_meeting, name='create_meeting'),
     path('get_meeting/', views.get_meeting, name='get_meeting'),
+    path('delete_meeting/', views.delete_meeting, name='delete_meeting'),
     path('map/get_doctors_list/', views.get_doctors_list, name='get_doctors_map_list'),
 ]

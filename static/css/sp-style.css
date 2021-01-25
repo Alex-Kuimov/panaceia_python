@@ -135,7 +135,6 @@
     box-sizing: content-box !important;
 }
 
-
 .appointment-btn{
     width: 180px;
     height: 52px;
@@ -195,4 +194,39 @@
 .modal-body {
     background: #fff;
     padding: 40px;
+}
+
+/**Task**/
+
+.task-body{
+    height: 785px;
+    overflow: hidden;
+}
+
+.task-list{
+    height: 785px;
+}
+
+.task-item{
+    margin: 5px;
+    padding: 5px;
+    border: 1px solid #d0e3e8;
+    border-radius: 5px;
+    cursor: pointer;
+    background: #fff;
+}
+
+.task-item p{
+    margin: 3px;
+    padding: 0px;
+}
+
+.task-item .task-date,
+.task-item .task-time{
+    font-size: 12px;
+}
+
+.task-item .task-name{
+    font-size: 14px;
+    font-weight: 600;
 }

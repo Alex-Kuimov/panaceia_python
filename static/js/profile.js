@@ -396,7 +396,45 @@ $(document).ready(function(){
         }
     }
 
+    let userTask = {
+        action: function(){
+        },
+
+        sortable: function () {
+			$('.task-list').sortable({
+
+				connectWith: ".task-list",
+
+				start: function (event, ui) {
+                    console.log('start');
+                    $('.scroll-wrapper').css('overflow', 'unset');
+                    $('.scroll-content').css('overflow', 'unset');
+				},
+
+				stop: function (event, ui) {
+                    console.log('stop');
+                    $('.scroll-wrapper').css('overflow', 'hidden');
+                    $('.scroll-content').css('overflow', 'scroll');
+				},
+
+				update: function (event, ui) {
+                     console.log('update');
+				},
+
+			});
+
+			$('.task-list').scrollbar();
+		},
+
+        init: function(){
+            userTask.action();
+            userTask.sortable();
+        }
+    }
+
+
     profile.init();
     userCalendar.init();
+    userTask.init();
 
 });

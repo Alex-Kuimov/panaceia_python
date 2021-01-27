@@ -346,8 +346,6 @@ $(document).ready(function(){
 
                             eventDrop : function(calEvent, $event) {
                                 let event_id = $event.id;
-                                console.log(event_id);
-
                                 let year = calEvent.start.getFullYear();
                                 let month = calEvent.start.getMonth()+1;
                                 let day = calEvent.start.getDate();
@@ -406,19 +404,49 @@ $(document).ready(function(){
 				connectWith: ".task-list",
 
 				start: function (event, ui) {
-                    console.log('start');
                     $('.scroll-wrapper').css('overflow', 'unset');
                     $('.scroll-content').css('overflow', 'unset');
 				},
 
 				stop: function (event, ui) {
-                    console.log('stop');
                     $('.scroll-wrapper').css('overflow', 'hidden');
                     $('.scroll-content').css('overflow', 'scroll');
 				},
 
 				update: function (event, ui) {
-                     console.log('update');
+
+				    let items = {},
+				        page = location.origin,
+					    wrapID = event.target.getAttribute('id'),
+					    status = event.target.getAttribute('data-status');
+
+
+                    $('#' + wrapID + ' .task-item').each(function (i) {
+                        let dataID = $(this).attr('data-id');
+
+                        if (typeof (dataID) != 'undefined') {
+                            let item = {};
+
+                            item['id'] = dataID;
+                            item['sort'] = i + 1;
+                            item['status'] = status;
+
+                            items[i] = item;
+                        }
+                    });
+
+                    items = JSON.stringify(items);
+
+                    $.ajax({
+                        url: page + '/doctors/update_meeting/',
+                        type: 'get',
+                        headers: {'api-csrftoken': csrftoken},
+                        data:{'items': items},
+                        success: function(data) {
+                            //console.log(data);
+                        },
+                    });
+
 				},
 
 			});
@@ -432,9 +460,31 @@ $(document).ready(function(){
         }
     }
 
+    let modal = {
+
+       action: function(){
+            $('body').on('click', '.show-modal', modal.show);
+            $('body').on('click', '.hide-modal', modal.hide);
+       },
+
+       show: function(){
+            $('.modal-cover').fadeIn('500').css('display', 'flex');
+            return false;
+       },
+
+       hide: function(){
+            $('.modal-cover').fadeOut('500');
+       },
+
+       init: function(){
+            modal.action();
+       },
+
+    }
 
     profile.init();
     userCalendar.init();
     userTask.init();
+    modal.init();
 
 });

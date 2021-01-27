@@ -8,7 +8,7 @@ from .forms import SignUpForm, UserMainForm, UserDoctorForm, DocumentForm
 from django.contrib.auth.models import Group, User
 from blog.models import Article
 from doctors.models import Meeting
-from .utility import OneInputField, TwoInputField, ThreeInputField, CheckboxField
+from .utility import OneInputField, TwoInputField, ThreeInputField, CheckboxField, get_task
 from django.contrib.auth.decorators import login_required
 from django.core.mail import EmailMessage
 
@@ -73,12 +73,6 @@ def profile_page_view(request):
             'specialty_list': specialty_list,
             'meetings': meetings,
         }
-
-        if request.path == '/profile/consalt_doctor/':
-            if request.user.groups.filter(name='doctors').exists():
-                return render(request, 'profile/consalt_doctor.html', data)
-            else:
-                return render(request, 'profile/consalt_user.html', data)
 
         if request.path == '/profile/grafik/':
             if request.user.groups.filter(name='doctors').exists():
@@ -398,6 +392,29 @@ def save_verification_success(request):
 def save_consalt_success(request):
     user_profile = UserMain.objects.get(user=request.user)
     return render(request, 'profile/success_consalt.html', {'user_profile': user_profile})
+
+
+@login_required
+def get_task_view(request):
+    user_profile = UserMain.objects.get(user=request.user)
+    user_doctor = UserDoctor.objects.get(user=request.user)
+
+    meeting_new = get_task(UserMain, Meeting, request.user.id, 'new')
+    meeting_work = get_task(UserMain, Meeting, request.user.id, 'work')
+    meeting_success = get_task(UserMain, Meeting, request.user.id, 'success')
+    meeting_reject = get_task(UserMain, Meeting, request.user.id, 'reject')
+
+    data = {
+        'user_profile': user_profile,
+        'user_doctor': user_doctor,
+        'meeting_new': meeting_new,
+        'meeting_work': meeting_work,
+        'meeting_success': meeting_success,
+        'meeting_reject': meeting_reject,
+    }
+
+    if request.user.groups.filter(name='doctors').exists():
+        return render(request, 'profile/consalt_doctor.html', data)
 
 
 def error_404(request, exception):

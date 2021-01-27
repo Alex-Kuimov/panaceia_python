@@ -143,6 +143,7 @@ def create_meeting(request):
                     doctor_id=doctor_id,
                     user_id=user_id,
                     service_id=service_id,
+                    sort_id=1,
                     status='new',
                 )
 
@@ -357,6 +358,35 @@ def delete_event(request):
         content_type="application/json"
     )
 
+
+@requires_csrf_token
+def update_meeting(request):
+    csrf_token = request.headers.get("api-csrftoken")
+    csrf_cookie = request.META.get("CSRF_COOKIE")
+
+    if csrf_token == csrf_cookie:
+        if request.user.is_authenticated:
+            items = request.GET['items']
+            meetings = json.loads(items)
+
+            for key in meetings:
+                id = meetings[key]['id']
+                status = meetings[key]['status']
+                sort = meetings[key]['sort']
+
+                meeting = Meeting.objects.filter(pk=id)
+                meeting.update(status=status, sort_id=sort)
+
+            result = 'ok'
+        else:
+            result = 'auth err'
+    else:
+        result = 'csrf err'
+
+    return HttpResponse(
+        json.dumps(result),
+        content_type="application/json"
+    )
 
 def delete_meeting(request):
     if request.user.is_authenticated:

@@ -28,5 +28,3 @@ def decl_of_num(n, es):
 
 
 
-
-

@@ -169,3 +169,23 @@ class CheckboxField():
         else:
             print(name + ' false')
             setattr(self, name, False)
+
+
+def get_task(user_main, meeting, doctor_id, status):
+    meeting_object_list = meeting.objects.filter(doctor_id=doctor_id, status=status).order_by('sort_id')
+    meetings = list()
+
+    for meeting in meeting_object_list:
+        _meeting = {
+            'id': meeting.id,
+            'date': meeting.date,
+            'time_start': str(meeting.time_start),
+            'time_end': str(meeting.time_end),
+            'user': user_main.objects.filter(user=meeting.user_id).values('fio')[0],
+            'status': meeting.status,
+            'sort_id': meeting.sort_id,
+        }
+
+        meetings.append(_meeting)
+
+    return meetings

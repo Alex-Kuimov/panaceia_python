@@ -10,6 +10,7 @@ class Meeting(models.Model):
     doctor_id = models.IntegerField(blank=True, verbose_name='Доктор', default=1)
     user_id = models.IntegerField(blank=True, verbose_name='Пациент', default=1)
     service_id = models.IntegerField(blank=True, verbose_name='Услуга', default=1)
+    sort_id = models.IntegerField(blank=True, verbose_name='Индекс сортитровки', default=1)
 
     status_list = [
         ('new', 'Новая'),

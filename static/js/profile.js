@@ -315,10 +315,6 @@ $(document).ready(function(){
                                     success: function(data) {
                                         $event.attr('data-id', data)
                                     },
-
-                                    failure: function(data) {
-                                        console.log(data);
-                                    },
                                 });
 
                             },
@@ -335,10 +331,6 @@ $(document).ready(function(){
                                         data:{'event_id': event_id},
                                         success: function(data) {
                                             $event.remove();
-                                        },
-
-                                        failure: function(data) {
-                                            console.log(data);
                                         },
                                     });
                                 }
@@ -362,10 +354,6 @@ $(document).ready(function(){
                                     success: function(data) {
                                         console.log(data);
                                     },
-
-                                    failure: function(data) {
-                                        console.log(data);
-                                    },
                                 });
                             },
                             use24Hour : true,
@@ -385,10 +373,6 @@ $(document).ready(function(){
 
                         });
                     },
-
-                    failure: function(data) {
-                        console.log(data);
-                    }
                 });
             }
         }
@@ -396,6 +380,7 @@ $(document).ready(function(){
 
     let userTask = {
         action: function(){
+            $('body').on('click', '.task-get', userTask.get);
         },
 
         sortable: function () {
@@ -453,6 +438,55 @@ $(document).ready(function(){
 
 			$('.task-list').scrollbar();
 		},
+
+        get: function () {
+            let meeting_id = $(this).attr('data-id');
+            let page = location.origin;
+
+            $('.modal-body-ajax').html('Загрузка...');
+
+            $.ajax({
+                url: page + '/doctors/get_meeting/',
+                type: 'get',
+                headers: {'api-csrftoken': csrftoken},
+                data:{'meeting_id': meeting_id},
+                success: function(data) {
+
+                    let date = new Date(data[0].date);
+                    let year = date.getFullYear();
+                    let month = ((date.getMonth() + 1) < 10 ? '0' : '') + (date.getMonth() + 1);
+                    let day = (date.getDate() < 10 ? '0' : '') + date.getDate();
+                    let newDate = day + '.' + month + '.' + year;
+
+                    let html = '';
+                    html += '<p><strong>Пациент:</strong> '+data[0].user.fio+'</p>';
+                    html += '<p><strong>Услуга:</strong> '+data[0].services[0].name+'</p>';
+                    html += '<p><strong>Продолжительность:</strong> '+data[0].services[0].time+' минут</p>';
+                    html += '<p><strong>Дата:</strong> '+newDate+'</p>';
+                    html += '<p><strong>Время:</strong> '+data[0].time_start+'</p>';
+
+                    if(data[0].phone != ''){
+                        html += '<p><strong>Контактный телефон:</strong> '+data[0].phone+'</p>';
+                    }
+
+                    if(data[0].skype != ''){
+                        html += '<p><strong>Skype:</strong> '+data[0].skype+'</p>';
+                    }
+
+                    if(data[0].whatsapp != ''){
+                        html += '<p><strong>WhatsApp:</strong> '+data[0].whatsapp+'</p>';
+                    }
+
+                    if(data[0].email != ''){
+                        html += '<p><strong>E-mail:</strong> '+data[0].email+'</p>';
+                    }
+
+                    $('.modal-body-ajax').html(html);
+
+                },
+
+            });
+        },
 
         init: function(){
             userTask.action();

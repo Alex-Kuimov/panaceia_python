@@ -35,70 +35,65 @@
 
             <div class="col-md-12 task-body">
                 <div class="row">
+
                     <div class="col-md-3 task-list" id="task-list-new" data-status="new">
-
                         {% for meeting in meeting_new %}
-                            <div class="task-item show-modal" data-id="{{ meeting.id }}" data-sort="{{ meeting.sort_id }}">
+                            <div class="task-item show-modal task-get" data-id="{{ meeting.id }}" data-sort="{{ meeting.sort_id }}">
                                 <p class="task-date">{{ meeting.date }}</p>
                                 <p class="task-time">{{ meeting.time_start }}</p>
                                 <p class="task-name">{{ meeting.user.fio }}</p>
                             </div>
                         {% endfor %}
-
                     </div>
 
-                    <div class="col-md-3 task-list show-modal" id="task-list-work" data-status="work">
-
+                    <div class="col-md-3 task-list" id="task-list-work" data-status="work">
                         {% for meeting in meeting_work %}
-                            <div class="task-item" data-id="{{ meeting.id }}" data-sort="{{ meeting.sort_id }}">
+                            <div class="task-item show-modal task-get" data-id="{{ meeting.id }}" data-sort="{{ meeting.sort_id }}">
                                 <p class="task-date">{{ meeting.date }}</p>
                                 <p class="task-time">{{ meeting.time_start }}</p>
                                 <p class="task-name">{{ meeting.user.fio }}</p>
                             </div>
                         {% endfor %}
-
                     </div>
 
-                    <div class="col-md-3 task-list show-modal" id="task-list-success"  data-status="success">
-
+                    <div class="col-md-3 task-list" id="task-list-success"  data-status="success">
                         {% for meeting in meeting_success %}
-                            <div class="task-item" data-id="{{ meeting.id }}" data-sort="{{ meeting.sort_id }}">
+                            <div class="task-item show-modal task-get" data-id="{{ meeting.id }}" data-sort="{{ meeting.sort_id }}">
                                 <p class="task-date">{{ meeting.date }}</p>
                                 <p class="task-time">{{ meeting.time_start }}</p>
                                 <p class="task-name">{{ meeting.user.fio }}</p>
                             </div>
                         {% endfor %}
-
                     </div>
 
-                    <div class="col-md-3 task-list show-modal" id="task-list-reject"  data-status="reject">
-
+                    <div class="col-md-3 task-list" id="task-list-reject"  data-status="reject">
                         {% for meeting in meeting_reject %}
-                            <div class="task-item" data-id="{{ meeting.id }}" data-sort="{{ meeting.sort_id }}">
+                            <div class="task-item show-modal task-get" data-id="{{ meeting.id }}" data-sort="{{ meeting.sort_id }}">
                                 <p class="task-date">{{ meeting.date }}</p>
                                 <p class="task-time">{{ meeting.time_start }}</p>
                                 <p class="task-name">{{ meeting.user.fio }}</p>
                             </div>
                         {% endfor %}
-
                     </div>
+
                 </div>
             </div>
-
         </div>
     </div>
-
 </div>
 
 
 <div class="modal-cover">
     <div class="modal-wrap">
         <div class="modal-header">
-            <p class="modal-title">Запись на консультацию</p>
+            <p class="modal-title">Консультация</p>
             <img src="{% static 'img/cross.png' %}" class="modal-close hide-modal">
         </div>
-        <div class="modal-body">
-
+        <div class="modal-body modal-body-ajax">
+            <p><strong>Пациент:</strong> Тестов тест</p>
+            <p><strong>Услуга:</strong> тест</p>
+            <p><strong>Дата:</strong> тест</p>
+            <p><strong>Время:</strong> тест</p>
         </div>
     </div>
 </div>

@@ -184,10 +184,6 @@ $(document).ready(function(){
                         },
                     });
                 },
-
-                failure: function(data) {
-                    console.log(data);
-                }
             });
         },
 
@@ -259,7 +255,7 @@ $(document).ready(function(){
                     let getDate = (string) => new Date(0,0,0, string.split(':')[0], string.split(':')[1]);
 
                     $.ajax({
-                        url: page + '/doctors/get_meeting/',
+                        url: page + '/doctors/get_meetings/',
                         type: 'get',
                         data:{'doctor_id': doctor_id, 'date': dateText},
                         headers: {'api-csrftoken': csrftoken},

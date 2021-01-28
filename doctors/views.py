@@ -114,99 +114,6 @@ def get_doctors_list(request):
 
 
 @requires_csrf_token
-def create_meeting(request):
-    csrf_token = request.headers.get("api-csrftoken")
-    csrf_cookie = request.META.get("CSRF_COOKIE")
-
-    if csrf_token == csrf_cookie:
-
-        if request.user.is_authenticated:
-
-            date = request.GET['app-date']
-            time_start = request.GET['app-time-start']
-            time_end = request.GET['app-time-end']
-            doctor_id = request.GET['app-doctor-id']
-            user_id = request.GET['app-user-id']
-            service_id = request.GET['app-service']
-            title = 'Консультация'
-
-            if date != '' and time_start != '' and time_end != '' and doctor_id != '' and user_id != '' and service_id != '':
-                date_format = "%d.%m.%Y"
-                date = datetime.strptime(date, date_format)
-                date = date.strftime("%Y-%m-%d")
-
-                meeting = Meeting.objects.create(
-                    title=title,
-                    date=date,
-                    time_start=time_start,
-                    time_end=time_end,
-                    doctor_id=doctor_id,
-                    user_id=user_id,
-                    service_id=service_id,
-                    sort_id=1,
-                    status='new',
-                )
-
-            try:
-                meeting.save()
-                result = 'ok'
-            except:
-                result = 'save err'
-        else:
-            result = 'auth err'
-
-    else:
-        result = 'csrf err'
-
-    return HttpResponse(
-        json.dumps(result),
-        content_type="application/json"
-    )
-
-
-@requires_csrf_token
-def get_meeting(request):
-    csrf_token = request.headers.get("api-csrftoken")
-    csrf_cookie = request.META.get("CSRF_COOKIE")
-
-    if csrf_token == csrf_cookie:
-
-        if request.user.is_authenticated:
-            doctor_id = request.GET['doctor_id']
-            date = request.GET['date']
-
-            date_format = "%d.%m.%Y"
-            date = datetime.strptime(date, date_format)
-            date = date.strftime("%Y-%m-%d")
-
-            meetings = list()
-            meeting_object_list = Meeting.objects.filter(doctor_id=doctor_id, date=date, status='new') | Meeting.objects.filter(doctor_id=doctor_id, date=date, status='work')
-
-            for meeting in meeting_object_list:
-
-                _meeting = {
-                    'id': meeting.id,
-                    'time_start': str(meeting.time_start),
-                    'time_end': str(meeting.time_end),
-                }
-
-                meetings.append(_meeting)
-
-            result = meetings
-
-        else:
-            result = 'auth err'
-
-    else:
-        result = 'csrf err'
-
-    return HttpResponse(
-        json.dumps(result),
-        content_type="application/json"
-    )
-
-
-@requires_csrf_token
 def get_calendar(request):
     csrf_token = request.headers.get("api-csrftoken")
     csrf_cookie = request.META.get("CSRF_COOKIE")
@@ -360,6 +267,153 @@ def delete_event(request):
 
 
 @requires_csrf_token
+def create_meeting(request):
+    csrf_token = request.headers.get("api-csrftoken")
+    csrf_cookie = request.META.get("CSRF_COOKIE")
+
+    if csrf_token == csrf_cookie:
+
+        if request.user.is_authenticated:
+
+            date = request.GET['app-date']
+            time_start = request.GET['app-time-start']
+            time_end = request.GET['app-time-end']
+            doctor_id = request.GET['app-doctor-id']
+            user_id = request.GET['app-user-id']
+            service_id = request.GET['app-service']
+            title = 'Консультация'
+
+            if date != '' and time_start != '' and time_end != '' and doctor_id != '' and user_id != '' and service_id != '':
+                date_format = "%d.%m.%Y"
+                date = datetime.strptime(date, date_format)
+                date = date.strftime("%Y-%m-%d")
+
+                meeting = Meeting.objects.create(
+                    title=title,
+                    date=date,
+                    time_start=time_start,
+                    time_end=time_end,
+                    doctor_id=doctor_id,
+                    user_id=user_id,
+                    service_id=service_id,
+                    sort_id=1,
+                    status='new',
+                )
+
+            try:
+                meeting.save()
+                result = 'ok'
+            except:
+                result = 'save err'
+        else:
+            result = 'auth err'
+
+    else:
+        result = 'csrf err'
+
+    return HttpResponse(
+        json.dumps(result),
+        content_type="application/json"
+    )
+
+
+@requires_csrf_token
+def get_meetings(request):
+    csrf_token = request.headers.get("api-csrftoken")
+    csrf_cookie = request.META.get("CSRF_COOKIE")
+
+    if csrf_token == csrf_cookie:
+
+        if request.user.is_authenticated:
+            doctor_id = request.GET['doctor_id']
+            date = request.GET['date']
+
+            date_format = "%d.%m.%Y"
+            date = datetime.strptime(date, date_format)
+            date = date.strftime("%Y-%m-%d")
+
+            meetings = list()
+            meeting_object_list = Meeting.objects.filter(doctor_id=doctor_id, date=date, status='new') | Meeting.objects.filter(doctor_id=doctor_id, date=date, status='work')
+
+            for meeting in meeting_object_list:
+
+                _meeting = {
+                    'id': meeting.id,
+                    'time_start': str(meeting.time_start),
+                    'time_end': str(meeting.time_end),
+                }
+
+                meetings.append(_meeting)
+
+            result = meetings
+
+        else:
+            result = 'auth err'
+
+    else:
+        result = 'csrf err'
+
+    return HttpResponse(
+        json.dumps(result),
+        content_type="application/json"
+    )
+
+
+@requires_csrf_token
+def get_meeting(request):
+    csrf_token = request.headers.get("api-csrftoken")
+    csrf_cookie = request.META.get("CSRF_COOKIE")
+
+    if csrf_token == csrf_cookie:
+
+        if request.user.is_authenticated:
+            meeting_id = request.GET['meeting_id']
+
+            meetings = list()
+            meeting_object_list = Meeting.objects.filter(pk=meeting_id)
+
+            for meeting in meeting_object_list:
+                user_services = Service.objects.filter(id=meeting.service_id)
+                services = list()
+
+                for service in user_services:
+                    _services = {
+                        'id': service.id,
+                        'name': service.name,
+                        'time': service.time,
+                    }
+
+                    services.append(_services)
+
+                _meeting = {
+                    'id': meeting.id,
+                    'date': str(meeting.date),
+                    'time_start': str(meeting.time_start),
+                    'user': UserMain.objects.filter(user=meeting.user_id).values('fio')[0],
+                    'phone': UserMain.objects.filter(user=meeting.user_id).values('phone')[0]['phone'],
+                    'whatsapp': UserMain.objects.filter(user=meeting.user_id).values('whatsapp')[0]['whatsapp'],
+                    'skype': UserMain.objects.filter(user=meeting.user_id).values('skype')[0]['skype'],
+                    'email': User.objects.get(pk=meeting.user_id).email,
+                    'services': services,
+                }
+
+                meetings.append(_meeting)
+
+            result = meetings
+
+        else:
+            result = 'auth err'
+
+    else:
+        result = 'csrf err'
+
+    return HttpResponse(
+        json.dumps(result),
+        content_type="application/json"
+    )
+
+
+@requires_csrf_token
 def update_meeting(request):
     csrf_token = request.headers.get("api-csrftoken")
     csrf_cookie = request.META.get("CSRF_COOKIE")
@@ -387,6 +441,7 @@ def update_meeting(request):
         json.dumps(result),
         content_type="application/json"
     )
+
 
 def delete_meeting(request):
     if request.user.is_authenticated:

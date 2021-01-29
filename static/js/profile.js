@@ -335,7 +335,26 @@ $(document).ready(function(){
                                     });
                                 }
                             },
+                            eventResize : function(calEvent, $event) {
+                                let event_id = $event.id;
+                                let year = calEvent.start.getFullYear();
+                                let month = calEvent.start.getMonth()+1;
+                                let day = calEvent.start.getDate();
+                                let date = day + '.' + month + '.' + year;
 
+                                let time_start = calEvent.start.getHours() + ':' + calEvent.start.getMinutes();
+                                let time_end = calEvent.end.getHours() + ':' + calEvent.end.getMinutes();
+
+                                $.ajax({
+                                    url: page + '/doctors/update_event/',
+                                    type: 'get',
+                                    headers: {'api-csrftoken': csrftoken},
+                                    data:{'date': date, 'time_start': time_start, 'time_end': time_end, 'event_id': event_id},
+                                    success: function(data) {
+                                        console.log(data);
+                                    },
+                                });
+                            },
                             eventDrop : function(calEvent, $event) {
                                 let event_id = $event.id;
                                 let year = calEvent.start.getFullYear();
@@ -381,6 +400,8 @@ $(document).ready(function(){
     let userTask = {
         action: function(){
             $('body').on('click', '.task-get', userTask.get);
+            $('body').on('click', '.show-modal-info', userTask.showModalInfo);
+            $('body').on('click', '.task-to-arch', userTask.toArch);
         },
 
         sortable: function () {
@@ -459,6 +480,7 @@ $(document).ready(function(){
                     let newDate = day + '.' + month + '.' + year;
 
                     let html = '';
+                    html += '<p><strong>Номер:</strong> '+data[0].id+'</p>';
                     html += '<p><strong>Пациент:</strong> '+data[0].user.fio+'</p>';
                     html += '<p><strong>Услуга:</strong> '+data[0].services[0].name+'</p>';
                     html += '<p><strong>Продолжительность:</strong> '+data[0].services[0].time+' минут</p>';
@@ -466,19 +488,19 @@ $(document).ready(function(){
                     html += '<p><strong>Время:</strong> '+data[0].time_start+'</p>';
 
                     if(data[0].phone != ''){
-                        html += '<p><strong>Контактный телефон:</strong> '+data[0].phone+'</p>';
+                        html += '<p><strong>Контактный телефон:</strong> <a href="tel:'+data[0].phone+'">'+data[0].phone+'</a></p>';
                     }
 
                     if(data[0].skype != ''){
-                        html += '<p><strong>Skype:</strong> '+data[0].skype+'</p>';
+                        html += '<p><strong>Skype:</strong> <a href="skype:'+data[0].skype+'">'+data[0].skype+'</a></p>';
                     }
 
                     if(data[0].whatsapp != ''){
-                        html += '<p><strong>WhatsApp:</strong> '+data[0].whatsapp+'</p>';
+                        html += '<p><strong>WhatsApp:</strong> <a target="_blank" href="https://web.whatsapp.com/send?l=en&amp;phone='+data[0].whatsapp+'&amp;text=Добрый день!">'+data[0].whatsapp+'</a></p>';
                     }
 
                     if(data[0].email != ''){
-                        html += '<p><strong>E-mail:</strong> '+data[0].email+'</p>';
+                        html += '<p><strong>E-mail:</strong> <a href="mailto:'+data[0].email+'">'+data[0].email+'</a></p>';
                     }
 
                     $('.modal-body-ajax').html(html);
@@ -486,6 +508,36 @@ $(document).ready(function(){
                 },
 
             });
+        },
+
+        showModalInfo: function () {
+            let meeting_id = $(this).attr('data-id');
+            let html = '';
+
+            $('.modal-body-ajax').html('<p>Загрузка...</p>');
+
+            html += '<p>Удалить консультацию #' + meeting_id + '?</p>';
+            html += '<div class="modal-btn task-to-arch" data-id="' + meeting_id + '">Да</div>';
+            html += '<div class="modal-btn hide-modal">Нет</div>';
+
+            $('.modal-body-ajax').html(html);
+        },
+
+        toArch: function () {
+            let meeting_id = $(this).attr('data-id');
+            let page = location.origin;
+            $('#task-item-'+meeting_id).remove();
+
+            $.ajax({
+                url: page + '/doctors/archive_meeting/',
+                type: 'get',
+                headers: {'api-csrftoken': csrftoken},
+                data:{'meeting_id': meeting_id},
+                success: function(data) {
+                   modal.hide();
+                }
+            });
+
         },
 
         init: function(){

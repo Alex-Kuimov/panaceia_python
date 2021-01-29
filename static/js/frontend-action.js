@@ -115,6 +115,8 @@ $(document).ready(function(){
             let form = $('.registry')
             let data = form.serialize();
 
+            $('.registry').html('<p>Выполняется загрузка, пожалуйста, подождите.</p>');
+
             $.ajax({
                 url: page + '/doctors/list/create_meeting/',
                 type: 'get',

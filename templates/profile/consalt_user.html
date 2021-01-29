@@ -25,7 +25,7 @@
                     <a href="#">Посмотреть профиль специалиста</a>
 
                     {% if meeting.status == 'new' %}
-                        <a href="{% url 'delete_meeting' %}?meeting_id={{meeting.id}}">Отказаться</a>
+                        <a href="{% url 'reject_meeting' %}?meeting_id={{meeting.id}}">Отказаться</a>
                     {% endif %}
 
                     <p>Статус: {{ meeting.status }}</p>

@@ -8,9 +8,10 @@ from .forms import SignUpForm, UserMainForm, UserDoctorForm, DocumentForm
 from django.contrib.auth.models import Group, User
 from blog.models import Article
 from doctors.models import Meeting
-from .utility import OneInputField, TwoInputField, ThreeInputField, CheckboxField, get_task
+from .utility import OneInputField, TwoInputField, ThreeInputField, CheckboxField, get_task, get_meetings_list
 from django.contrib.auth.decorators import login_required
 from django.core.mail import EmailMessage
+from django.conf import settings
 
 
 def home(request):
@@ -38,27 +39,6 @@ def profile_page_view(request):
         articles = Article.objects.all()
         specialty_list = SpecialtyList.objects.all()
 
-        meetings = list()
-        if request.path == '/profile/consalt_user/':
-            meeting_object_list = Meeting.objects.filter(user_id=request.user.id).exclude(status='reject').order_by('id').reverse()
-
-            for meeting in meeting_object_list:
-                doctor_id = meeting.doctor_id
-                specialty = ', '.join([str(i) for i in Specialty.objects.filter(content=doctor_id).order_by('?')[:4]])
-
-                _meeting = {
-                    'id': meeting.id,
-                    'date': meeting.date,
-                    'doctor': UserMain.objects.filter(user=doctor_id).values('fio')[0],
-                    'image': UserMain.objects.filter(user=doctor_id).values('avatar')[0],
-                    'time_start': str(meeting.time_start),
-                    'time_end': str(meeting.time_end),
-                    'specialty': specialty,
-                    'status': meeting.status,
-                }
-
-                meetings.append(_meeting)
-
         data = {
             'user_profile': user_profile,
             'user_doctor': user_doctor,
@@ -71,14 +51,17 @@ def profile_page_view(request):
             'timezone': timezone,
             'articles': articles,
             'specialty_list': specialty_list,
-            'meetings': meetings,
         }
+
+        if request.path == '/profile/consalt_user/':
+            meetings = get_meetings_list(Meeting, Specialty, UserMain, request.user.id)
+            data.update({'meetings': meetings})
 
         if request.path == '/profile/grafik/':
             if request.user.groups.filter(name='doctors').exists():
                 return render(request, 'profile/grafik.html', data)
             else:
-                return render(request, 'profile/consalt_user.html', data)
+                return render(request, 'errs/404.html')
 
         if request.path == '/profile/info/':
             return render(request, 'profile/profile.html', data)
@@ -209,14 +192,14 @@ def signup_view(request, user_group_type, template):
             subject = 'Регистрация на сайте Panaceia'
             content = '<p>Поздравляем! Вы успешно зарегистрированы на сайте Panaceia.</p>'
             to = [request.POST['email']]
-            contact_email = 'robots@u1233610.isp.regruhosting.ru'
+            _from = settings.DEFAULT_FROM_EMAIL
 
             email = EmailMessage(
                 subject,
                 content,
-                contact_email,
+                _from,
                 to,
-                headers={'Reply-To': contact_email}
+                headers={'Reply-To': _from}
             )
 
             email.content_subtype = 'html'
@@ -353,15 +336,15 @@ def send_file_for_verified(request):
     if phone != '':
         content += '<p><b>Телефон:</b> ' + phone + '</p>'
 
-    contact_email = 'robots@u1233610.isp.regruhosting.ru'
-    to = ['spoot@bk.ru']
+    _from = settings.DEFAULT_FROM_EMAIL
+    to = [settings.ADMIN_EMAIL]
 
     email = EmailMessage(
         subject,
         content,
-        contact_email,
+        _from,
         to,
-        headers={'Reply-To': contact_email}
+        headers={'Reply-To': _from}
     )
 
     if request.FILES:

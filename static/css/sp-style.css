@@ -196,6 +196,20 @@
     padding: 40px;
 }
 
+.modal-btn{
+    width: 100px;
+    height: 52px;
+    background: #36A672;
+    box-shadow: 0px 4px 12px rgb(29 157 115 / 40%);
+    border-radius: 6px;
+    color: #fff;
+    display: inline-block;
+    cursor: pointer;
+    margin-right: 20px;
+    text-align: center;
+    padding-top: 13px;
+}
+
 /**Task**/
 
 .task-body{
@@ -229,4 +243,10 @@
 .task-item .task-name{
     font-size: 14px;
     font-weight: 600;
+    margin-top: 10px;
+}
+
+.task-item .show-modal-info{
+    font-size: 14px;
+    color: #40a073;
 }

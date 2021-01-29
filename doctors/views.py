@@ -6,7 +6,7 @@ from django.http import HttpResponse, Http404, HttpResponseRedirect
 from userprofile.models import UserMain, UserDoctor, User, Service, Specialty
 from .models import Meeting, Calendar
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from .utility import decl_of_num
+from .utility import decl_of_num, send_notify, get_email
 from django.views.decorators.csrf import requires_csrf_token
 from django.urls import reverse
 
@@ -284,6 +284,7 @@ def create_meeting(request):
             title = 'Консультация'
 
             if date != '' and time_start != '' and time_end != '' and doctor_id != '' and user_id != '' and service_id != '':
+                date_to_send = date
                 date_format = "%d.%m.%Y"
                 date = datetime.strptime(date, date_format)
                 date = date.strftime("%Y-%m-%d")
@@ -302,6 +303,16 @@ def create_meeting(request):
 
             try:
                 meeting.save()
+
+                subject = 'Запись на консультацию'
+                text = '<p>К Вам записались на консультацию. ' + date_to_send + ' в ' + time_start
+                to = get_email(doctor_id)
+                send_notify(to, text, subject)
+
+                text = '<p>Вы записались на консультацию. ' + date_to_send + ' в ' + time_start
+                to = get_email(user_id)
+                send_notify(to, text, subject)
+
                 result = 'ok'
             except:
                 result = 'save err'
@@ -430,6 +441,15 @@ def update_meeting(request):
 
                 meeting = Meeting.objects.filter(pk=id)
                 meeting.update(status=status, sort_id=sort)
+                user_id = meeting.values('user_id')[0]['user_id']
+                email_notify = meeting.values('email_notify')[0]['email_notify']
+
+                if status == 'work' and email_notify != 1:
+                    subject = 'Запись на консультацию успешно подтверждена'
+                    text = '<p>Запись на консультацию #' + id + ' успешно подтверждена.</p>'
+                    to = get_email(user_id)
+                    send_notify(to, text, subject)
+                    meeting.update(email_notify=1)
 
             result = 'ok'
         else:
@@ -443,10 +463,39 @@ def update_meeting(request):
     )
 
 
-def delete_meeting(request):
+@requires_csrf_token
+def archive_meeting(request):
+    csrf_token = request.headers.get("api-csrftoken")
+    csrf_cookie = request.META.get("CSRF_COOKIE")
+
+    if csrf_token == csrf_cookie:
+        if request.user.is_authenticated:
+            meeting_id = request.GET['meeting_id']
+            meeting = Meeting.objects.filter(pk=meeting_id)
+            meeting.update(status='archive')
+            result = 'ok'
+        else:
+            result = 'auth err'
+    else:
+       result = 'csrf err'
+
+    return HttpResponse(
+        json.dumps(result),
+        content_type="application/json"
+    )
+
+
+def reject_meeting(request):
     if request.user.is_authenticated:
         meeting_id = request.GET['meeting_id']
         meeting = Meeting.objects.filter(pk=meeting_id)
         meeting.update(status='reject')
+        doctor_id = meeting.values('doctor_id')[0]['doctor_id']
+
+        subject = 'Отказ от консультации'
+        text = 'От консультации #'+meeting_id+' отказались.'
+        to = get_email(doctor_id)
+
+        send_notify(to, text, subject)
 
     return HttpResponseRedirect(reverse('save_consalt_success'))

@@ -1,7 +1,7 @@
 import re
 
 
-class OneInputField():
+class OneInputField:
     # add
     def add(self, obj, request, pref):
         post_list = []
@@ -52,7 +52,7 @@ class OneInputField():
                 instance.delete()
 
 
-class TwoInputField():
+class TwoInputField:
     # add
     def add(self, obj, request, pref1, pref2):
         post_list = []
@@ -106,7 +106,7 @@ class TwoInputField():
                 instance.delete()
 
 
-class ThreeInputField():
+class ThreeInputField:
     # add
     def add(self, obj, request, pref1, pref2, pref3):
         post_list = []
@@ -160,7 +160,7 @@ class ThreeInputField():
                 instance.delete()
 
 
-class CheckboxField():
+class CheckboxField:
 
     def save(self, name, request):
         if name in request.POST:
@@ -184,6 +184,32 @@ def get_task(user_main, meeting, doctor_id, status):
             'user': user_main.objects.filter(user=meeting.user_id).values('fio')[0],
             'status': meeting.status,
             'sort_id': meeting.sort_id,
+        }
+
+        meetings.append(_meeting)
+
+    return meetings
+
+
+def get_meetings_list(meeting, spec, user_main, user_id):
+    meetings = list()
+
+    meeting_object_list = meeting.objects.filter(user_id=user_id).exclude(status='reject').exclude(status='archive').order_by(
+        'id').reverse()
+
+    for meeting in meeting_object_list:
+        doctor_id = meeting.doctor_id
+        specialty = ', '.join([str(i) for i in spec.objects.filter(content=doctor_id).order_by('?')[:4]])
+
+        _meeting = {
+            'id': meeting.id,
+            'date': meeting.date,
+            'doctor': user_main.objects.filter(user=doctor_id).values('fio')[0],
+            'image': user_main.objects.filter(user=doctor_id).values('avatar')[0],
+            'time_start': str(meeting.time_start),
+            'time_end': str(meeting.time_end),
+            'specialty': specialty,
+            'status': meeting.status,
         }
 
         meetings.append(_meeting)

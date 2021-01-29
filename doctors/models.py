@@ -11,12 +11,14 @@ class Meeting(models.Model):
     user_id = models.IntegerField(blank=True, verbose_name='Пациент', default=1)
     service_id = models.IntegerField(blank=True, verbose_name='Услуга', default=1)
     sort_id = models.IntegerField(blank=True, verbose_name='Индекс сортитровки', default=1)
+    email_notify = models.BooleanField(blank=True, verbose_name='Уведомление на почту', default=0)
 
     status_list = [
         ('new', 'Новая'),
         ('work', 'В работе'),
         ('success', 'Выполнено'),
         ('reject', 'Отказ'),
+        ('archive', 'Архив'),
     ]
 
     status = models.CharField(blank=True, null=True, max_length=11, choices=status_list, verbose_name='Статус')

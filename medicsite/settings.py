@@ -139,3 +139,4 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'robots@u1233610.isp.regruhosting.ru'
 EMAIL_HOST_PASSWORD = ''
 DEFAULT_FROM_EMAIL = 'robots@u1233610.isp.regruhosting.ru'
+ADMIN_EMAIL = 'spoot@bk.ru'

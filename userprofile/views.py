@@ -63,6 +63,12 @@ def profile_page_view(request):
             else:
                 return render(request, 'errs/404.html')
 
+        if request.path == '/profile/contact_user/':
+            if request.user.groups.filter(name='doctors').exists():
+                return render(request, 'profile/contact_user.html', data)
+            else:
+                return render(request, 'errs/404.html')
+
         if request.path == '/profile/info/':
             return render(request, 'profile/profile.html', data)
 
@@ -83,6 +89,7 @@ def profile_page_view(request):
 
         if request.path == '/profile/articles/':
             return render(request, 'profile/articles.html', data)
+
 
     else:
         return redirect('login')

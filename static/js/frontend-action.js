@@ -158,6 +158,7 @@ $(document).ready(function(){
                     $('.app-date-result').html(html);
 
                     $('#datepicker').datepicker({
+                        minDate: 0,
                         beforeShowDay: function(date){
                             let string = jQuery.datepicker.formatDate('yy-mm-dd', date);
                             return [ date_array.indexOf(string) != -1 ]

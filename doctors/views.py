@@ -18,7 +18,7 @@ def doctors_map_view(request):
 
 def doctors_list_view(request):
     object_list = User.objects.filter(groups__name='doctors')
-    paginator = Paginator(object_list, 2)
+    paginator = Paginator(object_list, 10)
     page = request.GET.get('page')
     doctors = list()
 
@@ -34,6 +34,17 @@ def doctors_list_view(request):
         doctor = UserDoctor.objects.get(user=user)
         services = Service.objects.filter(content=user.id)
         user_spec = ', '.join([str(i) for i in Specialty.objects.filter(content=user.id) .order_by('?')[:4]])
+
+        count_meeting = len(Meeting.objects.filter(doctor_id=user.id))
+
+        total_service_price = 0
+        count_service_item = len(services)
+        average_price = 0
+
+        for service in services:
+            total_service_price = total_service_price + int(service.price)
+
+        average_price = round(total_service_price / count_service_item)
 
         if doctor.experience_years != '':
             words = ['год', 'года', 'лет']
@@ -52,6 +63,8 @@ def doctors_list_view(request):
             'specialty': user_spec,
             'experience_years': experience,
             'services': services,
+            'average_price': average_price,
+            'count_meeting': count_meeting
         }
 
         doctors.append(_doctor)

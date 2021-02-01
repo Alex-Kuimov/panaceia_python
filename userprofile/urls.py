@@ -14,6 +14,7 @@ urlpatterns = [
     path('profile/grafik/', views.profile_page_view, name='user_profile_grafik'),
     path('profile/consalt_user/', views.profile_page_view, name='user_profile_consalt_user'),
     path('profile/consalt_doctor/', views.get_task_view, name='user_profile_consalt_doctor'),
+    path('profile/contact_user/', views.profile_page_view, name='user_profile_contact_user'),
     path('profile/settings/', views.profile_page_view, name='user_profile_settings'),
     path('profile/videos/', views.profile_page_view, name='user_profile_videos'),
     path('profile/articles/', views.profile_page_view, name='user_profile_articles'),

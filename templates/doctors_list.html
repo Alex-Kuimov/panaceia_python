@@ -117,7 +117,7 @@
                                                 {% endif %}
 
                                                 <div class="price">
-                                                    <b>4800</b> ₽
+                                                    <b>{{ doctor.average_price }} </b> ₽
                                                 </div>
 
                                                 <div class="phone-record">
@@ -137,7 +137,7 @@
                                                 {% else %}
                                                     <p>Чтобы записаться на прием, нужно <a href="{% url 'login' %}">авторизоваться</a> сайте.</p>
                                                 {% endif %}
-                                                <h5>Всего записались N кол-во</h5>
+                                                <h5>Всего записались {{ doctor.count_meeting }} чел.</h5>
                                             </div>
 
                                         </div>

@@ -1,0 +1,41 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+{% load static %}
+
+<div class="col-md-9 px-4">
+
+    <div class="col-md-12 block-info"> <h4>Список ваших контактов</h4>
+
+        {% for meeting in meetings %}
+
+            <div class="line"></div>
+            <div class="row">
+                <div class="col-md-3 ml-3">
+                    {% if meeting.image.avatar != '' %}
+                        <img src="/media/{{meeting.image.avatar}}" alt="" class="avatar_image">
+                    {% else %}
+                        <img src="{% static 'img/user.png' %}" alt="" class="avatar_image">
+                    {% endif %}
+                </div>
+                <div class="col-md-8">
+                    <p>Вы записанны на прием к врачу в {{meeting.time_start}} {{meeting.date}}</p>
+                    <h5>{{meeting.doctor.fio}}</h5>
+                    <p>{{meeting.specialty}}</p>
+                    <a href="#">Посмотреть профиль специалиста</a>
+
+                    {% if meeting.status == 'new' %}
+                        <a href="{% url 'reject_meeting' %}?meeting_id={{meeting.id}}">Отказаться</a>
+                    {% endif %}
+
+                    <p>Статус: {{ meeting.status }}</p>
+                </div>
+            </div>
+
+        {% endfor %}
+
+    </div>
+
+</div>
+
+{% endblock %}

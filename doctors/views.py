@@ -3,7 +3,7 @@ from datetime import datetime
 
 from django.shortcuts import render
 from django.http import HttpResponse, Http404, HttpResponseRedirect
-from userprofile.models import UserMain, UserDoctor, User, Service, Specialty
+from userprofile.models import UserMain, UserDoctor, User, Service, Specialty, SpecialtyList
 from .models import Meeting, Calendar
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from .utility import decl_of_num, send_notify, get_email
@@ -17,9 +17,16 @@ def doctors_map_view(request):
 
 
 def doctors_list_view(request):
-    object_list = User.objects.filter(groups__name='doctors')
-    paginator = Paginator(object_list, 10)
     page = request.GET.get('page')
+
+    #specialtes = SpecialtyList.objects.filter(id=7)
+
+    #for specialty in specialtes:
+        #instance = Specialty.objects.create(title=specialty.name, content_id=request.user.id)
+
+    object_list = User.objects.filter(groups__name='doctors')
+    paginator = Paginator(object_list, 1)
+
     doctors = list()
 
     try:
@@ -44,7 +51,8 @@ def doctors_list_view(request):
         for service in services:
             total_service_price = total_service_price + int(service.price)
 
-        average_price = round(total_service_price / count_service_item)
+        if count_service_item !=0:
+            average_price = round(total_service_price / count_service_item)
 
         if doctor.experience_years != '':
             words = ['год', 'года', 'лет']

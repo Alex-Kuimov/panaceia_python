@@ -7,28 +7,35 @@
 
     <div class="col-md-12 block-info"> <h4>Список ваших контактов</h4>
 
-        {% for meeting in meetings %}
+        {% for contact in contact_list %}
 
             <div class="line"></div>
             <div class="row">
                 <div class="col-md-3 ml-3">
-                    {% if meeting.image.avatar != '' %}
-                        <img src="/media/{{meeting.image.avatar}}" alt="" class="avatar_image">
+                    {% if contact.image.avatar != '' %}
+                        <img src="/media/{{contact.image.avatar}}" alt="" class="avatar_image">
                     {% else %}
                         <img src="{% static 'img/user.png' %}" alt="" class="avatar_image">
                     {% endif %}
                 </div>
                 <div class="col-md-8">
-                    <p>Вы записанны на прием к врачу в {{meeting.time_start}} {{meeting.date}}</p>
-                    <h5>{{meeting.doctor.fio}}</h5>
-                    <p>{{meeting.specialty}}</p>
-                    <a href="#">Посмотреть профиль специалиста</a>
+                    <p>{{contact.user.fio}}</p>
 
-                    {% if meeting.status == 'new' %}
-                        <a href="{% url 'reject_meeting' %}?meeting_id={{meeting.id}}">Отказаться</a>
+                    {% if contact.phone != '' %}
+                        <p><strong>Телефон:</strong> {{contact.phone}}</p>
                     {% endif %}
 
-                    <p>Статус: {{ meeting.status }}</p>
+                    {% if contact.whatsapp != '' %}
+                        <p><strong>WhatsApp:</strong> {{contact.whatsapp}}</p>
+                    {% endif %}
+
+                    {% if contact.skype != '' %}
+                        <p><strong>Skype:</strong> {{contact.skype}}</p>
+                    {% endif %}
+
+                    {% if contact.email != '' %}
+                        <p><strong>E-mail:</strong> {{contact.email}}</p>
+                    {% endif %}
                 </div>
             </div>
 

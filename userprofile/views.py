@@ -8,7 +8,7 @@ from .forms import SignUpForm, UserMainForm, UserDoctorForm, DocumentForm
 from django.contrib.auth.models import Group, User
 from blog.models import Article
 from doctors.models import Meeting
-from .utility import OneInputField, TwoInputField, ThreeInputField, CheckboxField, get_task, get_meetings_list
+from .utility import OneInputField, TwoInputField, ThreeInputField, CheckboxField, get_task, get_meetings_list, get_contact_list
 from django.contrib.auth.decorators import login_required
 from django.core.mail import EmailMessage
 from django.conf import settings
@@ -25,7 +25,11 @@ def user_main(request):
 
 @login_required
 def profile_page_view(request):
+
+    # only authenticated users
     if request.user.is_authenticated:
+
+        # getting params
         user_profile = UserMain.objects.get(user=request.user)
         user_doctor = UserDoctor.objects.get(user=request.user)
         user_spec = Specialty.objects.filter(content=request.user)
@@ -34,25 +38,14 @@ def profile_page_view(request):
         user_qualification = Qualification.objects.filter(content=request.user)
         user_services = Service.objects.filter(content=request.user)
         user_documents = Document.objects.filter(content=request.user)
-
         timezone = TimeZone.objects.all()
         articles = Article.objects.all()
         specialty_list = SpecialtyList.objects.all()
 
-        data = {
-            'user_profile': user_profile,
-            'user_doctor': user_doctor,
-            'user_spec': user_spec,
-            'user_associations': user_associations,
-            'user_education': user_education,
-            'user_qualification': user_qualification,
-            'user_services': user_services,
-            'user_documents': user_documents,
-            'timezone': timezone,
-            'articles': articles,
-            'specialty_list': specialty_list,
-        }
+        # create data
+        data = {'user_profile': user_profile}
 
+        # pages
         if request.path == '/profile/consalt_user/':
             meetings = get_meetings_list(Meeting, Specialty, UserMain, request.user.id)
             data.update({'meetings': meetings})
@@ -65,6 +58,11 @@ def profile_page_view(request):
 
         if request.path == '/profile/contact_user/':
             if request.user.groups.filter(name='doctors').exists():
+
+                contact_list = get_contact_list(Meeting, UserMain, User, request.user.id)
+
+                data.update({'contact_list': contact_list})
+
                 return render(request, 'profile/contact_user.html', data)
             else:
                 return render(request, 'errs/404.html')
@@ -73,6 +71,20 @@ def profile_page_view(request):
             return render(request, 'profile/profile.html', data)
 
         if request.path == '/profile/main/':
+            doctor_data = {
+                'user_doctor': user_doctor,
+                'user_spec': user_spec,
+                'user_associations': user_associations,
+                'user_education': user_education,
+                'user_qualification': user_qualification,
+                'user_services': user_services,
+                'user_documents': user_documents,
+                'specialty_list': specialty_list,
+                'timezone': timezone,
+            }
+
+            data.update(doctor_data)
+
             return render(request, 'profile/profile_main.html', data)
 
         if request.path == '/profile/recomend/':
@@ -88,8 +100,8 @@ def profile_page_view(request):
             return render(request, 'profile/settings.html', data)
 
         if request.path == '/profile/articles/':
+            data.update({'articles': articles})
             return render(request, 'profile/articles.html', data)
-
 
     else:
         return redirect('login')

@@ -116,9 +116,11 @@
                                                     <h5>{{ doctor.experience_years }}</h5>
                                                 {% endif %}
 
-                                                <div class="price">
-                                                    <b>{{ doctor.average_price }} </b> ₽
-                                                </div>
+                                                {% if doctor.average_price != 0 %}
+                                                    <div class="price">
+                                                        <b>{{ doctor.average_price }} </b> ₽
+                                                    </div>
+                                                {% endif %}
 
                                                 <div class="phone-record">
                                                     <h5>Телефон для записи</h5>

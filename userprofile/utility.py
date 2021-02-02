@@ -226,3 +226,31 @@ def get_meetings_list(meeting, spec, user_main, user_id):
         meetings.append(_meeting)
 
     return meetings
+
+
+def get_contact_list(meeting, usermain, user, doctor_id):
+    contact_ids = list()
+    contact_list = list()
+
+    meetings = meeting.objects.filter(doctor_id=doctor_id)
+
+    for meeting in meetings:
+        user_id = meeting.user_id
+
+        if user_id not in contact_ids:
+            contact_ids.append(user_id)
+
+    for contact_id in contact_ids:
+        _contact = {
+            'id': contact_id,
+            'user': usermain.objects.filter(user=contact_id).values('fio')[0],
+            'image': usermain.objects.filter(user=contact_id).values('avatar')[0],
+            'phone': usermain.objects.filter(user=contact_id).values('phone')[0]['phone'],
+            'whatsapp': usermain.objects.filter(user=contact_id).values('whatsapp')[0]['whatsapp'],
+            'skype': usermain.objects.filter(user=contact_id).values('skype')[0]['skype'],
+            'email': user.objects.get(pk=contact_id).email,
+        }
+
+        contact_list.append(_contact)
+
+    return contact_list

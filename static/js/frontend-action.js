@@ -316,7 +316,6 @@ $(document).ready(function(){
                                                 } else {
                                                     finded = false;
                                                 }
-
                                             }
 
                                             //проверка выбранной даты и текущей даты.

@@ -19,13 +19,14 @@ def doctors_map_view(request):
 def doctors_list_view(request):
     page = request.GET.get('page')
 
-    #specialtes = SpecialtyList.objects.filter(id=7)
+    if 'spec' in request.GET:
+        specialty_id = request.GET.get('spec')
+        specialty_title = SpecialtyList.objects.filter(id=specialty_id).values('name')[0]['name']
+        object_list = User.objects.filter(groups__name='doctors', specialty__title=specialty_title)
+    else:
+        object_list = User.objects.filter(groups__name='doctors')
 
-    #for specialty in specialtes:
-        #instance = Specialty.objects.create(title=specialty.name, content_id=request.user.id)
-
-    object_list = User.objects.filter(groups__name='doctors')
-    paginator = Paginator(object_list, 1)
+    paginator = Paginator(object_list, 10)
 
     doctors = list()
 

@@ -265,6 +265,11 @@ $(document).ready(function(){
                         success: function(data) {
                             let meeting_arr = data;
 
+                            //формируем время(+1 час), что бы у врача был запас времени.
+                            let now = new Date();
+                            now.setMinutes(now.getMinutes() + 60);
+                            let currentTime = getDate(now.getHours() + ':' +  now.getMinutes());
+
                             html += '<p>3. Выберите время</p>';
 
                             html += '<p><select name="app-time-start" class="app-time" required>';
@@ -305,18 +310,31 @@ $(document).ready(function(){
 
                                                 //если попадает в интревал, то исключаем "disabled"
                                                 if(find_time_start <= time && find_time_end > time) {
-                                                    console.log(time);
                                                     html += '<option value="' + displayTime + '" disabled>' + displayTime + '</option>';
                                                     finded = true;
                                                     break;
                                                 } else {
                                                     finded = false;
                                                 }
+
                                             }
 
-                                            //если не попал в интрвал, то продолжаем вывод
-                                            if(finded == false){
-                                                html += '<option value="' + displayTime + '">' + displayTime + '</option>';
+                                            //проверка выбранной даты и текущей даты.
+                                            if(checkDate <= now){
+                                                //если даты совпали, то исключаем вывод времени от текущего плюс 1 час. currentTime получаю выше
+                                                if(currentTime > time){
+                                                    html += '<option value="' + displayTime + '" disabled>' + displayTime + '</option>';
+                                                } else {
+                                                    //если не попал в интрвал, то продолжаем вывод
+                                                    if(finded == false){
+                                                        html += '<option value="' + displayTime + '">' + displayTime + '</option>';
+                                                    }
+                                                }
+                                            } else {
+                                                //если даты не совпали и не попал в интрвал, то продолжаем вывод
+                                                if(finded == false){
+                                                    html += '<option value="' + displayTime + '">' + displayTime + '</option>';
+                                                }
                                             }
                                         }
 

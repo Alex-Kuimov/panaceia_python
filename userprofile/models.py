@@ -175,6 +175,7 @@ class Support(models.Model):
 
 class SpecialtyList(models.Model):
     name = models.CharField(blank=True, max_length=100)
+    slug = models.SlugField(blank=True, max_length=100, unique=True)
 
     def __str__(self):
         return self.name

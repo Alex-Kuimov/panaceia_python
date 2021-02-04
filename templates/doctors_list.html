@@ -39,7 +39,11 @@
         <div class="row">
             <div class="col-ms">
                 <div class="breadcrumbs">
-                    <a href="index.html">Главная</a>/ <a href="#">Психосоматика</a>/ <a href="">м.Полежаевская</a>
+                    {% if all == 'y' %}
+                        <a href="index.html">Главная</a>/ <a href="{% url 'doctors_list_all' %}">Все специалисты</a></a>
+                    {% else %}
+                        <a href="index.html">Главная</a>/ <a href="{% url 'doctors_list_all' %}">Все специалисты</a>/ <a href="">{{ title }}</a>
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -47,7 +51,7 @@
         </div>
         <div class="row">
             <div class="col-sm">
-                <h2>Гинекологи на метро Автозаводская <span>(311)</span></h2>
+                <h2>{{ title }} <span>({{count}})</span></h2>
                 <ul class="nav nav-tabs doctor-tab" id="myTab" role="tablist">
                     <li class="nav-item">
                         <a class="nav-link active" id="popular-tab" data-toggle="tab" href="#popular" role="tab" aria-controls="popular" aria-selected="true">Популярные</a>
@@ -68,7 +72,7 @@
                 <div>
                      <div class="map-list tabs-nav">
                          <div class="list-icon icon">
-                             <a href="{% url 'doctors_list' %}"><img src="{% static 'img/list.png' %}" alt=""></a>
+                             <a href="{% url 'doctors_list_all' %}"><img src="{% static 'img/list.png' %}" alt=""></a>
                          </div>
                          <div class="map-icon icon">
                             <a href="{% url 'doctors_map' %}"> <img src="{% static 'img/place.png' %}" alt=""></a>
@@ -140,6 +144,11 @@
                                                     <p>Чтобы записаться на прием, нужно <a href="{% url 'login' %}">авторизоваться</a> сайте.</p>
                                                 {% endif %}
                                                 <h5>Всего записались {{ doctor.count_meeting }} чел.</h5>
+
+                                                {% if doctor.patients != '' %}
+                                                    <p>Специализация: {{ doctor.patients }}</p>
+                                                {% endif %}
+
                                             </div>
 
                                         </div>

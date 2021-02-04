@@ -16,18 +16,89 @@ def doctors_map_view(request):
     return render(request, 'doctors_map.html', data)
 
 
-def doctors_list_view(request):
+def doctors_list_all_view(request):
     page = request.GET.get('page')
+    object_list = User.objects.filter(groups__name='doctors')
+    count = len(object_list)
+    paginator = Paginator(object_list, 1)
+    doctors = list()
 
-    if 'spec' in request.GET:
-        specialty_id = request.GET.get('spec')
-        specialty_title = SpecialtyList.objects.filter(id=specialty_id).values('name')[0]['name']
-        object_list = User.objects.filter(groups__name='doctors', specialty__title=specialty_title)
-    else:
-        object_list = User.objects.filter(groups__name='doctors')
+    try:
+        users = paginator.page(page)
+    except PageNotAnInteger:
+        users = paginator.page(1)
+    except EmptyPage:
+        users = paginator.page(paginator.num_pages)
 
-    paginator = Paginator(object_list, 10)
+    for user in users:
+        doctor_main = UserMain.objects.get(user=user)
+        doctor = UserDoctor.objects.get(user=user)
+        services = Service.objects.filter(content=user.id)
+        user_spec = ', '.join([str(i) for i in Specialty.objects.filter(content=user.id).order_by('?')[:4]])
 
+        count_meeting = len(Meeting.objects.filter(doctor_id=user.id))
+
+        total_service_price = 0
+        count_service_item = len(services)
+        average_price = 0
+
+        for service in services:
+            total_service_price = total_service_price + int(service.price)
+
+        if count_service_item !=0:
+            average_price = round(total_service_price / count_service_item)
+
+        if doctor.experience_years != '':
+            words = ['год', 'года', 'лет']
+            num = int(doctor.experience_years)
+            years = decl_of_num(num, words)
+            experience = 'Стаж: ' + str(num) + ' ' + years
+        else:
+            experience = ''
+
+        patients = ''
+        if doctor.patient_grown:
+            patients = patients + 'взрослые, '
+
+        if doctor.patient_children:
+            patients = patients + 'дети, '
+
+        _doctor = {
+            'id': user.id,
+            'fio': doctor_main.fio,
+            'city': doctor_main.city,
+            'phone': doctor_main.phone,
+            'avatar': doctor_main.avatar,
+            'specialty': user_spec,
+            'experience_years': experience,
+            'services': services,
+            'average_price': average_price,
+            'count_meeting': count_meeting,
+            'patient_grown': doctor.patient_grown,
+            'patient_children': doctor.patient_children,
+            'patients': patients[:-2],
+        }
+
+        doctors.append(_doctor)
+
+    data = {
+        'doctors': doctors,
+        'page': page,
+        'users': users,
+        'title': 'Все специалисты',
+        'count': count,
+        'all': 'y'
+    }
+
+    return render(request, 'doctors_list.html', data)
+
+
+def doctors_list_view(request, slug):
+    page = request.GET.get('page')
+    specialty_title = SpecialtyList.objects.filter(slug=slug).values('name')[0]['name']
+    object_list = User.objects.filter(groups__name='doctors', specialty__title=specialty_title)
+    count = len(object_list)
+    paginator = Paginator(object_list, 1)
     doctors = list()
 
     try:
@@ -63,6 +134,13 @@ def doctors_list_view(request):
         else:
             experience = ''
 
+        patients = ''
+        if doctor.patient_grown:
+            patients = patients + 'взрослые, '
+
+        if doctor.patient_children:
+            patients = patients + 'дети, '
+
         _doctor = {
             'id': user.id,
             'fio': doctor_main.fio,
@@ -73,12 +151,13 @@ def doctors_list_view(request):
             'experience_years': experience,
             'services': services,
             'average_price': average_price,
-            'count_meeting': count_meeting
+            'count_meeting': count_meeting,
+            'patients': patients[:-2],
         }
 
         doctors.append(_doctor)
 
-    data = {'doctors': doctors, 'page': page, 'users': users}
+    data = {'doctors': doctors, 'page': page, 'users': users, 'title': specialty_title, 'count': count, 'all': 'n'}
 
     return render(request, 'doctors_list.html', data)
 

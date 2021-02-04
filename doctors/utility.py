@@ -2,6 +2,7 @@ from django.core.mail import EmailMessage
 from userprofile.models import User
 from django.conf import settings
 
+
 def decl_of_num(n, es):
   n = n % 100
   if n >= 11 and n <= 19:

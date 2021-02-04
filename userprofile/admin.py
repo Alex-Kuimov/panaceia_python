@@ -60,8 +60,12 @@ class UserAdmin(UserAdmin):
     )
 
 
+class SpecialtySlug(admin.ModelAdmin):
+    prepopulated_fields = {'slug': ('name',)}
+
+
 admin.site.unregister(User)
 admin.site.register(User, UserAdmin)
 admin.site.register(Support)
 admin.site.register(TimeZone)
-admin.site.register(SpecialtyList)
+admin.site.register(SpecialtyList, SpecialtySlug)

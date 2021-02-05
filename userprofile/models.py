@@ -64,7 +64,6 @@ class UserDoctor(models.Model):
 
     meet_online = models.BooleanField(blank=True, null=True, verbose_name='Прием онлайн')
     meet_offline = models.BooleanField(blank=True, null=True, verbose_name='Прием оффлайн')
-    meet_online_offline = models.BooleanField(blank=True, null=True, verbose_name='Прием онлайн и оффлайн')
     patient_grown = models.BooleanField(blank=True, null=True, verbose_name='Взрослые')
     patient_children = models.BooleanField(blank=True, null=True, verbose_name='Дети')
     verified = models.BooleanField(blank=True, null=True, verbose_name='Аккаунт верифицирован')

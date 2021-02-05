@@ -49,7 +49,7 @@
                         <input type="text" name="city" id="user-city" value="{{user_profile.city}}" minlength="3" maxlength="100" placeholder="Город" required>
                         <input type="hidden" name="coords" id="coords" value="{{user_profile.coords}}" maxlength="200">
 
-                        <select class="" name="timezone">
+                        <select class="select-timezone" name="timezone">
 
                             {% for item in timezone %}
                                 {% if user_profile.time_zone == item.name  %}
@@ -93,10 +93,14 @@
                             <div class="col-md-3">
                             </div>
                             <div class="col-md-9">
-                                <input type="text" name="email" value="{{user.email}}" minlength="5" maxlength="100" placeholder="E-mail">
-                                + <input type="number" name="phone" value="{{user_profile.phone}}" maxlength="20" placeholder="Номер телефона" required>
-                                <input type="text" name="skype" value="{{user_profile.skype}}" minlength="5" maxlength="50" placeholder="Skype">
-                                + <input type="number" name="whatsapp" value="{{user_profile.whatsapp}}" maxlength="20" placeholder="Whatsapp">
+                                <div class="input-number-wrap">
+                                    <input type="text" name="email" value="{{user.email}}" minlength="5" maxlength="100" placeholder="E-mail">
+                                    <span class="input-plus">+</span> <input type="number" name="phone" value="{{user_profile.phone}}" maxlength="20" placeholder="Номер телефона" required>
+                                </div>
+                                <div class="input-number-wrap">
+                                    <input type="text" name="skype" value="{{user_profile.skype}}" minlength="5" maxlength="50" placeholder="Skype">
+                                    <span class="input-plus">+</span> <input type="number" name="whatsapp" value="{{user_profile.whatsapp}}" maxlength="20" placeholder="Whatsapp">
+                                </div>
                                 <br>
                                 <button type="submit" name="button">Сохранить изменения</button>
                             </div>

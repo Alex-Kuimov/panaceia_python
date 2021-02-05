@@ -6,7 +6,7 @@ from django.http import HttpResponse, Http404, HttpResponseRedirect
 from userprofile.models import UserMain, UserDoctor, User, Service, Specialty, SpecialtyList
 from .models import Meeting, Calendar
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from .utility import decl_of_num, send_notify, get_email
+from .utility import decl_of_num, send_notify, get_email, get_doctor_list
 from django.views.decorators.csrf import requires_csrf_token
 from django.urls import reverse
 
@@ -17,148 +17,12 @@ def doctors_map_view(request):
 
 
 def doctors_list_all_view(request):
-    page = request.GET.get('page')
-    object_list = User.objects.filter(groups__name='doctors')
-    count = len(object_list)
-    paginator = Paginator(object_list, 1)
-    doctors = list()
-
-    try:
-        users = paginator.page(page)
-    except PageNotAnInteger:
-        users = paginator.page(1)
-    except EmptyPage:
-        users = paginator.page(paginator.num_pages)
-
-    for user in users:
-        doctor_main = UserMain.objects.get(user=user)
-        doctor = UserDoctor.objects.get(user=user)
-        services = Service.objects.filter(content=user.id)
-        user_spec = ', '.join([str(i) for i in Specialty.objects.filter(content=user.id).order_by('?')[:4]])
-
-        count_meeting = len(Meeting.objects.filter(doctor_id=user.id))
-
-        total_service_price = 0
-        count_service_item = len(services)
-        average_price = 0
-
-        for service in services:
-            total_service_price = total_service_price + int(service.price)
-
-        if count_service_item !=0:
-            average_price = round(total_service_price / count_service_item)
-
-        if doctor.experience_years != '':
-            words = ['год', 'года', 'лет']
-            num = int(doctor.experience_years)
-            years = decl_of_num(num, words)
-            experience = 'Стаж: ' + str(num) + ' ' + years
-        else:
-            experience = ''
-
-        patients = ''
-        if doctor.patient_grown:
-            patients = patients + 'взрослые, '
-
-        if doctor.patient_children:
-            patients = patients + 'дети, '
-
-        _doctor = {
-            'id': user.id,
-            'fio': doctor_main.fio,
-            'city': doctor_main.city,
-            'phone': doctor_main.phone,
-            'avatar': doctor_main.avatar,
-            'specialty': user_spec,
-            'experience_years': experience,
-            'services': services,
-            'average_price': average_price,
-            'count_meeting': count_meeting,
-            'patient_grown': doctor.patient_grown,
-            'patient_children': doctor.patient_children,
-            'patients': patients[:-2],
-        }
-
-        doctors.append(_doctor)
-
-    data = {
-        'doctors': doctors,
-        'page': page,
-        'users': users,
-        'title': 'Все специалисты',
-        'count': count,
-        'all': 'y'
-    }
-
+    data = get_doctor_list(request, '')
     return render(request, 'doctors_list.html', data)
 
 
 def doctors_list_view(request, slug):
-    page = request.GET.get('page')
-    specialty_title = SpecialtyList.objects.filter(slug=slug).values('name')[0]['name']
-    object_list = User.objects.filter(groups__name='doctors', specialty__title=specialty_title)
-    count = len(object_list)
-    paginator = Paginator(object_list, 1)
-    doctors = list()
-
-    try:
-        users = paginator.page(page)
-    except PageNotAnInteger:
-        users = paginator.page(1)
-    except EmptyPage:
-        users = paginator.page(paginator.num_pages)
-
-    for user in users:
-        doctor_main = UserMain.objects.get(user=user)
-        doctor = UserDoctor.objects.get(user=user)
-        services = Service.objects.filter(content=user.id)
-        user_spec = ', '.join([str(i) for i in Specialty.objects.filter(content=user.id) .order_by('?')[:4]])
-
-        count_meeting = len(Meeting.objects.filter(doctor_id=user.id))
-
-        total_service_price = 0
-        count_service_item = len(services)
-        average_price = 0
-
-        for service in services:
-            total_service_price = total_service_price + int(service.price)
-
-        if count_service_item !=0:
-            average_price = round(total_service_price / count_service_item)
-
-        if doctor.experience_years != '':
-            words = ['год', 'года', 'лет']
-            num = int(doctor.experience_years)
-            years = decl_of_num(num, words)
-            experience = 'Стаж: ' + str(num) + ' ' + years
-        else:
-            experience = ''
-
-        patients = ''
-        if doctor.patient_grown:
-            patients = patients + 'взрослые, '
-
-        if doctor.patient_children:
-            patients = patients + 'дети, '
-
-        _doctor = {
-            'id': user.id,
-            'fio': doctor_main.fio,
-            'city': doctor_main.city,
-            'phone': doctor_main.phone,
-            'avatar': doctor_main.avatar,
-            'specialty': user_spec,
-            'experience_years': experience,
-            'services': services,
-            'average_price': average_price,
-            'count_meeting': count_meeting,
-            'patients': patients[:-2],
-        }
-
-        doctors.append(_doctor)
-
-    data = {'doctors': doctors, 'page': page, 'users': users, 'title': specialty_title, 'count': count, 'all': 'n'}
-
+    data = get_doctor_list(request, slug)
     return render(request, 'doctors_list.html', data)
 
 
@@ -176,7 +40,7 @@ def get_doctors_list(request):
         for user in users:
             doctor_main = UserMain.objects.get(user=user)
             doctor = UserDoctor.objects.get(user=user)
-
+            services = Service.objects.filter(content=user.id)
             user_spec = ', '.join([str(i) for i in Specialty.objects.filter(content=user.id).order_by('?')[:4]])
 
             if doctor.experience_years != '':
@@ -192,6 +56,32 @@ def get_doctors_list(request):
             else:
                 avatar = 'medicsite/static/img/user.png'
 
+            count_meeting = len(Meeting.objects.filter(doctor_id=user.id))
+
+            total_service_price = 0
+            count_service_item = len(services)
+            average_price = 0
+
+            for service in services:
+                total_service_price = total_service_price + int(service.price)
+
+            if count_service_item != 0:
+                average_price = round(total_service_price / count_service_item)
+
+            patients = ''
+            if doctor.patient_grown:
+                patients = patients + 'взрослые, '
+
+            if doctor.patient_children:
+                patients = patients + 'дети, '
+
+            meet = ''
+            if doctor.meet_online:
+                meet = meet + 'online, '
+
+            if doctor.meet_offline:
+                meet = meet + 'offline, '
+
             _doctor = {
                 'id': user.id,
                 'fio': doctor_main.fio,
@@ -201,6 +91,11 @@ def get_doctors_list(request):
                 'specialty': user_spec,
                 'experience_years': experience,
                 'coords': doctor_main.coords,
+                'average_price': average_price,
+                'count_meeting': count_meeting,
+                'meet': meet,
+                'patients': patients,
+
             }
 
             doctors.append(_doctor)

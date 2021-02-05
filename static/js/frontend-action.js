@@ -48,6 +48,10 @@ $(document).ready(function(){
                                 let phone = mapEl[key]['phone'];
                                 let city = mapEl[key]['city'];
                                 let avatar = mapEl[key]['avatar'];
+                                let count_meeting = mapEl[key]['count_meeting'];
+                                let average_price = mapEl[key]['average_price'];
+                                let meet = mapEl[key]['meet'];
+                                let patients = mapEl[key]['patients'];
                                 let objects = new ymaps.Placemark(coords);
 
                                 let content = '';
@@ -55,6 +59,7 @@ $(document).ready(function(){
 
                                     content += '<div class="doctor-map-left">';
                                         content += '<img src="'+ siteUrl +'/'+ avatar +'" class="doctor-map-image">';
+                                        content += '<p class="doctor-map-price">' + average_price + ' руб.</p>';
                                     content += '</div>';
 
                                     content += '<div class="doctor-map-right">';
@@ -63,6 +68,9 @@ $(document).ready(function(){
                                         content += '<p class="doctor-map-experience-years">' + experience_years + '</p>';
                                         content += '<p class="doctor-map-phone-title">Телефон для записи</p>';
                                         content += '<p class="doctor-map-phone">' + phone + '</p>';
+                                        content += '<p class="doctor-map-count-meeting">Всего записались ' + count_meeting + ' чел.</p>';
+                                        content += '<p class="doctor-map-patients"><strong>Специализация:</strong> ' + patients + '</p>';
+                                        content += '<p class="doctor-map-meet"><strong>Прием:</strong> ' + meet + '</p>';
                                     content += '</div>';
 
                                 content += '</div>';
@@ -395,8 +403,33 @@ $(document).ready(function(){
 
     }
 
+    let specialty = {
+        action: function(){
+            $('.specialty-form').on('submit', specialty.redirect);
+        },
+
+        redirect: function(){
+            let slug = $('.speciality-select').val();
+            let page = window.location.href;
+
+            if(slug == '' || slug == 'all'){
+                window.location.href = page + 'doctors/list/';
+            } else {
+                window.location.href = page + 'doctors/list/' + slug + '/';
+            }
+
+            return false;
+        },
+
+        init: function(){
+            $('.speciality-select').customselect();
+            specialty.action();
+        },
+    }
+
     doctorMap.init();
     registry.init();
     modal.init();
+    specialty.init();
 
 });

@@ -15,7 +15,13 @@ from django.conf import settings
 
 
 def home(request):
-    return render(request, 'home.html')
+    specialty_list = SpecialtyList.objects.all()
+
+    data = {
+        'specialty_list': specialty_list
+    }
+
+    return render(request, 'home.html', data)
 
 
 def user_main(request):

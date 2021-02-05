@@ -71,6 +71,36 @@
     color: #18384C;
 }
 
+.doctor-map-price{
+    text-align: center;
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 22px;
+    color: #18384C;
+}
+
+.doctor-map-content .doctor-map-count-meeting{
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 22px;
+    color: #18384C;
+    margin-top: 10px;
+    margin-bottom: 5px;
+}
+
+.doctor-map-patients,
+.doctor-map-meet{
+    font-weight: 200;
+    font-size: 12px;
+    line-height: 24px;
+    color: #18384C;
+}
+
+.doctor-map-patients strong,
+.doctor-map-meet strong{
+    font-weight: bold;
+}
+
 .doctor-map-right{
     width: 500px;
     padding: 10px;
@@ -250,3 +280,72 @@
     font-size: 14px;
     color: #40a073;
 }
+
+/*LK*/
+
+.block-info input[type="number"] {
+    width: 100%;
+    background: #F4F8F9;
+    border: 1px solid #D0E3E8;
+    box-sizing: border-box;
+    border-radius: 4px;
+    padding: 16px 20px;
+    font-size: 14px;
+    color: #ABABAB;
+    margin: 10px 0px;
+}
+
+.input-number-wrap{
+    position: relative;
+}
+
+.input-number-wrap .input-plus{
+    position: absolute;
+    top: 102px;
+    left: 8px;
+    font-size: 14px;
+    color: #afabb2;
+
+}
+
+.sex-input p{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.sex-input input[type=radio]{
+    margin-right: 5px;
+}
+
+.documents-block h4{
+    display: flex;
+}
+
+.documents-block h4 img{
+    width: 20px;
+    height: 20px;
+    margin-left: 5px;
+}
+
+.documents-specialist img{
+    object-fit: contain;
+}
+
+.block-form select{
+    margin-top: 11px;
+}
+
+.select-timezone{
+    margin-top: 10px;
+}
+
+.avatar. avatar_image{
+    object-fit: contain;
+}
+
+/*Home*/
+.search-video .custom-select a{
+    display: initial;
+}
+

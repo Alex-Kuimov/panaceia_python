@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}" >
     <link rel="stylesheet" href="{% static 'css/jquery-ui.css' %}" >
+    <link rel="stylesheet" href="{% static 'css/jquery-customselect.css' %}" >
     <link rel="stylesheet" href="{% static 'css/sp-style.css' %}" >
 
     <script src="https://api-maps.yandex.ru/2.1/?apikey=91488a5d-f346-4c91-9e15-c225d5aa25b0&lang=ru_RU"></script>
@@ -54,9 +55,16 @@
                         Найти нужно видео
                     </div>
                     <div class="form-video">
-                        <form class="search-form">
+                        <form action="/doctors/list/" class="specialty-form search-form" method="POST" enctype="multipart/form-data">
+                            {% csrf_token %}
                             <p class="search-video">
-                                <input type="text" name="search-video" value="Психосоматика" />
+                                <select name='speciality-select' class='custom-select speciality-select'>
+                                    <option value=''>Выберите специализацию</option>
+                                    <option value='all'>Все</option>
+                                    {% for specialty in specialty_list %}
+                                        <option value='{{ specialty.slug }}'>{{ specialty.name }}</option>
+                                    {% endfor %}
+                                </select>
                             </p>
                             <p class="found">
                                 <input type="submit" value="Найти" />
@@ -517,6 +525,7 @@
     <script src="{% static 'js/jquery.min.js' %}"></script>
     <script src="{% static 'js/jquery-ui.js' %}"></script>
     <script src="{% static 'js/data-picker-ru.js' %}"></script>
+    <script src="{% static 'js/jquery-customselect.js' %}"></script>
     <script src="{% static 'js/script.js' %}"></script>
     <script src="{% static 'js/frontend-action.js' %}"></script>
 </body>

@@ -40,7 +40,7 @@
             <div class="col-ms">
                 <div class="breadcrumbs">
                     {% if all == 'y' %}
-                        <a href="index.html">Главная</a>/ <a href="{% url 'doctors_list_all' %}">Все специалисты</a></a>
+                        <a href="index.html">Главная</a>/ <a href="{% url 'doctors_list_all' %}">Все специалисты</a>
                     {% else %}
                         <a href="index.html">Главная</a>/ <a href="{% url 'doctors_list_all' %}">Все специалисты</a>/ <a href="">{{ title }}</a>
                     {% endif %}
@@ -147,6 +147,10 @@
 
                                                 {% if doctor.patients != '' %}
                                                     <p>Специализация: {{ doctor.patients }}</p>
+                                                {% endif %}
+
+                                                {% if doctor.meet != '' %}
+                                                    <p>Прием: {{ doctor.meet }}</p>
                                                 {% endif %}
 
                                             </div>

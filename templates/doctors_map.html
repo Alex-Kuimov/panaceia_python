@@ -39,7 +39,11 @@
         <div class="row">
             <div class="col-ms">
                 <div class="breadcrumbs">
-                    <a href="index.html">Главная</a>/ <a href="{% url 'doctors_map' %}">Все специалисты</a>
+                     {% if all == 'y' %}
+                        <a href="index.html">Главная</a>/ <a href="{% url 'doctors_map_all' %}">Все специалисты на карте</a>
+                    {% else %}
+                        <a href="index.html">Главная</a>/ <a href="{% url 'doctors_map_all' %}">Все специалисты на карте</a>/ <a href="">{{ title }}</a>
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -47,7 +51,7 @@
         </div>
         <div class="row">
             <div class="col-sm">
-                <h2>Все специалисты <span>(2)</span></h2>
+                <h2>{{title}} <span>({{count}})</span></h2>
                 <ul class="nav nav-tabs doctor-tab" id="myTab" role="tablist">
                     <li class="nav-item">
                         <a class="nav-link active" id="popular-tab" data-toggle="tab" href="#popular" role="tab" aria-controls="popular" aria-selected="true">Популярные</a>
@@ -68,15 +72,15 @@
                 <div>
                      <div class="map-list tabs-nav">
                          <div class="list-icon icon">
-                             <a href="{% url 'doctors_list_all' %}"><img src="{% static 'img/list.png' %}" alt=""></a>
+                             <a href="{% url 'doctors_list_all' %}{{slug}}"><img src="{% static 'img/list.png' %}" alt=""></a>
                          </div>
                          <div class="map-icon icon">
-                            <a href="{% url 'doctors_map' %}"> <img src="{% static 'img/place.png' %}" alt=""></a>
+                            <a href="{% url 'doctors_map_all' %}{{slug}}"> <img src="{% static 'img/place.png' %}" alt=""></a>
                          </div>
                      </div>
                      <div class="tab-maps">
                         <div class="tab-map-content tabs-target">
-                            <div class="map" id="doctor-map" style="height:400px">
+                            <div class="map" id="doctor-map" style="height:400px" data-slug="{{slug}}">
                             </div>
                         </div>
                      </div>
@@ -86,6 +90,26 @@
     </div>
 </div>
 
-
+<div class="modal-cover">
+    <div class="modal-wrap">
+        <div class="modal-header">
+            <p class="modal-title">Запись на консультацию</p>
+            <img src="{% static 'img/cross.png' %}" class="modal-close hide-modal">
+        </div>
+        <div class="modal-body">
+            <form action="#" class="registry">
+                <p>1. Выберите дату:</p>
+                <div class="app-date-result"></div>
+                <div class="app-service-result"></div>
+                <div class="app-time-result"></div>
+                <input type="hidden" name="app-user-id" class="app-user-id" value="{{user.id}}">
+                <input type="hidden" name="app-doctor-id" class="app-doctor-id" value="">
+                <input type="hidden" name="app-time-end" class="app-time-end" value="">
+                <input type="hidden" name="app-time-interval" class="app-time-interval" value="">
+                <input type="submit" class="appointment-btn" value="Записаться">
+            </form>
+        </div>
+    </div>
+</div>
 
 {% endblock %}

@@ -25,8 +25,11 @@ $(document).ready(function(){
             if ($('#doctor-map').length){
                 ymaps.ready(function(){
 
-                    let page = window.location.href;
+                    let page = location.origin;
                     let siteUrl = window.location.origin;
+                    let slug = $('#doctor-map').attr('data-slug');
+
+                    console.log(slug);
 
                     let map = new ymaps.Map('doctor-map', {
                         center: [0, 0],
@@ -34,14 +37,16 @@ $(document).ready(function(){
                     });
 
                     $.ajax({
-                        url: page + 'get_doctors_list/',
+                        url: page + '/doctors/get_doctors_list/',
                         type: 'get',
                         headers: {'api-csrftoken': csrftoken},
+                        data: {'slug': slug},
                         success: function(data) {
                             let mapEl = data
 
                             for (var key in mapEl) {
                                 let coords = mapEl[key]['coords'].split(',');
+                                let doctor_id = mapEl[key]['id'];
                                 let fio = mapEl[key]['fio'];
                                 let specialty = mapEl[key]['specialty'];
                                 let experience_years = mapEl[key]['experience_years'];
@@ -71,6 +76,7 @@ $(document).ready(function(){
                                         content += '<p class="doctor-map-count-meeting">Всего записались ' + count_meeting + ' чел.</p>';
                                         content += '<p class="doctor-map-patients"><strong>Специализация:</strong> ' + patients + '</p>';
                                         content += '<p class="doctor-map-meet"><strong>Прием:</strong> ' + meet + '</p>';
+                                        content += '<div class="appointment appointment-btn set-doctor-id show-modal" doctor-id="' + doctor_id + '">Записаться на прием</div>';
                                     content += '</div>';
 
                                 content += '</div>';
@@ -126,7 +132,7 @@ $(document).ready(function(){
             $('.registry').html('<p>Выполняется загрузка, пожалуйста, подождите.</p>');
 
             $.ajax({
-                url: page + '/doctors/list/create_meeting/',
+                url: page + '/doctors/create_meeting/',
                 type: 'get',
                 data: data,
                 headers: {'api-csrftoken': csrftoken},
@@ -389,6 +395,7 @@ $(document).ready(function(){
        },
 
        show: function(){
+            console.log('ok');
             $('.modal-cover').fadeIn('500').css('display', 'flex');
             return false;
        },

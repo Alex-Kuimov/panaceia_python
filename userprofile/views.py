@@ -169,7 +169,6 @@ def save_doctor_data(request):
             # checkbox data save
             CheckboxField.save(user_doctor, 'meet_online', request)
             CheckboxField.save(user_doctor, 'meet_offline', request)
-            CheckboxField.save(user_doctor, 'meet_online_offline', request)
             CheckboxField.save(user_doctor, 'patient_grown', request)
             CheckboxField.save(user_doctor, 'patient_children', request)
 

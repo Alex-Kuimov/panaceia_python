@@ -47,9 +47,13 @@ def get_doctor_list(request, slug):
 
     if slug == '':
         object_list = User.objects.filter(groups__name='doctors')
+        title = 'Все специалисты'
+        all_flag = 'y'
     else:
         specialty_title = SpecialtyList.objects.filter(slug=slug).values('name')[0]['name']
         object_list = User.objects.filter(groups__name='doctors', specialty__title=specialty_title)
+        title = specialty_title
+        all_flag = 'n'
 
     count = len(object_list)
     paginator = Paginator(object_list, 1)
@@ -125,9 +129,10 @@ def get_doctor_list(request, slug):
         'doctors': doctors,
         'page': page,
         'users': users,
-        'title': 'Все специалисты',
+        'title': title,
         'count': count,
-        'all': 'y'
+        'all': all_flag,
+        'slug': slug,
     }
 
     return data

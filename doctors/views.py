@@ -11,8 +11,29 @@ from django.views.decorators.csrf import requires_csrf_token
 from django.urls import reverse
 
 
-def doctors_map_view(request):
-    data = {}
+def doctors_map_all_view(request):
+    count = len(User.objects.filter(groups__name='doctors'))
+
+    data = {
+        'title': 'Все специалисты',
+        'count': count,
+        'all': 'y'
+    }
+
+    return render(request, 'doctors_map.html', data)
+
+
+def doctors_map_view(request, slug):
+    specialty_title = SpecialtyList.objects.filter(slug=slug).values('name')[0]['name']
+    count = len(User.objects.filter(groups__name='doctors', specialty__title=specialty_title))
+
+    data = {
+        'title': specialty_title,
+        'count': count,
+        'slug': slug,
+        'all': 'n'
+    }
+
     return render(request, 'doctors_map.html', data)
 
 
@@ -33,8 +54,14 @@ def get_doctors_list(request):
     csrf_cookie = request.META.get("CSRF_COOKIE")
 
     if csrf_token == csrf_cookie:
+        slug = request.GET['slug']
 
-        users = User.objects.filter(groups__name='doctors')
+        if slug == '':
+            users = User.objects.filter(groups__name='doctors')
+        else:
+            specialty_title = SpecialtyList.objects.filter(slug=slug).values('name')[0]['name']
+            users = User.objects.filter(groups__name='doctors', specialty__title=specialty_title)
+
         doctors = list()
 
         for user in users:

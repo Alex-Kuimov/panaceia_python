@@ -132,13 +132,6 @@
                             <input type="checkbox" name="meet_offline" class="doctor_chk" value="False"> Прием оффлайн <img src="{% static 'img/question.png' %}" alt="Прием оффлайн" title="Здесь будет текст информации">
                         {% endif %}
 
-                        <br>
-
-                        {% if user_doctor.meet_online_offline == True %}
-                            <input type="checkbox" name="meet_online_offline" class="doctor_chk" value="True" checked> Прием онлайн и оффлайн <img src="{% static 'img/question.png' %}" alt="Прием онлайн и оффлайн" title="Здесь будет текст информации">
-                        {% else %}
-                            <input type="checkbox" name="meet_online_offline" class="doctor_chk" value="False"> Прием онлайн и оффлайн <img src="{% static 'img/question.png' %}" alt="Прием онлайн и оффлайн" title="Здесь будет текст информации">
-                        {% endif %}
 
                         <br>
                         <br>

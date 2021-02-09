@@ -89,11 +89,11 @@
 
                                                 {% if doctor.avatar != '' %}
                                                     <div class="avatar-doctor">
-                                                        <img src="/media/{{doctor.avatar}}" alt="">
+                                                        <a href="{% url 'doctor_detail' slug=doctor.id %}"><img src="/media/{{doctor.avatar}}" alt=""></a>
                                                     </div>
                                                 {% else %}
                                                     <div class="avatar-doctor">
-                                                        <img src="{% static 'img/user.png' %}" alt="">
+                                                        <a href="{% url 'doctor_detail' slug=doctor.id %}"><img src="{% static 'img/user.png' %}" alt=""></a>
                                                     </div>
                                                 {% endif %}
 
@@ -109,7 +109,7 @@
                                             </div>
                                             <div class="col-4 info-doctor">
                                                 {% if doctor.fio != '' %}
-                                                    <h4>{{ doctor.fio }}</h4>
+                                                    <h4><a href="{% url 'doctor_detail' slug=doctor.id %}">{{ doctor.fio }}</a></h4>
                                                 {% endif %}
 
                                                 {% if doctor.specialty != '' %}

@@ -1,14 +1,14 @@
 import json
 from datetime import datetime
-
 from django.shortcuts import render
 from django.http import HttpResponse, Http404, HttpResponseRedirect
 from userprofile.models import UserMain, UserDoctor, User, Service, Specialty, SpecialtyList
 from .models import Meeting, Calendar
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from .utility import decl_of_num, send_notify, get_email, get_doctor_list
 from django.views.decorators.csrf import requires_csrf_token
 from django.urls import reverse
+from django.shortcuts import get_list_or_404, get_object_or_404
+
 
 
 def doctors_map_all_view(request):
@@ -20,7 +20,7 @@ def doctors_map_all_view(request):
         'all': 'y'
     }
 
-    return render(request, 'doctors_map.html', data)
+    return render(request, 'doctor/doctors_map.html', data)
 
 
 def doctors_map_view(request, slug):
@@ -34,17 +34,86 @@ def doctors_map_view(request, slug):
         'all': 'n'
     }
 
-    return render(request, 'doctors_map.html', data)
+    return render(request, 'doctor/doctors_map.html', data)
 
 
 def doctors_list_all_view(request):
     data = get_doctor_list(request, '')
-    return render(request, 'doctors_list.html', data)
+    return render(request, 'doctor/doctors_list.html', data)
 
 
 def doctors_list_view(request, slug):
     data = get_doctor_list(request, slug)
-    return render(request, 'doctors_list.html', data)
+    return render(request, 'doctor/doctors_list.html', data)
+
+
+def doctor_detail_view(request, slug):
+    user_id = slug
+    user = get_object_or_404(User, id=user_id)
+
+    if user.groups.filter(name='doctors').exists():
+        doctor_main = UserMain.objects.get(user=user_id)
+        doctor = UserDoctor.objects.get(user=user_id)
+        services = Service.objects.filter(content=user_id)
+        user_spec = ', '.join([str(i) for i in Specialty.objects.filter(content=user_id).order_by('?')[:4]])
+
+        if doctor.experience_years != '':
+            words = ['год', 'года', 'лет']
+            num = int(doctor.experience_years)
+            years = decl_of_num(num, words)
+            experience = 'Стаж: ' + str(num) + ' ' + years
+        else:
+            experience = ''
+
+        if doctor_main.avatar != '':
+            avatar = 'media/' + str(doctor_main.avatar)
+        else:
+            avatar = 'medicsite/static/img/user.png'
+
+        count_meeting = len(Meeting.objects.filter(doctor_id=user_id))
+
+        total_service_price = 0
+        count_service_item = len(services)
+        average_price = 0
+
+        for service in services:
+            total_service_price = total_service_price + int(service.price)
+
+        if count_service_item != 0:
+            average_price = round(total_service_price / count_service_item)
+
+        patients = ''
+        if doctor.patient_grown:
+            patients = patients + 'взрослые, '
+
+        if doctor.patient_children:
+            patients = patients + 'дети, '
+
+        meet = ''
+        if doctor.meet_online:
+            meet = meet + 'online, '
+
+        if doctor.meet_offline:
+            meet = meet + 'offline, '
+
+        doc = {
+            'id': user_id,
+            'fio': doctor_main.fio,
+            'city': doctor_main.city,
+            'phone': doctor_main.phone,
+            'avatar': avatar,
+            'specialty': user_spec,
+            'experience_years': experience,
+            'coords': doctor_main.coords,
+            'average_price': average_price,
+            'count_meeting': count_meeting,
+            'meet': meet[:-2],
+            'patients': patients[:-2],
+        }
+
+        return render(request, 'doctor/doctor_detail.html', doc)
+    else:
+        return render(request, 'errs/404.html')
 
 
 @requires_csrf_token
@@ -109,6 +178,14 @@ def get_doctors_list(request):
             if doctor.meet_offline:
                 meet = meet + 'offline, '
 
+            button = ''
+            if request.user.is_authenticated:
+                if request.user.groups.filter(name='users').exists():
+                    if count_service_item != 0:
+                        button = '<div class="appointment appointment-btn set-doctor-id show-modal" doctor-id="' + str(user.id) + '">Записаться на прием</div>'
+            else:
+                button = '<p>Чтобы записаться на прием, нужно авторизоваться сайте.</p>'
+
             _doctor = {
                 'id': user.id,
                 'fio': doctor_main.fio,
@@ -120,9 +197,9 @@ def get_doctors_list(request):
                 'coords': doctor_main.coords,
                 'average_price': average_price,
                 'count_meeting': count_meeting,
-                'meet': meet,
-                'patients': patients,
-
+                'meet': meet[:-2],
+                'patients': patients[:-2],
+                'button': button,
             }
 
             doctors.append(_doctor)

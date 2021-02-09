@@ -57,6 +57,7 @@ $(document).ready(function(){
                                 let average_price = mapEl[key]['average_price'];
                                 let meet = mapEl[key]['meet'];
                                 let patients = mapEl[key]['patients'];
+                                let button = mapEl[key]['button'];
                                 let objects = new ymaps.Placemark(coords);
 
                                 let content = '';
@@ -76,7 +77,7 @@ $(document).ready(function(){
                                         content += '<p class="doctor-map-count-meeting">Всего записались ' + count_meeting + ' чел.</p>';
                                         content += '<p class="doctor-map-patients"><strong>Специализация:</strong> ' + patients + '</p>';
                                         content += '<p class="doctor-map-meet"><strong>Прием:</strong> ' + meet + '</p>';
-                                        content += '<div class="appointment appointment-btn set-doctor-id show-modal" doctor-id="' + doctor_id + '">Записаться на прием</div>';
+                                        content += button;
                                     content += '</div>';
 
                                 content += '</div>';
@@ -113,8 +114,8 @@ $(document).ready(function(){
 
         action: function(){
             $('.registry').on('submit', registry.send);
-            $('.set-doctor-id').on('click', registry.setID);
-            $('.appointment').on('click', registry.show);
+            $('body').on('click', '.set-doctor-id', registry.setID);
+            $('body').on('click', '.appointment', registry.show);
             $('body').on('change', '.service-list', registry.getService);
             $('body').on('change', '.app-time', registry.setTimeEnd);
         },
@@ -390,8 +391,8 @@ $(document).ready(function(){
     let modal = {
 
        action: function(){
-            $('.show-modal').on('click', modal.show);
-            $('.hide-modal').on('click', modal.hide);
+            $('body').on('click', '.show-modal', modal.show);
+            $('body').on('click', '.hide-modal', modal.hide);
        },
 
        show: function(){

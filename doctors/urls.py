@@ -11,6 +11,7 @@ urlpatterns = [
     path('reject_meeting/', views.reject_meeting, name='reject_meeting'),
     path('archive_meeting/', views.archive_meeting, name='archive_meeting'),
     path('update_meeting/', views.update_meeting, name='update_meeting'),
+    path('detail/<slug:slug>/', views.doctor_detail_view, name='doctor_detail'),
     path('map/', views.doctors_map_all_view, name='doctors_map_all'),
     path('map/<slug:slug>/', views.doctors_map_view, name='doctors_map'),
     path('list/', views.doctors_list_all_view, name='doctors_list_all'),

@@ -109,6 +109,14 @@ def profile_page_view(request):
             data.update({'articles': articles})
             return render(request, 'profile/articles.html', data)
 
+        if request.path == '/profile/reviews/':
+            if request.user.groups.filter(name='users').exists():
+                doctor_id = request.GET['doctor_id']
+                data.update({'doctor_id': doctor_id})
+                return render(request, 'profile/reviews.html', data)
+            else:
+                return render(request, 'errs/404.html')
+
     else:
         return redirect('login')
 

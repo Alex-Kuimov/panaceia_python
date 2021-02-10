@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone
 from django.contrib.auth.models import User
 
 
@@ -44,3 +45,20 @@ class Calendar(models.Model):
     class Meta:
         verbose_name = 'График работы'
         verbose_name_plural = 'Графики работы'
+
+
+class Review(models.Model):
+    title = models.CharField(blank=True, max_length=100, verbose_name='Заголовок')
+    text = models.TextField(blank=True, max_length=3000, verbose_name='Текст Отзыва')
+    doctor_id = models.IntegerField(blank=True, verbose_name='Доктор', default=1)
+    user_id = models.IntegerField(blank=True, verbose_name='Пациент', default=1)
+    star_prof = models.IntegerField(blank=True, verbose_name='Профессионализм', default=0)
+    star_pers = models.IntegerField(blank=True, verbose_name='Личные качества', default=0)
+    date = models.DateTimeField(verbose_name='Создан', default=timezone.now)
+
+    def __str__(self):
+        return self.title
+
+    class Meta:
+        verbose_name = 'Отзыв'
+        verbose_name_plural = 'Отзывы'

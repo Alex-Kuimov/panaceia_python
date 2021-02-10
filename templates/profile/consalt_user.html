@@ -22,13 +22,17 @@
                     <p>Вы записанны на прием к врачу в {{meeting.time_start}} {{meeting.date}}</p>
                     <h5>{{meeting.doctor.fio}}</h5>
                     <p>{{meeting.specialty}}</p>
-                    <a href="#">Посмотреть профиль специалиста</a>
+                    <a href="{% url 'doctor_detail' slug=meeting.doctor_id %}">Посмотреть профиль специалиста</a>
 
                     {% if meeting.status == 'new' %}
                         <a href="{% url 'reject_meeting' %}?meeting_id={{meeting.id}}">Отказаться</a>
                     {% endif %}
 
-                    <p>Статус: {{ meeting.status }}</p>
+                    {% if meeting.status == 'success' %}
+                        <a href="{% url 'user_profile_reviews' %}?doctor_id={{meeting.doctor_id}}">Оставить отзыв</a>
+                    {% endif %}
+
+                    <p>Статус: {{ meeting.status_title }}</p>
                 </div>
             </div>
 

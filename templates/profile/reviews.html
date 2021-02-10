@@ -1,0 +1,33 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+{% load static %}
+
+<div class="col-md-9 px-4">
+    <div class="row">
+        <div class="col-md-12 block-info">
+            <h4>Оставить отзыв</h4>
+            <div class="line"></div>
+
+            <p>Профессионализм:</p>
+            <div class="star-rate star-prof" data-rate-value=0></div>
+            <p>Личные качества:</p>
+            <div class="star-rate star-pers" data-rate-value=0></div>
+
+            <form class="row" action="#" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="col-md-12 block-form">
+                    <input type="hidden" id="star-prof" name="star-prof" value="0">
+                    <input type="hidden" id="star-pers" name="star-pers" value="0">
+
+                    <input type="hidden" name="doctor-id" value="{{doctor_id}}">
+                    <input type="hidden" name="user-id" value="{{user.id}}">
+                    <textarea name="message" rows="8" cols="80" placeholder="* Текст сообщения"></textarea>
+                    <button type="submit" name="button">Отправить</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -349,3 +349,10 @@
     display: initial;
 }
 
+/*Star rate*/
+
+.star-rate{
+    font-size: 25px;
+    color: #ffc107;
+    padding-left: 10px;
+}

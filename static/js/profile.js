@@ -25,7 +25,6 @@ $(document).ready(function(){
     let countSeElement = 0;
 
     let profile = {
-
         action: function(){
             $('.remove-avatar').on('click', profile.removeAvatar);
             $('.doctor_chk').on('change', profile.typeSpecialty);
@@ -258,7 +257,6 @@ $(document).ready(function(){
            profile.dob();
            profile.cityAutocomplete();
         }
-
     }
 
     let userCalendar = {
@@ -568,9 +566,29 @@ $(document).ready(function(){
 
     }
 
+    let starRate = {
+        init: function(){
+            let optionsProf = {
+                max_value: 5,
+                step_size: 1,
+                update_input_field_name: $("#star-prof"),
+            }
+
+            let optionsPers = {
+                max_value: 5,
+                step_size: 1,
+                update_input_field_name: $("#star-pers"),
+            }
+
+            $('.star-prof').rate(optionsProf);
+            $('.star-pers').rate(optionsPers);
+        }
+    }
+
     profile.init();
     userCalendar.init();
     userTask.init();
     modal.init();
+    starRate.init();
 
 });

@@ -201,26 +201,28 @@ def get_meetings_list(meeting, spec, user_main, user_id):
         doctor_id = meeting.doctor_id
         specialty = ', '.join([str(i) for i in spec.objects.filter(content=doctor_id).order_by('?')[:4]])
 
-        status = ''
+        status_title = ''
 
         if meeting.status == 'new':
-            status = 'Новая'
+            status_title = 'Новая'
 
         if meeting.status == 'work':
-            status = 'В работе'
+            status_title = 'В работе'
 
         if meeting.status == 'success':
-            status = 'Выполнено'
+            status_title = 'Выполнено'
 
         _meeting = {
             'id': meeting.id,
             'date': meeting.date,
+            'doctor_id': doctor_id,
             'doctor': user_main.objects.filter(user=doctor_id).values('fio')[0],
             'image': user_main.objects.filter(user=doctor_id).values('avatar')[0],
             'time_start': str(meeting.time_start),
             'time_end': str(meeting.time_end),
             'specialty': specialty,
-            'status': status,
+            'status': meeting.status,
+            'status_title': status_title,
         }
 
         meetings.append(_meeting)

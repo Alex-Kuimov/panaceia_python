@@ -9,23 +9,41 @@
             <h4>Оставить отзыв</h4>
             <div class="line"></div>
 
-            <p>Профессионализм:</p>
-            <div class="star-rate star-prof" data-rate-value=0></div>
-            <p>Личные качества:</p>
-            <div class="star-rate star-pers" data-rate-value=0></div>
+            {% if form.errors %}
+                {% for key, value in form.errors.items %}
+                    <div class="error-wrap">
+                        {% if key == 'star_prof' %}
+                            Профессионализм {{value}}
+                        {% endif %}
 
-            <form class="row" action="#" method="POST" enctype="multipart/form-data">
+                        {% if key == 'star_pers' %}
+                            Личные качества  {{value}}
+                        {% endif %}
+
+                        {% if key == 'text' %}
+                            Текст отзыва  {{value}}
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            <p>Профессионализм:</p>
+            <div class="star-rate star-prof" data-rate-value="{{form.star_prof.value}}"></div>
+            <p>Личные качества:</p>
+            <div class="star-rate star-pers" data-rate-value="{{form.star_pers.value}}"></div>
+
+            <form class="row" action="{% url 'save_review_view' %}" method="POST" enctype="multipart/form-data">
                 {% csrf_token %}
                 <div class="col-md-12 block-form">
-                    <input type="hidden" id="star-prof" name="star-prof" value="0">
-                    <input type="hidden" id="star-pers" name="star-pers" value="0">
-
-                    <input type="hidden" name="doctor-id" value="{{doctor_id}}">
-                    <input type="hidden" name="user-id" value="{{user.id}}">
-                    <textarea name="message" rows="8" cols="80" placeholder="* Текст сообщения"></textarea>
+                    <input type="hidden" id="star-prof" name="star_prof" value="{{form.star_prof.value}}">
+                    <input type="hidden" id="star-pers" name="star_pers" value="{{form.star_pers.value}}">
+                    <input type="hidden" name="doctor_id" value="{{doctor_id}}">
+                    <input type="hidden" name="user_id" value="{{user.id}}">
+                    <textarea name="text" rows="8" cols="80" placeholder="* Текст отзыва" required></textarea>
                     <button type="submit" name="button">Отправить</button>
                 </div>
             </form>
+
         </div>
     </div>
 </div>

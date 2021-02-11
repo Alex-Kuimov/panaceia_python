@@ -1,9 +1,8 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from django.db.models import F
-
 from .models import UserMain, UserDoctor, Document
+from doctors.models import Review
 
 
 class SignUpForm(UserCreationForm):
@@ -105,3 +104,37 @@ class DocumentForm(forms.ModelForm):
     class Meta:
         model = Document
         fields = ['doc_name', 'doc_file']
+
+
+class ReviewForm(forms.ModelForm):
+    title = forms.CharField(
+        min_length=3,
+        max_length=100,
+        required=False,
+        label='Заголовок',
+    )
+
+    star_prof = forms.IntegerField(
+        min_value=1,
+        max_value=5,
+        required=True,
+        label='Профессионализм'
+    )
+
+    star_pers = forms.IntegerField(
+        min_value=1,
+        max_value=5,
+        required=True,
+        label='Личные качества'
+    )
+
+    text = forms.CharField(
+        min_length=3,
+        max_length=3000,
+        required=True,
+        label='Текст Отзыва',
+    )
+
+    class Meta:
+        model = Review
+        fields = ['title', 'text', 'star_prof', 'star_pers']

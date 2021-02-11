@@ -4,14 +4,15 @@ from .models import UserMain, UserDoctor, User, Specialty, Associations, Educati
 from django.urls import reverse
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import authenticate, login, logout
-from .forms import SignUpForm, UserMainForm, UserDoctorForm, DocumentForm
+from .forms import SignUpForm, UserMainForm, UserDoctorForm, DocumentForm, ReviewForm
 from django.contrib.auth.models import Group, User
 from blog.models import Article
-from doctors.models import Meeting
+from doctors.models import Meeting, Review
 from .utility import OneInputField, TwoInputField, ThreeInputField, CheckboxField, get_task, get_meetings_list, get_contact_list
 from django.contrib.auth.decorators import login_required
 from django.core.mail import EmailMessage
 from django.conf import settings
+from django.utils import timezone
 
 
 def home(request):
@@ -410,6 +411,12 @@ def save_consalt_success(request):
 
 
 @login_required
+def save_review_success(request):
+    user_profile = UserMain.objects.get(user=request.user)
+    return render(request, 'profile/success_review.html', {'user_profile': user_profile})
+
+
+@login_required
 def get_task_view(request):
     user_profile = UserMain.objects.get(user=request.user)
     user_doctor = UserDoctor.objects.get(user=request.user)
@@ -430,6 +437,38 @@ def get_task_view(request):
 
     if request.user.groups.filter(name='doctors').exists():
         return render(request, 'profile/consalt_doctor.html', data)
+
+
+@login_required
+def save_review_view(request):
+    if request.method == 'POST':
+        form = ReviewForm(request.POST)
+
+        doctor_id = request.POST['doctor_id']
+        user_id = request.POST['user_id']
+
+        if form.is_valid():
+
+            title = 'Отзыв'
+            text = request.POST['text']
+            star_prof = request.POST['star_prof']
+            star_pers = request.POST['star_pers']
+
+            review = Review.objects.create(
+                title=title,
+                text=text,
+                doctor_id=doctor_id,
+                user_id=user_id,
+                star_prof=star_prof,
+                star_pers=star_pers,
+            )
+            review.save()
+
+            return HttpResponseRedirect(reverse('save_review_success'))
+
+        else:
+            user_profile = UserMain.objects.get(user=request.user)
+            return render(request, 'profile/reviews.html', {'user_profile': user_profile, 'form': form, 'doctor_id': doctor_id, 'user_id': user_id})
 
 
 def error_404(request, exception):

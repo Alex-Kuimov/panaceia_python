@@ -2,6 +2,7 @@ from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import User
 
+
 class Article(models.Model):
     title = models.CharField(blank=True, max_length=100, verbose_name='Заголовок')
     text = models.TextField(blank=True, max_length=10000, verbose_name='Текст')

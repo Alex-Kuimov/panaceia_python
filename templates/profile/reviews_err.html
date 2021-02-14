@@ -1,0 +1,25 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+{% load static %}
+
+<div class="col-md-9 px-4">
+    <div class="row">
+        <div class="col-md-12 block-info">
+            <h4>Оставить отзыв</h4>
+            <div class="line"></div>
+            <p>Вы уже оставили отзыв для этого доктора!</p>
+
+            {% for review in reviews %}
+                <p>Профессионализм:</p>
+                <div class="star-rate star-prof" data-rate-value="{{review.star_prof}}" style="pointer-events: none"></div>
+                <p>Личные качества:</p>
+                <div class="star-rate star-pers" data-rate-value="{{review.star_pers}}" style="pointer-events: none"></div>
+                <p>Текст отзыва:</p>
+                <p>{{review.text}}</p>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+{% endblock %}

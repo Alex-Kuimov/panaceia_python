@@ -35,11 +35,11 @@
             <form class="row" action="{% url 'save_review_view' %}" method="POST" enctype="multipart/form-data">
                 {% csrf_token %}
                 <div class="col-md-12 block-form">
-                    <input type="hidden" id="star-prof" name="star_prof" value="{{form.star_prof.value}}">
-                    <input type="hidden" id="star-pers" name="star_pers" value="{{form.star_pers.value}}">
+                    <input type="hidden" name="star_prof" id="star-prof" value="{{form.star_prof.value}}">
+                    <input type="hidden" name="star_pers"  id="star-pers" value="{{form.star_pers.value}}">
                     <input type="hidden" name="doctor_id" value="{{doctor_id}}">
                     <input type="hidden" name="user_id" value="{{user.id}}">
-                    <textarea name="text" rows="8" cols="80" placeholder="* Текст отзыва" required></textarea>
+                    <textarea name="text" rows="8" cols="80" placeholder="* Текст отзыва" required>{{form.text.value}}</textarea>
                     <button type="submit" name="button">Отправить</button>
                 </div>
             </form>

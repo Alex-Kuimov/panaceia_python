@@ -58,6 +58,7 @@ $(document).ready(function(){
                                 let meet = mapEl[key]['meet'];
                                 let patients = mapEl[key]['patients'];
                                 let button = mapEl[key]['button'];
+                                let reviews_count = mapEl[key]['reviews_count'];
                                 let objects = new ymaps.Placemark(coords);
 
                                 let content = '';
@@ -66,6 +67,7 @@ $(document).ready(function(){
                                     content += '<div class="doctor-map-left">';
                                         content += '<img src="'+ siteUrl +'/'+ avatar +'" class="doctor-map-image">';
                                         content += '<p class="doctor-map-price">' + average_price + ' руб.</p>';
+                                        content += '<p class="doctor-map-reviews">' + reviews_count + '</p>';
                                     content += '</div>';
 
                                     content += '<div class="doctor-map-right">';

@@ -1,6 +1,6 @@
 from django.core.mail import EmailMessage
 from userprofile.models import User, UserMain, UserDoctor, Service, Specialty, SpecialtyList
-from doctors.models import Meeting, Calendar
+from doctors.models import Meeting, Calendar, Review
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.conf import settings
 
@@ -106,6 +106,8 @@ def get_doctor_list(request, slug):
         if doctor.meet_offline:
             meet = meet + 'offline, '
 
+        reviews_count = get_count_reviews(Review, user.id)
+
         _doctor = {
             'id': user.id,
             'fio': doctor_main.fio,
@@ -121,6 +123,7 @@ def get_doctor_list(request, slug):
             'patient_children': doctor.patient_children,
             'patients': patients[:-2],
             'meet': meet[:-2],
+            'reviews_count': reviews_count,
         }
 
         doctors.append(_doctor)
@@ -136,3 +139,13 @@ def get_doctor_list(request, slug):
     }
 
     return data
+
+
+def get_count_reviews(review, doctor_id):
+    reviews = review.objects.filter(doctor_id=doctor_id)
+    reviews_dic = ['отзыв', 'отзыва', 'отзывов']
+    reviews_count = len(reviews)
+    reviews_text = decl_of_num(reviews_count, reviews_dic)
+    reviews_result = str(reviews_count) + ' ' + reviews_text
+
+    return reviews_result

@@ -113,8 +113,15 @@ def profile_page_view(request):
         if request.path == '/profile/reviews/':
             if request.user.groups.filter(name='users').exists():
                 doctor_id = request.GET['doctor_id']
-                data.update({'doctor_id': doctor_id})
-                return render(request, 'profile/reviews.html', data)
+                user_id = request.user.id
+                reviews = Review.objects.filter(user_id=user_id, doctor_id=doctor_id)
+
+                if len(reviews) < 1:
+                    data.update({'doctor_id': doctor_id})
+                    return render(request, 'profile/reviews.html', data)
+                else:
+                    data.update({'reviews': reviews})
+                    return render(request, 'profile/reviews_err.html', data)
             else:
                 return render(request, 'errs/404.html')
 
@@ -448,7 +455,6 @@ def save_review_view(request):
         user_id = request.POST['user_id']
 
         if form.is_valid():
-
             title = 'Отзыв'
             text = request.POST['text']
             star_prof = request.POST['star_prof']

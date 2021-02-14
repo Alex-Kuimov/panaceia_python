@@ -3,8 +3,8 @@ from datetime import datetime
 from django.shortcuts import render
 from django.http import HttpResponse, Http404, HttpResponseRedirect
 from userprofile.models import UserMain, UserDoctor, User, Service, Specialty, SpecialtyList
-from .models import Meeting, Calendar
-from .utility import decl_of_num, send_notify, get_email, get_doctor_list
+from .models import Meeting, Calendar, Review
+from .utility import decl_of_num, send_notify, get_email, get_doctor_list, get_count_reviews
 from django.views.decorators.csrf import requires_csrf_token
 from django.urls import reverse
 from django.shortcuts import get_list_or_404, get_object_or_404
@@ -178,6 +178,8 @@ def get_doctors_list(request):
             if doctor.meet_offline:
                 meet = meet + 'offline, '
 
+            reviews_count = get_count_reviews(Review, user.id)
+
             button = ''
             if request.user.is_authenticated:
                 if request.user.groups.filter(name='users').exists():
@@ -200,6 +202,7 @@ def get_doctors_list(request):
                 'meet': meet[:-2],
                 'patients': patients[:-2],
                 'button': button,
+                'reviews_count': reviews_count
             }
 
             doctors.append(_doctor)

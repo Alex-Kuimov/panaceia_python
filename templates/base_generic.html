@@ -32,7 +32,7 @@
                             {{user_profile.fio}}
 
                             {% if user_profile.avatar != '' %}
-                                <img style="width:32px; height: 32px; padding:5px auto; object-fit: cover; border-radius:100px;" src="/media/{{user_profile.avatar}}" alt="">
+                                <img style="width:32px; height: 32px; padding:5px auto; object-fit: cover; border-radius:100px;" src="{{user_profile.avatar.url}}" alt="">
                             {% else %}
                                 <img style="width:32px; height: 32px; padding:5px auto; object-fit: cover; border-radius:100px;" src="{% static 'img/user.png' %}" alt="">
                             {% endif %}
@@ -60,6 +60,7 @@
                             <li><a href="{% url 'user_profile_grafik' %}">График работы</a></li>
                             <li><a href="{% url 'user_profile_consalt_doctor' %}">Консультации</a></li>
                             <li><a href="{% url 'user_profile_contact_user' %}">Список контактов</a></li>
+                            <li><a href="{% url 'user_profile_reviews' %}">Отзывы</a></li>
                             <li><a href="{% url 'user_profile_recomend' %}">Рекомендации</a></li>
                             <li><a href="{% url 'user_profile_videos' %}">Видеолекции</a></li>
                             <li><a href="{% url 'user_profile_articles' %}">Статьи</a></li>

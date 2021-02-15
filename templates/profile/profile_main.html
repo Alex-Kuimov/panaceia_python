@@ -32,7 +32,7 @@
                     <div class="col-md-3 central avatar">
 
                         {% if user_profile.avatar != '' %}
-                            <img src="/media/{{user_profile.avatar}}" alt="" class="avatar_image">
+                            <img src="{{user_profile.avatar.url}}" alt="" class="avatar_image">
                         {% else %}
                             <img src="{% static 'img/user.png' %}" alt="" class="avatar_image">
                         {% endif %}
@@ -312,7 +312,7 @@
                                 <div class="row">
                                     <div class="col-4">
                                         {% if documents.image != '' %}
-                                            <img src="/media/{{documents.image}}" alt="">
+                                            <img src="{{documents.image.url}}" alt="">
                                         {% else %}
                                             <img src="{% static 'img/foto.png' %}" alt="">
                                         {% endif %}

@@ -13,6 +13,7 @@ class Meeting(models.Model):
     service_id = models.IntegerField(blank=True, verbose_name='Услуга', default=1)
     sort_id = models.IntegerField(blank=True, verbose_name='Индекс сортитровки', default=1)
     email_notify = models.BooleanField(blank=True, verbose_name='Уведомление на почту', default=0)
+    review_notify = models.BooleanField(blank=True, verbose_name='Оставить отзыв', default=0)
 
     status_list = [
         ('new', 'Новая'),
@@ -25,7 +26,7 @@ class Meeting(models.Model):
     status = models.CharField(blank=True, null=True, max_length=11, choices=status_list, verbose_name='Статус')
 
     def __str__(self):
-        return self.title
+        return self.title + ' - doctor_id: ' + str(self.doctor_id) + ' - user_id: ' + str(self.user_id)
 
     class Meta:
         verbose_name = 'Консультация'
@@ -57,7 +58,7 @@ class Review(models.Model):
     date = models.DateTimeField(verbose_name='Создан', default=timezone.now)
 
     def __str__(self):
-        return self.title
+        return self.title + ' - doctor_id: ' + str(self.doctor_id) + ' - user_id: ' + str(self.user_id)
 
     class Meta:
         verbose_name = 'Отзыв'

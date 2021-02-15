@@ -6,20 +6,22 @@
 <div class="col-md-9 px-4">
     <div class="row">
         <div class="col-md-12 block-info">
-            <h4>Оставить отзыв</h4>
+            <h4>Отзывы</h4>
             <div class="line"></div>
-            <p>{{txt}}</p>
-
             {% for review in reviews %}
-               <div class="review-item">
+                <div class="review-item">
+                    <p><strong>Имя:</strong> {{ review.user.fio }}</p>
+
                     <div class="star-wrap">
                         <p>Профессионализм:</p>
                         <div class="star-rate star-prof" data-rate-value="{{review.star_prof}}" style="pointer-events: none"></div>
                     </div>
+
                     <div class="star-wrap">
                         <p>Личные качества:</p>
                         <div class="star-rate star-pers" data-rate-value="{{review.star_pers}}" style="pointer-events: none"></div>
                     </div>
+
                     <p><strong>Текст отзыва:</strong> {{ review.text }}</p>
                 </div>
             {% endfor %}

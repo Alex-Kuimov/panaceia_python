@@ -369,3 +369,26 @@
     color: #ffc107;
     padding-left: 10px;
 }
+
+/*Reviews*/
+
+.review-item{
+    margin-top: 15px;
+    margin-bottom: 15px;
+    padding: 5px;
+    border: 1px solid #d0e3e8;
+}
+
+.review-item p{
+    margin:0px;
+    padding: 8px;
+}
+
+.review-item strong{
+    font-weight: 600;
+}
+
+.review-item .star-wrap{
+    display: flex;
+    align-items: center;
+}

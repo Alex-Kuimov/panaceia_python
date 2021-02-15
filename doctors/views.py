@@ -8,7 +8,7 @@ from .utility import decl_of_num, send_notify, get_email, get_doctor_list, get_c
 from django.views.decorators.csrf import requires_csrf_token
 from django.urls import reverse
 from django.shortcuts import get_list_or_404, get_object_or_404
-
+from django.conf import settings
 
 
 def doctors_map_all_view(request):
@@ -148,9 +148,9 @@ def get_doctors_list(request):
                 experience = ''
 
             if doctor_main.avatar != '':
-                avatar = 'media/' + str(doctor_main.avatar)
+                avatar = str(doctor_main.avatar.url)
             else:
-                avatar = 'medicsite/static/img/user.png'
+                avatar = '/medicsite/static/img/user.png'
 
             count_meeting = len(Meeting.objects.filter(doctor_id=user.id))
 
@@ -545,7 +545,9 @@ def update_meeting(request):
                 meeting = Meeting.objects.filter(pk=id)
                 meeting.update(status=status, sort_id=sort)
                 user_id = meeting.values('user_id')[0]['user_id']
+                doctor_id = meeting.values('doctor_id')[0]['doctor_id']
                 email_notify = meeting.values('email_notify')[0]['email_notify']
+                review_notify = meeting.values('review_notify')[0]['review_notify']
 
                 if status == 'work' and email_notify != 1:
                     subject = 'Запись на консультацию успешно подтверждена'
@@ -553,6 +555,13 @@ def update_meeting(request):
                     to = get_email(user_id)
                     send_notify(to, text, subject)
                     meeting.update(email_notify=1)
+
+                if status == 'success' and review_notify != 1:
+                    subject = 'Консультация завершена.'
+                    text = '<p>Консультация #' + id + ' завершена. Оставить <a href="' + settings.SITE_URL + '/profile/reviews/?doctor_id=' + str(doctor_id) + '">отзыв</a></p>'
+                    to = get_email(user_id)
+                    send_notify(to, text, subject)
+                    meeting.update(review_notify=1)
 
             result = 'ok'
         else:

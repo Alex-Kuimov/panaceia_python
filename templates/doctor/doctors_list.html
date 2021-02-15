@@ -89,7 +89,7 @@
 
                                                 {% if doctor.avatar != '' %}
                                                     <div class="avatar-doctor">
-                                                        <a href="{% url 'doctor_detail' slug=doctor.id %}"><img src="/media/{{doctor.avatar}}" alt=""></a>
+                                                        <a href="{% url 'doctor_detail' slug=doctor.id %}"><img src="{{doctor.avatar.url}}" alt=""></a>
                                                     </div>
                                                 {% else %}
                                                     <div class="avatar-doctor">
@@ -102,9 +102,11 @@
                                                 </div>
                                                 <div class="rating-profi">
                                                     Профессионализм
+                                                    <div class="star-rate star-prof" data-rate-value="{{ doctor.star_prof }}" style="pointer-events: none"></div>
                                                 </div>
                                                 <div class="rating-qualities">
                                                     Личные качества
+                                                    <div class="star-rate star-pers" data-rate-value="{{ doctor.star_pers }}" style="pointer-events: none"></div>
                                                 </div>
                                             </div>
                                             <div class="col-4 info-doctor">

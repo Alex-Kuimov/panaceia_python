@@ -106,7 +106,10 @@ def get_doctor_list(request, slug):
         if doctor.meet_offline:
             meet = meet + 'offline, '
 
-        reviews_count = get_count_reviews(Review, user.id)
+        reviews_count_txt = get_count_reviews(Review, user.id)
+
+        star_prof = get_star_prof(Review, user.id)
+        star_pers = get_star_pers(Review, user.id)
 
         _doctor = {
             'id': user.id,
@@ -121,9 +124,11 @@ def get_doctor_list(request, slug):
             'count_meeting': count_meeting,
             'patient_grown': doctor.patient_grown,
             'patient_children': doctor.patient_children,
+            'star_prof': str(star_prof),
+            'star_pers': str(star_pers),
             'patients': patients[:-2],
             'meet': meet[:-2],
-            'reviews_count': reviews_count,
+            'reviews_count': reviews_count_txt,
         }
 
         doctors.append(_doctor)
@@ -149,3 +154,33 @@ def get_count_reviews(review, doctor_id):
     reviews_result = str(reviews_count) + ' ' + reviews_text
 
     return reviews_result
+
+
+def get_star_prof(review, doctor_id):
+    prof = 0
+    review_object_list = review.objects.filter(doctor_id=doctor_id)
+
+    for review in review_object_list:
+        prof = prof + review.star_prof
+
+    if len(review_object_list) > 0:
+        star_prof = round(prof / len(review_object_list))
+    else:
+        star_prof = 0
+
+    return star_prof
+
+
+def get_star_pers(review, doctor_id):
+    pers = 0
+    review_object_list = review.objects.filter(doctor_id=doctor_id)
+
+    for review in review_object_list:
+        pers = pers + review.star_pers
+
+    if len(review_object_list) > 0:
+        star_pers = round(pers / len(review_object_list))
+    else:
+        star_pers = 0
+
+    return star_pers

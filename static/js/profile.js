@@ -54,7 +54,7 @@ $(document).ready(function(){
         },
 
         removeAvatar: function(){
-            let userNoneImg = '/static/img/user.png'
+            let userNoneImg = '/medicsite/static/img/user.png'
             $('.avatar_image').attr('src', userNoneImg);
             $('.avatar_none').val('y');
 

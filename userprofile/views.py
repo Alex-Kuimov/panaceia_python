@@ -115,15 +115,36 @@ def profile_page_view(request):
                 doctor_id = request.GET['doctor_id']
                 user_id = request.user.id
                 reviews = Review.objects.filter(user_id=user_id, doctor_id=doctor_id)
+                meetings = Meeting.objects.filter(user_id=user_id, doctor_id=doctor_id)
+
+                if len(meetings) == 0:
+                    txt = 'Вы не можете оставить отзыв!'
+                    data.update({'reviews': reviews, 'txt': txt})
+                    return render(request, 'profile/reviews_err.html', data)
 
                 if len(reviews) < 1:
                     data.update({'doctor_id': doctor_id})
                     return render(request, 'profile/reviews.html', data)
                 else:
-                    data.update({'reviews': reviews})
+                    txt = 'Вы уже оставили отзыв для этого доктора!'
+                    data.update({'reviews': reviews, 'txt': txt})
                     return render(request, 'profile/reviews_err.html', data)
             else:
-                return render(request, 'errs/404.html')
+                doctor_id = request.user.id
+                reviews = list()
+                review_object_list = Review.objects.filter(doctor_id=doctor_id)
+
+                for review in review_object_list:
+                    _review = {
+                        'user': UserMain.objects.filter(user=review.user_id).values('fio')[0],
+                        'star_prof': review.star_prof,
+                        'star_pers': review.star_pers,
+                        'text': review.text,
+                    }
+                    reviews.append(_review)
+
+                data.update({'reviews': reviews})
+                return render(request, 'profile/reviews_list.html', data)
 
     else:
         return redirect('login')

@@ -1,6 +1,7 @@
 from django.urls import path
 from . import views
 from django.contrib.auth import views as authViews
+from blog import views as blog_views
 
 urlpatterns = [
     path('', views.home, name='home'),
@@ -19,6 +20,9 @@ urlpatterns = [
     path('profile/articles/', views.profile_page_view, name='user_profile_articles'),
     path('profile/reviews/', views.profile_page_view, name='user_profile_reviews'),
     path('profile/consalt_doctor/', views.get_task_view, name='user_profile_consalt_doctor'),
+    path('profile/article_edit/<slug:slug>/', blog_views.edit_article_view, name='edit_article'),
+    path('profile/article_add/', blog_views.add_article_view, name='add_article'),
+    path('save_article_success', blog_views.save_article_success, name='save_article_success'),
     path('save_main_data', views.save_main_data, name='save_main_data'),
     path('save_doctor_data', views.save_doctor_data, name='save_doctor_data'),
     path('change_user_pass', views.change_user_pass, name='change_user_pass'),

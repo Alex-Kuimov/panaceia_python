@@ -29,8 +29,6 @@ $(document).ready(function(){
                     let siteUrl = window.location.origin;
                     let slug = $('#doctor-map').attr('data-slug');
 
-                    console.log(slug);
-
                     let map = new ymaps.Map('doctor-map', {
                         center: [0, 0],
                         zoom: 12,
@@ -65,7 +63,7 @@ $(document).ready(function(){
                                 content += '<div class="doctor-map-content">';
 
                                     content += '<div class="doctor-map-left">';
-                                        content += '<img src="'+ siteUrl +'/'+ avatar +'" class="doctor-map-image">';
+                                        content += '<img src="'+ avatar +'" class="doctor-map-image">';
                                         content += '<p class="doctor-map-price">' + average_price + ' руб.</p>';
                                         content += '<p class="doctor-map-reviews">' + reviews_count + '</p>';
                                     content += '</div>';

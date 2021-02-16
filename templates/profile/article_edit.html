@@ -1,0 +1,26 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+{% load static %}
+
+<div class="col-md-9 px-4">
+    <div class="row">
+        <div class="col-md-12 block-info">
+            <div class="row">
+                <div class="col-md-5">
+                    <h4>Редактирование статьи</h4>
+                </div>
+            </div>
+            <div class="line"></div>
+            <div class="row">
+                <form action="" class="edit-article-form" method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {{ form }}
+                    <button type="submit" name="button">Сохранить изменения</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

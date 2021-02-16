@@ -55,19 +55,20 @@ def profile_page_view(request):
         # pages
         if request.path == '/profile/consalt_user/':
             meetings = get_meetings_list(Meeting, Specialty, UserMain, request.user.id)
+            data.update({'title': 'Консультации'})
             data.update({'meetings': meetings})
 
         if request.path == '/profile/grafik/':
             if request.user.groups.filter(name='doctors').exists():
+                data.update({'title': 'График'})
                 return render(request, 'profile/grafik.html', data)
             else:
                 return render(request, 'errs/404.html')
 
         if request.path == '/profile/contact_user/':
             if request.user.groups.filter(name='doctors').exists():
-
                 contact_list = get_contact_list(Meeting, UserMain, User, request.user.id)
-
+                data.update({'title': 'Контакты'})
                 data.update({'contact_list': contact_list})
 
                 return render(request, 'profile/contact_user.html', data)
@@ -75,9 +76,11 @@ def profile_page_view(request):
                 return render(request, 'errs/404.html')
 
         if request.path == '/profile/info/':
+            data.update({'title': 'Актуальное'})
             return render(request, 'profile/profile.html', data)
 
         if request.path == '/profile/main/':
+            data.update({'title': 'Профиль'})
             doctor_data = {
                 'user_doctor': user_doctor,
                 'user_spec': user_spec,
@@ -95,22 +98,28 @@ def profile_page_view(request):
             return render(request, 'profile/profile_main.html', data)
 
         if request.path == '/profile/recomend/':
+            data.update({'title': 'Рекомендации'})
             return render(request, 'profile/recomend.html', data)
 
         if request.path == '/profile/consalt_user/':
+            data.update({'title': 'Консультации'})
             return render(request, 'profile/consalt_user.html', data)
 
         if request.path == '/profile/videos/':
+            data.update({'title': 'Видео'})
             return render(request, 'profile/videos.html', data)
 
         if request.path == '/profile/settings/':
+            data.update({'title': 'Настройки'})
             return render(request, 'profile/settings.html', data)
 
         if request.path == '/profile/articles/':
+            data.update({'title': 'Статьи'})
             data.update({'articles': articles})
             return render(request, 'profile/articles.html', data)
 
         if request.path == '/profile/reviews/':
+            data.update({'title': 'Отзывы'})
             if request.user.groups.filter(name='users').exists():
                 doctor_id = request.GET['doctor_id']
                 user_id = request.user.id
@@ -464,6 +473,7 @@ def get_task_view(request):
     }
 
     if request.user.groups.filter(name='doctors').exists():
+        data.update({'title': 'Консультации'})
         return render(request, 'profile/consalt_doctor.html', data)
 
 

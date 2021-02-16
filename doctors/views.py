@@ -4,7 +4,7 @@ from django.shortcuts import render
 from django.http import HttpResponse, Http404, HttpResponseRedirect
 from userprofile.models import UserMain, UserDoctor, User, Service, Specialty, SpecialtyList
 from .models import Meeting, Calendar, Review
-from .utility import decl_of_num, send_notify, get_email, get_doctor_list, get_count_reviews
+from .utility import decl_of_num, send_notify, get_email, get_doctor_list, get_count_reviews, get_star_prof, get_star_pers
 from django.views.decorators.csrf import requires_csrf_token
 from django.urls import reverse
 from django.shortcuts import get_list_or_404, get_object_or_404
@@ -148,9 +148,9 @@ def get_doctors_list(request):
                 experience = ''
 
             if doctor_main.avatar != '':
-                avatar = str(doctor_main.avatar.url)
+                avatar = settings.SITE_URL + '' + str(doctor_main.avatar.url)
             else:
-                avatar = '/medicsite/static/img/user.png'
+                avatar = settings.STATIC_URL + '/img/user.png'
 
             count_meeting = len(Meeting.objects.filter(doctor_id=user.id))
 
@@ -178,7 +178,10 @@ def get_doctors_list(request):
             if doctor.meet_offline:
                 meet = meet + 'offline, '
 
-            reviews_count = get_count_reviews(Review, user.id)
+            reviews_count_txt = get_count_reviews(Review, user.id)
+
+            star_prof = get_star_prof(Review, user.id)
+            star_pers = get_star_pers(Review, user.id)
 
             button = ''
             if request.user.is_authenticated:
@@ -202,7 +205,9 @@ def get_doctors_list(request):
                 'meet': meet[:-2],
                 'patients': patients[:-2],
                 'button': button,
-                'reviews_count': reviews_count
+                'reviews_count': reviews_count_txt,
+                'star_prof': star_prof,
+                'star_pers': star_pers,
             }
 
             doctors.append(_doctor)

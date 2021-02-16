@@ -9,32 +9,28 @@
             <div class="row">
                 <div class="col-md-5">
                     <h4>Список ваших статей</h4>
-                </div>
-            </div>
-            <div class="line"></div>
-            <div class="row">
-                <div class="col-md-12 central">
-                    <div class="central" >
-                        <img src="{% static 'img/icon_consalt.png' %}" alt=""> <br>
-                        <p>Здесь будут храниться статьи, которые вы добавили.</p>
-                        <input type="Вставить ссылку на видео в youtube">
-                    </div>
-                </div>
-           </div>
-            <div class="row">
-                <div class="col-md-5">
-                    <h4>Список ваших статей</h4>
+                    <a class="new-article" href="{% url 'add_article' %}">Добавить новую</a>
                 </div>
             </div>
             <div class="line"></div>
             <div class="row">
 
-                {%for article in articles %}
-                     <div class="col-md-6 youtube-block">
-                            <img src="/media/{{article.image}}" alt=""> <br>
-                            <p>{{ article.title }}</p>
-                     </div>
+                {% if articles == '' %}
+                    <p>Статей пока нет!</p>
+                {% endif %}
+
+                {% for article in articles %}
+                     <a href="{% url 'edit_article' slug=article.id %}" class="col-md-6 youtube-block">
+
+                         {% if article.image.url != '' %}
+                            <img src="{{article.image.url}}" alt=""><br>
+                         {% else %}
+                            <img src="{% static 'img/article.png' %}" alt=""><br>
+                         {% endif %}
+                         <p>{{ article.title }}</p>
+                     </a>
                 {% endfor %}
+
             </div>
         </div>
     </div>

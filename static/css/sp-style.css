@@ -422,4 +422,39 @@
     color: white;
     border: #36A672;
     margin: 20px 0px 20px 0px;
+    cursor: pointer;
+}
+
+.btn-remove {
+    width: 240px;
+    height: 50px;
+    background: #bb2d3b;
+    border-radius: 6px;
+    color: #fff!important;
+    border: #bb2d3b;
+    padding: 12px;
+}
+
+.btn-yes,
+.btn-no{
+    width: 75px;
+    height: 40px;
+    background: #36A672;
+    border-radius: 6px;
+    color: #fff!important;
+    border: #36A672;
+    padding: 8px;
+}
+
+.btn-no{
+    background: #bb2d3b;
+    border: #bb2d3b;
+}
+
+.msg-wrap{
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    width: 100%;
+    margin: 15px;
 }

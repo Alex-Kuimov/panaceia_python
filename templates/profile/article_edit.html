@@ -16,7 +16,10 @@
                 <form action="" class="edit-article-form" method="POST" enctype="multipart/form-data">
                     {% csrf_token %}
                     {{ form }}
-                    <button type="submit" name="button">Сохранить изменения</button>
+                    <div class="btn-wrap">
+                        <button type="submit" name="button">Сохранить изменения</button>
+                        <a href="{% url 'remove_article' slug=form.article_id.value %}" class="btn btn-remove">Удалить</a>
+                    </div>
                 </form>
             </div>
         </div>

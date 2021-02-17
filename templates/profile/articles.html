@@ -23,7 +23,7 @@
                      <a href="{% url 'edit_article' slug=article.id %}" class="col-md-6 youtube-block">
 
                          {% if article.image.url != '' %}
-                            <img src="{{article.image.url}}" alt=""><br>
+                            <img src="{{ article.image.url }}" alt=""><br>
                          {% else %}
                             <img src="{% static 'img/article.png' %}" alt=""><br>
                          {% endif %}

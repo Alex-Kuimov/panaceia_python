@@ -46,7 +46,7 @@ def profile_page_view(request):
         user_services = Service.objects.filter(content=request.user)
         user_documents = Document.objects.filter(content=request.user)
         timezone = TimeZone.objects.all()
-        articles = Article.objects.all()
+        articles = Article.objects.filter(user=request.user.id).order_by('id').reverse()
         specialty_list = SpecialtyList.objects.all()
 
         # create data

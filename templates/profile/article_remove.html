@@ -1,0 +1,29 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+{% load static %}
+
+<div class="col-md-9 px-4">
+    <div class="row">
+        <div class="col-md-12 block-info">
+            <div class="row">
+                <div class="col-md-5">
+                    <h4>Удаление статьи</h4>
+                </div>
+            </div>
+            <div class="line"></div>
+            <div class="row">
+                <div class="msg-wrap">
+                    <p>Вы действительно хотите удалить статью?</p>
+
+                    <div class="btn-wrap">
+                        <a href="{% url 'article_remove_success' slug=slug %}" class="btn btn-yes">Да</a>
+                        <a href="{% url 'user_profile_articles' %}" class="btn btn-no">Нет</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

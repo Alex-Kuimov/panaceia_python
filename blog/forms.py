@@ -24,6 +24,7 @@ class ArticleForm(forms.ModelForm):
     )
 
     user = forms.CharField(widget=forms.HiddenInput(), required=False)
+    article_id = forms.CharField(widget=forms.HiddenInput(), required=False)
 
     class Meta:
         model = Article

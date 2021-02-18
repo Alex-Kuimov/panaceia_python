@@ -18,6 +18,7 @@
                     {{ form }}
                     <div class="btn-wrap">
                         <button type="submit" name="button">Сохранить изменения</button>
+                        <a href="{% url 'article_change_status' slug=form.article_id.value %}" class="btn btn-moderation">Отправить на модерацию</a>
                         <a href="{% url 'remove_article' slug=form.article_id.value %}" class="btn btn-remove">Удалить</a>
                     </div>
                 </form>

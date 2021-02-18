@@ -18,7 +18,7 @@ def add_article_view(request):
             form.save()
             return HttpResponseRedirect(reverse('save_article_success'))
 
-    form = ArticleForm(request.POST or None, initial={'user': request.user.id})
+    form = ArticleForm(request.POST or None, initial={'user': request.user.id, 'status': 'new'})
 
     data = {
         'title': 'Добавить новую статью',
@@ -41,7 +41,7 @@ def edit_article_view(request, slug):
             form.save()
             return HttpResponseRedirect(reverse('save_article_success'))
 
-    form = ArticleForm(request.POST or None, instance=article, initial={'article_id': article.id})
+    form = ArticleForm(request.POST or None, instance=article, initial={'article_id': article.id, 'status': 'new'})
 
     data = {
         'title': 'Редактирование статьи',
@@ -71,10 +71,21 @@ def save_article_success(request):
     return render(request, 'profile/article_success.html', {'user_profile': user_profile})
 
 
+@login_required
 def article_remove_success(request, slug):
     article = Article.objects.get(id=slug)
 
     if request.user.id == article.user:
         article.delete()
+
+    return HttpResponseRedirect(reverse('user_profile_articles'))
+
+
+def article_change_status_view(request, slug):
+    article = Article.objects.get(id=slug)
+
+    if request.user.id == article.user:
+        article.status = 'review'
+        article.save()
 
     return HttpResponseRedirect(reverse('user_profile_articles'))

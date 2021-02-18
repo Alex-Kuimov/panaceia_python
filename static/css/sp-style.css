@@ -405,6 +405,7 @@
     flex-direction: column;
     width: 100%;
     margin: 15px;
+    height: 100%;
 }
 
 .edit-article-form textarea{
@@ -423,6 +424,16 @@
     border: #36A672;
     margin: 20px 0px 20px 0px;
     cursor: pointer;
+}
+
+.btn-moderation{
+    width: 240px;
+    height: 50px;
+    background: #36A672;
+    border-radius: 6px;
+    color: #fff!important;
+    border: #36A672;
+    padding: 12px;
 }
 
 .btn-remove {

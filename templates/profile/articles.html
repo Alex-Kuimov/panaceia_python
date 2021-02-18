@@ -28,6 +28,29 @@
                             <img src="{% static 'img/article.png' %}" alt=""><br>
                          {% endif %}
                          <p>{{ article.title }}</p>
+                         <p>Стаутс:
+
+                             {% if article.status == 'new' %}
+                                Новая
+                             {% endif %}
+
+                             {% if article.status == 'review' %}
+                                Рассмотрение
+                             {% endif %}
+
+                             {% if article.status == 'success' %}
+                                Выполнено
+                             {% endif %}
+
+                             {% if article.status == 'reject' %}
+                                Отказ
+                             {% endif %}
+
+                             {% if article.status == 'archive' %}
+                                Архив
+                             {% endif %}
+                         </p>
+
                      </a>
                 {% endfor %}
 

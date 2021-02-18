@@ -10,6 +10,16 @@ class Article(models.Model):
     date = models.DateTimeField(default=timezone.now, verbose_name='Дата')
     user = models.IntegerField(blank=True, verbose_name='Автор', default=1)
 
+    status_list = [
+        ('new', 'Новая'),
+        ('review', 'Рассмотрение'),
+        ('success', 'Выполнено'),
+        ('reject', 'Отказ'),
+        ('archive', 'Архив'),
+    ]
+
+    status = models.CharField(blank=True, null=True, max_length=11, choices=status_list, verbose_name='Статус')
+
     def __str__(self):
         return self.title
 

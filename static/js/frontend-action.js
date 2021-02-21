@@ -57,36 +57,40 @@ $(document).ready(function(){
                                 let patients = mapEl[key]['patients'];
                                 let button = mapEl[key]['button'];
                                 let reviews_count = mapEl[key]['reviews_count'];
-                                let objects = new ymaps.Placemark(coords);
 
-                                let content = '';
-                                content += '<div class="doctor-map-content">';
+                                if(coords != ''){
 
-                                    content += '<div class="doctor-map-left">';
-                                        content += '<img src="'+ avatar +'" class="doctor-map-image">';
-                                        content += '<p class="doctor-map-price">' + average_price + ' руб.</p>';
-                                        content += '<p class="doctor-map-reviews">' + reviews_count + '</p>';
+                                    let objects = new ymaps.Placemark(coords);
+
+                                    let content = '';
+                                    content += '<div class="doctor-map-content">';
+
+                                        content += '<div class="doctor-map-left">';
+                                            content += '<img src="'+ avatar +'" class="doctor-map-image">';
+                                            content += '<p class="doctor-map-price">' + average_price + ' руб.</p>';
+                                            content += '<p class="doctor-map-reviews">' + reviews_count + '</p>';
+                                        content += '</div>';
+
+                                        content += '<div class="doctor-map-right">';
+                                            content += '<p class="doctor-map-fio">' + fio + '</p>';
+                                            content += '<p class="doctor-map-specialty">' + specialty + '</p>';
+                                            content += '<p class="doctor-map-experience-years">' + experience_years + '</p>';
+                                            content += '<p class="doctor-map-phone-title">Телефон для записи</p>';
+                                            content += '<p class="doctor-map-phone">' + phone + '</p>';
+                                            content += '<p class="doctor-map-count-meeting">Всего записались ' + count_meeting + ' чел.</p>';
+                                            content += '<p class="doctor-map-patients"><strong>Специализация:</strong> ' + patients + '</p>';
+                                            content += '<p class="doctor-map-meet"><strong>Прием:</strong> ' + meet + '</p>';
+                                            content += button;
+                                        content += '</div>';
+
                                     content += '</div>';
 
-                                    content += '<div class="doctor-map-right">';
-                                        content += '<p class="doctor-map-fio">' + fio + '</p>';
-                                        content += '<p class="doctor-map-specialty">' + specialty + '</p>';
-                                        content += '<p class="doctor-map-experience-years">' + experience_years + '</p>';
-                                        content += '<p class="doctor-map-phone-title">Телефон для записи</p>';
-                                        content += '<p class="doctor-map-phone">' + phone + '</p>';
-                                        content += '<p class="doctor-map-count-meeting">Всего записались ' + count_meeting + ' чел.</p>';
-                                        content += '<p class="doctor-map-patients"><strong>Специализация:</strong> ' + patients + '</p>';
-                                        content += '<p class="doctor-map-meet"><strong>Прием:</strong> ' + meet + '</p>';
-                                        content += button;
-                                    content += '</div>';
+                                    objects.options.set('preset', 'islands#greenMedicalIcon');
+                                    objects.properties.set('iconCaption', fio);
+                                    objects.properties.set('balloonContentBody', content);
 
-                                content += '</div>';
-
-                                objects.options.set('preset', 'islands#greenMedicalIcon');
-                                objects.properties.set('iconCaption', fio);
-                                objects.properties.set('balloonContentBody', content);
-
-                                map.geoObjects.add(objects);
+                                    map.geoObjects.add(objects);
+                                }
                             }
 
                             map.setBounds(map.geoObjects.getBounds(), {

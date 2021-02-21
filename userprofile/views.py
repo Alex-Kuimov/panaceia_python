@@ -46,7 +46,6 @@ def profile_page_view(request):
         user_services = Service.objects.filter(content=request.user)
         user_documents = Document.objects.filter(content=request.user)
         timezone = TimeZone.objects.all()
-        articles = Article.objects.filter(user=request.user.id).order_by('id').reverse()
         specialty_list = SpecialtyList.objects.all()
 
         # create data
@@ -115,8 +114,13 @@ def profile_page_view(request):
 
         if request.path == '/profile/articles/':
             data.update({'title': 'Статьи'})
-            data.update({'articles': articles})
-            return render(request, 'profile/articles.html', data)
+
+            if request.user.groups.filter(name='doctors').exists():
+                articles = Article.objects.filter(user=request.user.id).order_by('id').reverse()
+                data.update({'articles': articles})
+                return render(request, 'profile/articles.html', data)
+            else:
+                return render(request, 'profile/articles_user.html', data)
 
         if request.path == '/profile/reviews/':
             data.update({'title': 'Отзывы'})

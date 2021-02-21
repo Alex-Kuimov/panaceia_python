@@ -1,0 +1,39 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+{% load static %}
+
+<div class="col-md-9 px-4">
+    <div class="row">
+        <div class="col-md-12 block-info">
+            <div class="row">
+                <div class="col-md-5">
+                    <h4>Список статей</h4>
+                </div>
+            </div>
+            <div class="line"></div>
+            <div class="row">
+
+                {% if articles == '' %}
+                    <p>Статей пока нет!</p>
+                {% endif %}
+
+                {% for article in articles %}
+                     <a href="#" class="col-md-6 youtube-block">
+
+                         {% if article.image.url != '' %}
+                            <img src="{{ article.image.url }}" alt=""><br>
+                         {% else %}
+                            <img src="{% static 'img/article.png' %}" alt=""><br>
+                         {% endif %}
+                         <p>{{ article.title }}</p>
+
+                     </a>
+                {% endfor %}
+
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

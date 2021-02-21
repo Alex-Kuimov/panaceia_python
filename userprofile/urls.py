@@ -4,7 +4,8 @@ from django.contrib.auth import views as authViews
 from blog import views as blog_views
 
 urlpatterns = [
-    path('', views.home, name='home'),
+    path('', views.home_view, name='home'),
+    path('blog/', views.blog_view, name='blog'),
     path('profile/signup_doctor/', views.signup_doctor_view, name="signup_doctor"),
     path('profile/logout/', views.logout_view, name='logout'),
     path('profile/login/', views.login_view, name='login'),
@@ -24,7 +25,6 @@ urlpatterns = [
     path('profile/article_add/', blog_views.add_article_view, name='add_article'),
     path('profile/article_remove/<slug:slug>/', blog_views.remove_article_view, name='remove_article'),
     path('profile/article_remove_success/<slug:slug>/', blog_views.article_remove_success, name='article_remove_success'),
-    path('profile/article_change_status/<slug:slug>/', blog_views.article_change_status_view, name='article_change_status'),
     path('profile/save_article_success/', blog_views.save_article_success, name='save_article_success'),
     path('profile/save_main_data/', views.save_main_data, name='save_main_data'),
     path('profile/save_doctor_data/', views.save_doctor_data, name='save_doctor_data'),

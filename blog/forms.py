@@ -18,6 +18,14 @@ class ArticleForm(forms.ModelForm):
         label='Текст',
     )
 
+    preview = forms.CharField(
+        widget=forms.Textarea,
+        min_length=3,
+        max_length=500,
+        required=True,
+        label='Отрывок',
+    )
+
     image = forms.ImageField(
         required=False,
         label='Изображение'
@@ -29,4 +37,4 @@ class ArticleForm(forms.ModelForm):
 
     class Meta:
         model = Article
-        fields = ['title', 'text', 'image', 'user', 'status']
+        fields = ['title', 'text', 'preview', 'image', 'user', 'status']

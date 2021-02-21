@@ -15,7 +15,7 @@ from django.conf import settings
 from django.utils import timezone
 
 
-def home(request):
+def home_view(request):
     specialty_list = SpecialtyList.objects.all()
 
     data = {
@@ -23,6 +23,12 @@ def home(request):
     }
 
     return render(request, 'home.html', data)
+
+
+def blog_view(request):
+    articles = Article.objects.order_by('id').reverse()
+    data ={'articles': articles}
+    return render(request, 'articles_list.html', data)
 
 
 def user_main(request):

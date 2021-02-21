@@ -6,6 +6,7 @@ from django.contrib.auth.models import User
 class Article(models.Model):
     title = models.CharField(blank=True, max_length=100, verbose_name='Заголовок')
     text = models.TextField(blank=True, max_length=10000, verbose_name='Текст')
+    preview = models.TextField(blank=True, max_length=500, verbose_name='Отрывок')
     image = models.ImageField(blank=True, upload_to='images/blog', verbose_name='Изображение')
     date = models.DateTimeField(default=timezone.now, verbose_name='Дата')
     user = models.IntegerField(blank=True, verbose_name='Автор', default=1)

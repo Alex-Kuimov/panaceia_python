@@ -8,14 +8,11 @@ import { modal } from './components/modal.js';
 import { starRate } from './components/rate.js';
 
 $(document).ready(function(){
-
     const csrftoken = getCookie('csrftoken');
 
     userCalendar.init(csrftoken);
     userTask.init(csrftoken);
     profile.init();
-
     modal.init();
     starRate.init();
-
 });

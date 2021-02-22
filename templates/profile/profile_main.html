@@ -199,7 +199,7 @@
                                 {% for service in user_services %}
                                     <div class="row se-block se-block-{{ service.id }}">
                                         <div class="col-5">
-                                            <input type="text" name="se[{{ service.id }}]" value="{{ service.name }}" placeholder="Название">
+                                            <input type="text" name="se[{{ service.id }}]" value="{{ service.name }}" placeholder="Название" required>
                                         </div>
                                         <div class="col-3">
                                             <select name="set[{{ service.id }}]" required>
@@ -216,7 +216,7 @@
                                             </select>
                                         </div>
                                         <div class="col-3">
-                                            <input type="text" name="sep[{{ service.id }}]" value="{{ service.price }}" placeholder="Цена">
+                                            <input type="number" name="sep[{{ service.id }}]" value="{{ service.price }}" placeholder="Цена" required>
                                         </div>
                                         <div class="col-1">
                                             <a href="#" class="item-remove" data-id="{{ service.id }}" data-name="se-block">Удалить</a>

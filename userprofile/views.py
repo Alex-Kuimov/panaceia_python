@@ -17,9 +17,11 @@ from django.utils import timezone
 
 def home_view(request):
     specialty_list = SpecialtyList.objects.all()
+    articles = Article.objects.filter(status='success').order_by('id').reverse()[:3]
 
     data = {
-        'specialty_list': specialty_list
+        'specialty_list': specialty_list,
+        'articles': articles
     }
 
     return render(request, 'home.html', data)

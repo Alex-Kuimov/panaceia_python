@@ -190,7 +190,7 @@ let profile = {
 
             element += '</div>';
             element += '<div class="col-3">';
-                element += '<input type="text" name="sep['+countSeElement+']" value="" placeholder="Цена" required>';
+                element += '<input type="number" name="sep['+countSeElement+']" value="" placeholder="Цена" required>';
             element += '</div>';
             element += '<div class="col-1">';
                 element += '<a href="#" class="item-remove" data-id="'+countSeElement+'" data-name="se-block">Удалить</a>';

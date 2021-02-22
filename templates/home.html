@@ -416,37 +416,36 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-4">
-                            <div class="image-article">
-                                <img src="{% static 'img/article.png' %}" alt="">
-                                <div class="date-articles">
-                                    22.02.2020
-                                </div>
-                                <h5>Топ-5 секретов обязательного медицинского страхования</h5>
-                                <h6>Многие россияне уверены, что лечиться за деньги в нашей стране гораздо приятнее и надежнее.</h6>
+
+                        {% for article in articles %}
+
+                            <div class="col-4">
+                                <a href="#" class="image-article">
+
+                                    {% if article.image.url != '' %}
+                                        <img src="{{ article.image.url }}" alt=""><br>
+                                    {% else %}
+                                        <img src="{% static 'img/article.png' %}" alt=""><br>
+                                    {% endif %}
+
+                                    <div class="date-articles">
+                                        {{ article.date }}
+                                    </div>
+                                    <h5>{{ article.title }}</h5>
+                                    <h6>{{ article.preview }}</h6>
+                                </a>
                             </div>
-                        </div>
-                        <div class="col-4">
-                            <div class="image-article">
-                                <img src="{% static 'img/article.png' %}" alt="">
-                                <div class="date-articles">
-                                    22.02.2020
-                                </div>
-                                <h5>Топ-5 секретов обязательного медицинского страхования</h5>
-                                <h6>Многие россияне уверены, что лечиться за деньги в нашей стране гораздо приятнее и надежнее.</h6>
-                            </div>
-                        </div>
-                        <div class="col-4">
-                            <div class="image-article">
-                                <img src="{% static 'img/article.png' %}" alt="">
-                                <div class="date-articles">
-                                    22.02.2020
-                                </div>
-                                <h5>Топ-5 секретов обязательного медицинского страхования</h5>
-                                <h6>Многие россияне уверены, что лечиться за деньги в нашей стране гораздо приятнее и надежнее.</h6>
-                            </div>
+
+                        {% endfor %}
+
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm">
+                            <a href="#">Все статьи</a>
                         </div>
                     </div>
+
                 </div>
             </div>
         </div>
@@ -519,16 +518,16 @@
         </div>
     </footer>
 
-    <script src="{% static 'js/jquery-3.2.1.slim.min.js' %}"></script>
-    <script src="{% static 'js/popper.min.js' %}"></script>
-    <script src="{% static 'js/bootstrap.min.js' %}"></script>
-    <script src="{% static 'js/jquery.min.js' %}"></script>
-    <script src="{% static 'js/jquery-ui.js' %}"></script>
-    <script src="{% static 'js/data-picker-ru.js' %}"></script>
-    <script src="{% static 'js/jquery-customselect.js' %}"></script>
-    <script src="{% static 'js/rater.js' %}"></script>
+    <script src="{% static 'js/libs/jquery-3.2.1.slim.min.js' %}"></script>
+    <script src="{% static 'js/libs/popper.min.js' %}"></script>
+    <script src="{% static 'js/libs/bootstrap.min.js' %}"></script>
+    <script src="{% static 'js/libs/jquery.min.js' %}"></script>
+    <script src="{% static 'js/libs/jquery-ui.js' %}"></script>
+    <script src="{% static 'js/libs/data-picker-ru.js' %}"></script>
+    <script src="{% static 'js/libs/jquery-customselect.js' %}"></script>
+    <script src="{% static 'js/libs/rater.js' %}"></script>
     <script src="{% static 'js/script.js' %}"></script>
-    <script src="{% static 'js/frontend-action.js' %}"></script>
+    <script type="module" src="{% static 'js/frontend-init.js' %}"></script>
 </body>
 
 </html>

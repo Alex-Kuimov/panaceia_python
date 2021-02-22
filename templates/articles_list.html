@@ -16,21 +16,21 @@
             {% for article in articles %}
 
                 <div class="col-4">
-                <a href="#" class="image-article">
+                    <a href="#" class="image-article">
 
-                    {% if article.image.url != '' %}
-                        <img src="{{ article.image.url }}" alt=""><br>
-                    {% else %}
-                        <img src="{% static 'img/article.png' %}" alt=""><br>
-                    {% endif %}
+                        {% if article.image.url != '' %}
+                            <img src="{{ article.image.url }}" alt=""><br>
+                        {% else %}
+                            <img src="{% static 'img/article.png' %}" alt=""><br>
+                        {% endif %}
 
-                    <div class="date-articles">
-                        {{ article.date }}
-                    </div>
-                    <h5>{{ article.title }}</h5>
-                    <h6>{{ article.preview }}</h6>
-                </a>
-            </div>
+                        <div class="date-articles">
+                            {{ article.date }}
+                        </div>
+                        <h5>{{ article.title }}</h5>
+                        <h6>{{ article.preview }}</h6>
+                    </a>
+                </div>
 
             {% endfor %}
 

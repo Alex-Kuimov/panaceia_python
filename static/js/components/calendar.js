@@ -1,4 +1,5 @@
 let userCalendar = {
+
     init: function(csrftoken){
         if ($('#doctor_grafik').length){
             let page = location.origin;

@@ -14,7 +14,7 @@ class Article(models.Model):
     status_list = [
         ('new', 'Новая'),
         ('review', 'Рассмотрение'),
-        ('success', 'Выполнено'),
+        ('success', 'Одобрено'),
         ('reject', 'Отказ'),
         ('archive', 'Архив'),
     ]

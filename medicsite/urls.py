@@ -23,6 +23,7 @@ from django.conf import settings
 from django.views.generic import TemplateView
 
 urlpatterns = [
+    path('tinymce/', include('tinymce.urls')),
     path('admin/', admin.site.urls),
     path('profile/', include('userprofile.urls')),
     path('doctors/', include('doctors.urls')),

@@ -408,11 +408,23 @@
     height: 100%;
 }
 
+.edit-article-form label{
+    margin-top: 30px;
+}
+
 .edit-article-form textarea{
     background: #F4F8F9;
     border: 1px solid #D0E3E8;
     color: #ABABAB;
     padding: 15px;
+}
+
+.edit-article-form #id_text{
+    height: 800px;
+}
+
+.edit-article-form #id_preview{
+    height: 150px;
 }
 
 .edit-article-form button {

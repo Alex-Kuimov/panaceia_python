@@ -1,11 +1,11 @@
 from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import User
-
+from tinymce.models import HTMLField
 
 class Article(models.Model):
     title = models.CharField(blank=True, max_length=100, verbose_name='Заголовок')
-    text = models.TextField(blank=True, max_length=10000, verbose_name='Текст')
+    text = HTMLField(blank=True, max_length=10000, verbose_name='Текст')
     preview = models.TextField(blank=True, max_length=500, verbose_name='Отрывок')
     image = models.ImageField(blank=True, upload_to='images/blog', verbose_name='Изображение')
     date = models.DateTimeField(default=timezone.now, verbose_name='Дата')

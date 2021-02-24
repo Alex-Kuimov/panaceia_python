@@ -6,6 +6,7 @@ from blog import views as blog_views
 urlpatterns = [
     path('', views.home_view, name='home'),
     path('blog/', views.blog_view, name='blog'),
+    path('blog/<slug:slug>/', views.blog_detail_view, name='blog_detail'),
     path('profile/signup_doctor/', views.signup_doctor_view, name="signup_doctor"),
     path('profile/logout/', views.logout_view, name='logout'),
     path('profile/login/', views.login_view, name='login'),

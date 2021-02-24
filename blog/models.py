@@ -2,9 +2,12 @@ from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import User
 from tinymce.models import HTMLField
+from .utility import slugify
+
 
 class Article(models.Model):
     title = models.CharField(blank=True, max_length=100, verbose_name='Заголовок')
+    slug = models.SlugField(blank=True, max_length=100, unique=True)
     text = HTMLField(blank=True, max_length=10000, verbose_name='Текст')
     preview = models.TextField(blank=True, max_length=500, verbose_name='Отрывок')
     image = models.ImageField(blank=True, upload_to='images/blog', verbose_name='Изображение')
@@ -20,6 +23,16 @@ class Article(models.Model):
     ]
 
     status = models.CharField(blank=True, null=True, max_length=11, choices=status_list, verbose_name='Статус')
+
+    def save(self, *args, **kwargs):
+        object_list = Article.objects.filter(title=self.title)
+
+        if len(object_list) > 0:
+            self.slug = slugify(self.title) + '-' + str(len(object_list))
+        else:
+            self.slug = slugify(self.title)
+
+        super(Article, self).save(*args, **kwargs)
 
     def __str__(self):
         return self.title

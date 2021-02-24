@@ -419,7 +419,7 @@
                         {% for article in articles %}
 
                             <div class="col-4">
-                                <a href="#" class="image-article">
+                                <a href="{% url 'blog_detail' slug=article.slug %}" class="image-article">
 
                                     {% if article.image.url != '' %}
                                         <img src="{{ article.image.url }}" alt=""><br>

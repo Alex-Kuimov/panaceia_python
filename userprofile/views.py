@@ -30,7 +30,7 @@ def home_view(request):
 
 def blog_view(request):
     page = request.GET.get('page')
-    object_list = Article.objects.order_by('id').reverse()
+    object_list = Article.objects.filter(status='success').order_by('id').reverse()
 
     paginator = Paginator(object_list, 3)
 
@@ -43,7 +43,28 @@ def blog_view(request):
 
     data = {'articles': articles}
 
-    return render(request, 'articles_list.html', data)
+    return render(request, 'article/article_list.html', data)
+
+
+def blog_detail_view(request, slug):
+    articles = Article.objects.filter(slug=slug)
+
+    for art in articles:
+
+        if art.image != '':
+            image = art.image.url
+        else:
+            image = ''
+
+        article = {
+            'title': art.title,
+            'text': art.text,
+            'image': image,
+            'date': art.date,
+        }
+
+    data = {'article': article}
+    return render(request, 'article/article_detail.html', data)
 
 
 def user_main(request):

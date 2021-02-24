@@ -481,3 +481,9 @@
     width: 100%;
     margin: 15px;
 }
+
+/*article detail*/
+
+.article-wrap img{
+    width: 100%;
+}

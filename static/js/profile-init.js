@@ -16,5 +16,5 @@ $(document).ready(function(){
     profile.init();
     modal.init();
     starRate.init();
-    //tinyMce.init();
+    tinyMce.init();
 });

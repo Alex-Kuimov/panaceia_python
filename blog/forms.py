@@ -14,7 +14,7 @@ class ArticleForm(forms.ModelForm):
         widget=forms.Textarea,
         min_length=3,
         max_length=10000,
-        required=True,
+        required=False,
         label='Текст',
     )
 
@@ -22,7 +22,7 @@ class ArticleForm(forms.ModelForm):
         widget=forms.Textarea,
         min_length=3,
         max_length=500,
-        required=True,
+        required=False,
         label='Отрывок',
     )
 

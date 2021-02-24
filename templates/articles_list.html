@@ -10,12 +10,11 @@
                 <h4>Полезные статьи</h4>
             </div>
         </div>
-        <div class="row">
-
+        <div class="row articles-wrap">
 
             {% for article in articles %}
 
-                <div class="col-4">
+                <div class="col-4 articles-item">
                     <a href="#" class="image-article">
 
                         {% if article.image.url != '' %}
@@ -33,6 +32,8 @@
                 </div>
 
             {% endfor %}
+
+            {% include "articles_pagination.html" with page=articles %}
 
         </div>
     </div>

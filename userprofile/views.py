@@ -12,6 +12,7 @@ from .utility import OneInputField, TwoInputField, ThreeInputField, CheckboxFiel
 from django.contrib.auth.decorators import login_required
 from django.core.mail import EmailMessage
 from django.conf import settings
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.utils import timezone
 
 
@@ -28,8 +29,20 @@ def home_view(request):
 
 
 def blog_view(request):
-    articles = Article.objects.order_by('id').reverse()
-    data ={'articles': articles}
+    page = request.GET.get('page')
+    object_list = Article.objects.order_by('id').reverse()
+
+    paginator = Paginator(object_list, 3)
+
+    try:
+        articles = paginator.page(page)
+    except PageNotAnInteger:
+        articles = paginator.page(1)
+    except EmptyPage:
+        articles = paginator.page(paginator.num_pages)
+
+    data = {'articles': articles}
+
     return render(request, 'articles_list.html', data)
 
 

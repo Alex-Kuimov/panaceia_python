@@ -67,9 +67,9 @@ def blog_detail_view(request, slug):
     return render(request, 'article/article_detail.html', data)
 
 
-def user_main(request):
-    user_profile = UserMain.objects.get(user=request.user)
-    return render(request, 'base_generic.html', {'user_profile': user_profile})
+# def user_main(request):
+#     user_profile = UserMain.objects.get(user=request.user)
+#     return render(request, 'base_generic.html', {'user_profile': user_profile})
 
 
 @login_required

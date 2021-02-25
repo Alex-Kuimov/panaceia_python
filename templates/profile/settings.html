@@ -5,40 +5,42 @@
 
 <div class="col-md-9 px-4">
     <div class="row">
-        <div class="col-md-12 block-info">
-            <h4>Пройти верификацию</h4>
-            <p>Отправть копию первых страниц следующих документов:</p>
-            <form class="row" action="{% url 'send_file_for_verified' %}" method="POST" enctype="multipart/form-data">
-                {% csrf_token %}
+        {% if user.groups.all.0.name == "doctors" %}
+            <div class="col-md-12 block-info">
+                <h4>Пройти верификацию</h4>
+                <p>Отправть копию первых страниц следующих документов:</p>
+                <form class="row" action="{% url 'send_file_for_verified' %}" method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
 
-                <p><label for="passport_photo" class="passport_photo_label" style="cursor:pointer">Фото паспорта</label>
-                    <input type="file" id="passport_photo" name="passport_photo" class="passport_photo" style="display:none" use-label="y"></p>
+                    <p><label for="passport_photo" class="passport_photo_label" style="cursor:pointer">Фото паспорта</label>
+                        <input type="file" id="passport_photo" name="passport_photo" class="passport_photo" style="display:none" use-label="y"></p>
 
-                <p><label for="diplom_photo" class="diplom_photo_label" style="cursor:pointer">Фото диплома</label>
-                    <input type="file" id="diplom_photo" name="diplom_photo" class="diplom_photo" style="display:none" use-label="y"></p>
+                    <p><label for="diplom_photo" class="diplom_photo_label" style="cursor:pointer">Фото диплома</label>
+                        <input type="file" id="diplom_photo" name="diplom_photo" class="diplom_photo" style="display:none" use-label="y"></p>
 
-                <div class="col-md-12">
-                    <button type="submit" name="button">Отправить</button>
-                </div>
-            </form>
+                    <div class="col-md-12">
+                        <button type="submit" name="button">Отправить</button>
+                    </div>
+                </form>
 
-            <div class="line"></div>
-            <div class="row">
-                <div class="col-md-12">
-                    <form class="row" action="{% url 'change_user_pass' %}" method="POST" enctype="multipart/form-data">
-                        {% csrf_token %}
-                        <div class="col-md-9">
-                            <h4>Смена пароля</h4>
-                            {{msg}}
-                            <input type="password" name="password" placeholder="Новый пароль"  minlength="5" required>
-                            <input type="password" name="password2" placeholder="Повторить пароль" minlength="5" required>
-                            <button type="submit" name="button">Сохранить изменения</button>
-                            <a href="#" style="color:DA2A2A!important;margin-left:10px;">Удалить профиль</a>
-                        </div>
-                    </form>
+                <div class="line"></div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <form class="row" action="{% url 'change_user_pass' %}" method="POST" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <div class="col-md-9">
+                                <h4>Смена пароля</h4>
+                                {{msg}}
+                                <input type="password" name="password" placeholder="Новый пароль"  minlength="5" required>
+                                <input type="password" name="password2" placeholder="Повторить пароль" minlength="5" required>
+                                <button type="submit" name="button">Сохранить изменения</button>
+                                <a href="#" style="color:DA2A2A!important;margin-left:10px;">Удалить профиль</a>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
-        </div>
+        {% endif %}
         <div class="col-md-12 block-info">
             <h4>Сообщение в службу поддержки</h4>
             {{txt}}

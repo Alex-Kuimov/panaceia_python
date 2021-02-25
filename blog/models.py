@@ -27,10 +27,10 @@ class Article(models.Model):
     def save(self, *args, **kwargs):
         object_list = Article.objects.filter(title=self.title)
 
-        if len(object_list) > 0:
-            self.slug = slugify(self.title) + '-' + str(len(object_list))
-        else:
+        if len(object_list) == 0:
             self.slug = slugify(self.title)
+        else:
+            self.slug = slugify(self.title) + '-' + str(len(object_list))
 
         super(Article, self).save(*args, **kwargs)
 

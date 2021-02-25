@@ -56,7 +56,7 @@ def get_doctor_list(request, slug):
         all_flag = 'n'
 
     count = len(object_list)
-    paginator = Paginator(object_list, 10)
+    paginator = Paginator(object_list, 1)
     doctors = list()
 
     try:

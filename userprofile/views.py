@@ -436,7 +436,7 @@ def save_support_message(request):
         s = Support.objects.create(user_id=user_id, user_name=user_name, text=message)
         s.save()
 
-    return render(request, 'profile/settings.html', {'txt': 'Сообщение отправлено!'})
+    return render(request, 'profile/settings.html', {'txt': 'Сообщение отправлено!', 'title': 'Сообщение отправлено'})
 
 
 @login_required
@@ -487,25 +487,25 @@ def send_file_for_verified(request):
 @login_required
 def save_data_success(request):
     user_profile = UserMain.objects.get(user=request.user)
-    return render(request, 'profile/success.html', {'user_profile': user_profile})
+    return render(request, 'profile/success.html', {'user_profile': user_profile, 'title': 'Сообщение'})
 
 
 @login_required
 def save_verification_success(request):
     user_profile = UserMain.objects.get(user=request.user)
-    return render(request, 'profile/verification_success.html', {'user_profile': user_profile})
+    return render(request, 'profile/verification_success.html', {'user_profile': user_profile, 'title': 'Сообщение'})
 
 
 @login_required
 def save_consalt_success(request):
     user_profile = UserMain.objects.get(user=request.user)
-    return render(request, 'profile/success_consalt.html', {'user_profile': user_profile})
+    return render(request, 'profile/success_consalt.html', {'user_profile': user_profile, 'title': 'Сообщение'})
 
 
 @login_required
 def save_review_success(request):
     user_profile = UserMain.objects.get(user=request.user)
-    return render(request, 'profile/success_review.html', {'user_profile': user_profile})
+    return render(request, 'profile/success_review.html', {'user_profile': user_profile, 'title': 'Сообщение'})
 
 
 @login_required
@@ -560,7 +560,7 @@ def save_review_view(request):
 
         else:
             user_profile = UserMain.objects.get(user=request.user)
-            return render(request, 'profile/reviews.html', {'user_profile': user_profile, 'form': form, 'doctor_id': doctor_id, 'user_id': user_id})
+            return render(request, 'profile/reviews.html', {'user_profile': user_profile, 'form': form, 'doctor_id': doctor_id, 'user_id': user_id, 'title': 'Сообщение'})
 
 
 def error_404(request, exception):

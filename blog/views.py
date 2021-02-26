@@ -68,7 +68,7 @@ def remove_article_view(request, slug):
 @login_required
 def save_article_success(request):
     user_profile = UserMain.objects.get(user=request.user)
-    return render(request, 'profile/article_success.html', {'user_profile': user_profile})
+    return render(request, 'profile/article_success.html', {'user_profile': user_profile, 'title': 'Сообщение'})
 
 
 @login_required

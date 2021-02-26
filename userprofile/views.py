@@ -21,6 +21,7 @@ def home_view(request):
     articles = Article.objects.filter(status='success').order_by('id').reverse()[:3]
 
     data = {
+        'title': 'Главная',
         'specialty_list': specialty_list,
         'articles': articles
     }
@@ -41,7 +42,10 @@ def blog_view(request):
     except EmptyPage:
         articles = paginator.page(paginator.num_pages)
 
-    data = {'articles': articles}
+    data = {
+        'title': 'Блог',
+        'articles': articles
+    }
 
     return render(request, 'article/article_list.html', data)
 
@@ -56,6 +60,8 @@ def blog_detail_view(request, slug):
         else:
             image = ''
 
+        page_title = art.title
+
         article = {
             'title': art.title,
             'text': art.text,
@@ -63,7 +69,10 @@ def blog_detail_view(request, slug):
             'date': art.date,
         }
 
-    data = {'article': article}
+    data = {
+        'title': page_title,
+        'article': article
+    }
     return render(request, 'article/article_detail.html', data)
 
 
@@ -321,14 +330,14 @@ def signup_view(request, user_group_type, template):
             email.content_subtype = 'html'
             email.send()
 
-            return render(request, 'profile/login.html', {'msg': 'Вы успешно зарегестрированы!'})
+            return render(request, 'profile/login.html', {'msg': 'Вы успешно зарегестрированы!', 'title': 'Регистрация'})
         else:
-            return render(request, template, {'form': form})
+            return render(request, template, {'form': form, 'title': 'Регистрация'})
 
     if request.user.is_authenticated:
         return redirect('user_profile')
     else:
-        return render(request, template)
+        return render(request, template, {'title': 'Регистрация'})
 
 
 def signup_user_view(request):
@@ -368,12 +377,12 @@ def login_view(request):
             else:
                 return redirect('registration')
         else:
-            return render(request, 'profile/login.html', {'form': form})
+            return render(request, 'profile/login.html', {'form': form, 'title': 'Авторизация'})
 
     if request.user.is_authenticated:
         return redirect('user_profile')
     else:
-        return render(request, 'profile/login.html',)
+        return render(request, 'profile/login.html', {'title': 'Авторизация'})
 
 
 def logout_view(request):
